@@ -988,12 +988,23 @@ async function submitPost() {
   const title = document.getElementById('post-title').value.trim();
   const content = document.getElementById('post-content').value.trim();
   if (!title || !content) return alert('제목과 내용을 입력해주세요.');
-  const { error } = await sb.from('posts').insert({
+
+  console.log('현재 유저:', currentUser?.id);
+  console.log('현재 프로필:', currentProfile);
+  console.log('brand_id:', currentProfile?.brand_id);
+
+  if (!currentUser) return alert('로그인이 필요해요.');
+  if (!currentProfile?.brand_id) return alert('브랜드 정보가 없어요. 마이페이지를 확인해주세요.');
+
+  const { data, error } = await sb.from('posts').insert({
     author_id: currentUser.id,
     brand_id: currentProfile.brand_id,
     title, content, is_anonymous: true
-  });
-  if (error) { alert('글 등록 실패: ' + error.message); return; }
+  }).select();
+
+  console.log('결과:', data, error);
+
+  if (error) { alert('글 등록 실패: ' + error.message + '\n코드: ' + error.code); return; }
   hideWritePost();
   loadCommunity();
 }
