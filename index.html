@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>프차인덱스</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
@@ -23,7 +23,7 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
 body {
-  font-family:'Noto Sans KR',sans-serif;
+  font-family:'Paperlogy', sans-serif;
   background:#D6D3CB;
   color:var(--navy);
   min-height:100vh;
@@ -58,15 +58,15 @@ body {
 
 /* NAV */
 .nav { background:var(--navy); padding:0 20px; height:56px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; width:100%; }
-.nav-logo { font-family:'Noto Serif KR',serif; font-size:18px; font-weight:900; color:#fff; cursor:pointer; }
+.nav-logo { font-family:'Paperlogy', sans-serif; font-size:18px; font-weight:900; color:#fff; cursor:pointer; }
 .nav-logo span { color:var(--orange); }
 .nav-right { display:flex; align-items:center; gap:10px; }
 .nav-brand { background:var(--orange); color:#fff; font-size:11px; padding:3px 10px; border-radius:6px; }
-.nav-btn { background:transparent; color:rgba(255,255,255,0.6); border:none; font-size:13px; cursor:pointer; font-family:'Noto Sans KR',sans-serif; padding:6px 12px; border-radius:6px; transition:all 0.2s; }
+.nav-btn { background:transparent; color:rgba(255,255,255,0.6); border:none; font-size:13px; cursor:pointer; font-family:'Paperlogy', sans-serif; padding:6px 12px; border-radius:6px; transition:all 0.2s; }
 .nav-btn:hover { background:rgba(255,255,255,0.1); color:#fff; }
 
 /* 버튼 */
-.btn { border:none; border-radius:var(--r-sm); padding:12px 24px; font-size:14px; font-weight:500; cursor:pointer; font-family:'Noto Sans KR',sans-serif; transition:all 0.2s; display:inline-block; text-align:center; width:100%; }
+.btn { border:none; border-radius:var(--r-sm); padding:12px 24px; font-size:14px; font-weight:500; cursor:pointer; font-family:'Paperlogy', sans-serif; transition:all 0.2s; display:inline-block; text-align:center; width:100%; }
 .btn-primary { background:var(--orange); color:#fff; }
 .btn-primary:hover { background:#CF6A0A; }
 .btn-navy { background:var(--navy); color:#fff; }
@@ -84,10 +84,10 @@ body {
 /* 폼 */
 .form-group { margin-bottom:14px; }
 .form-label { font-size:11px; font-weight:500; color:var(--gray); display:block; margin-bottom:5px; }
-.form-input { width:100%; background:var(--light); border:1px solid var(--border); border-radius:var(--r-sm); padding:11px 14px; font-size:14px; color:var(--navy); outline:none; transition:border 0.2s; font-family:'Noto Sans KR',sans-serif; }
+.form-input { width:100%; background:var(--light); border:1px solid var(--border); border-radius:var(--r-sm); padding:11px 14px; font-size:14px; color:var(--navy); outline:none; transition:border 0.2s; font-family:'Paperlogy', sans-serif; }
 .form-input:focus { border-color:var(--orange); background:#fff; }
 .form-input.right { text-align:right; }
-.form-select { width:100%; background:var(--light); border:1px solid var(--border); border-radius:var(--r-sm); padding:11px 14px; font-size:14px; color:var(--navy); outline:none; cursor:pointer; appearance:none; font-family:'Noto Sans KR',sans-serif; }
+.form-select { width:100%; background:var(--light); border:1px solid var(--border); border-radius:var(--r-sm); padding:11px 14px; font-size:14px; color:var(--navy); outline:none; cursor:pointer; appearance:none; font-family:'Paperlogy', sans-serif; }
 .form-select:focus { border-color:var(--orange); }
 .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 .form-note { font-size:11px; color:var(--gray); margin-top:6px; }
@@ -113,7 +113,7 @@ body {
 
 /* 탭바 */
 .tab-bar { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:#fff; border-top:1px solid var(--border); display:flex; height:56px; z-index:100; }
-.tab-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; cursor:pointer; transition:all 0.2s; border:none; background:transparent; font-family:'Noto Sans KR',sans-serif; }
+.tab-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; cursor:pointer; transition:all 0.2s; border:none; background:transparent; font-family:'Paperlogy', sans-serif; }
 .tab-icon { font-size:18px; }
 .tab-label { font-size:10px; color:var(--gray); }
 .tab-item.active .tab-label { color:var(--orange); font-weight:500; }
@@ -190,7 +190,7 @@ body {
 .landing-inner { max-width:1000px; margin:0 auto; width:100%; display:flex; align-items:center; gap:48px; }
 .landing-left { flex:1; }
 .landing-tag { display:inline-flex; align-items:center; gap:6px; background:rgba(232,121,12,0.1); border:1px solid rgba(232,121,12,0.25); color:var(--orange); font-size:11px; font-weight:500; padding:4px 12px; border-radius:20px; margin-bottom:20px; }
-.landing-title { font-family:'Noto Serif KR',serif; font-size:44px; font-weight:900; line-height:1.35; letter-spacing:-1px; color:var(--navy); margin-bottom:16px; }
+.landing-title { font-family:'Paperlogy', sans-serif; font-size:44px; font-weight:900; line-height:1.35; letter-spacing:-1px; color:var(--navy); margin-bottom:16px; }
 .landing-title em { color:var(--orange); font-style:normal; }
 .landing-desc { font-size:15px; color:var(--gray); line-height:1.8; margin-bottom:28px; }
 .landing-feats { display:flex; flex-direction:column; gap:10px; margin-bottom:32px; }
@@ -302,7 +302,7 @@ body {
   <div id="page-login" class="page">
     <nav class="nav"><div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div></nav>
     <div class="container" style="padding-top:40px;">
-      <h2 style="font-family:'Noto Serif KR',serif;font-size:26px;font-weight:900;margin-bottom:6px;">로그인</h2>
+      <h2 style="font-family:'Paperlogy', sans-serif;font-size:26px;font-weight:900;margin-bottom:6px;">로그인</h2>
       <p style="font-size:13px;color:var(--gray);margin-bottom:28px;">점주 전용 매장 수익 분석 서비스</p>
       <div id="login-alert"></div>
       <div class="form-group">
@@ -323,7 +323,7 @@ body {
   <div id="page-signup" class="page">
     <nav class="nav"><div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div></nav>
     <div class="container" style="padding-top:32px;">
-      <h2 style="font-family:'Noto Serif KR',serif;font-size:26px;font-weight:900;margin-bottom:6px;">회원가입</h2>
+      <h2 style="font-family:'Paperlogy', sans-serif;font-size:26px;font-weight:900;margin-bottom:6px;">회원가입</h2>
       <p style="font-size:13px;color:var(--gray);margin-bottom:24px;">사업자등록증으로 점주 인증을 진행해요</p>
       <div id="signup-alert"></div>
       <div class="form-row">
