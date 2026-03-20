@@ -22,7 +22,30 @@
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
-body { font-family:'Noto Sans KR',sans-serif; background:var(--cream); color:var(--navy); min-height:100vh; }
+body {
+  font-family:'Noto Sans KR',sans-serif;
+  background:#D6D3CB;
+  color:var(--navy);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+}
+
+#loading {
+  position:fixed; inset:0;
+  background:var(--cream);
+  display:flex; align-items:center; justify-content:center;
+  z-index:999;
+}
+
+#app {
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  background:var(--cream);
+  position:relative;
+  box-shadow:0 0 40px rgba(0,0,0,0.15);
+}
 
 .hidden { display:none !important; }
 .page { display:none; min-height:100vh; }
@@ -34,7 +57,7 @@ body { font-family:'Noto Sans KR',sans-serif; background:var(--cream); color:var
 @keyframes spin { to { transform:rotate(360deg); } }
 
 /* NAV */
-.nav { background:var(--navy); padding:0 20px; height:56px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+.nav { background:var(--navy); padding:0 20px; height:56px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; width:100%; }
 .nav-logo { font-family:'Noto Serif KR',serif; font-size:18px; font-weight:900; color:#fff; cursor:pointer; }
 .nav-logo span { color:var(--orange); }
 .nav-right { display:flex; align-items:center; gap:10px; }
@@ -89,7 +112,7 @@ body { font-family:'Noto Sans KR',sans-serif; background:var(--cream); color:var
 .container-wide { max-width:900px; margin:0 auto; padding:20px 20px 80px; }
 
 /* 탭바 */
-.tab-bar { position:fixed; bottom:0; left:0; right:0; background:#fff; border-top:1px solid var(--border); display:flex; height:56px; z-index:100; }
+.tab-bar { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:#fff; border-top:1px solid var(--border); display:flex; height:56px; z-index:100; }
 .tab-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; cursor:pointer; transition:all 0.2s; border:none; background:transparent; font-family:'Noto Sans KR',sans-serif; }
 .tab-icon { font-size:18px; }
 .tab-label { font-size:10px; color:var(--gray); }
@@ -964,8 +987,13 @@ function hideWritePost() {
 async function submitPost() {
   const title = document.getElementById('post-title').value.trim();
   const content = document.getElementById('post-content').value.trim();
-  if (!title || !content) return;
-  await sb.from('posts').insert({ author_id: currentUser.id, brand_id: currentProfile.brand_id, title, content, is_anonymous: true });
+  if (!title || !content) return alert('제목과 내용을 입력해주세요.');
+  const { error } = await sb.from('posts').insert({
+    author_id: currentUser.id,
+    brand_id: currentProfile.brand_id,
+    title, content, is_anonymous: true
+  });
+  if (error) { alert('글 등록 실패: ' + error.message); return; }
   hideWritePost();
   loadCommunity();
 }
