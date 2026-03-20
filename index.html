@@ -809,6 +809,7 @@ body {
   </div>
 
   <!-- 어드민 -->
+
   <div id="page-admin" class="page">
     <nav class="nav">
       <div class="nav-logo">프차<span>인덱스</span></div>
@@ -834,6 +835,12 @@ body {
         <div class="info-row"><span class="info-label">대기 중</span><span class="info-value" style="color:#D97706;" id="stat-pending">-</span></div>
         <div class="info-row"><span class="info-label">데이터 입력 건수</span><span class="info-value" id="stat-data">-</span></div>
       </div>
+    </div>
+    <div class="tab-bar">
+      <button class="tab-item" onclick="showPage('home')"><span class="tab-icon">🏠</span><span class="tab-label">홈</span></button>
+      <button class="tab-item" onclick="showPage('store-data')"><span class="tab-icon">✏️</span><span class="tab-label">데이터 입력</span></button>
+      <button class="tab-item" onclick="showPage('community')"><span class="tab-icon">💬</span><span class="tab-label">점주방</span></button>
+      <button class="tab-item active" onclick="showPage('admin')"><span class="tab-icon">⚙️</span><span class="tab-label">관리자</span></button>
     </div>
   </div>
 
