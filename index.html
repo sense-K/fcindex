@@ -289,142 +289,172 @@ body {
     <div class="landing-hero">
       <div class="landing-tag"><span style="width:5px;height:5px;border-radius:50%;background:var(--orange);display:inline-block;"></span>프랜차이즈 점주 전용 플랫폼</div>
       <h1 class="landing-title">우리매장만<br>손해보고 있던 건<br><em>아닐까?</em></h1>
-      <p class="landing-desc">내 매장이 평균보다 잘 되고 있는지<br>처음으로 알 수 있어요.</p>
+      <p class="landing-desc">내 매장이 평균보다 잘 되고 있는지<br>확인할 수 있어요.</p>
 
-      <!-- 서비스 프리뷰 -->
-      <div style="background:#111;border-radius:36px;padding:6px;box-shadow:0 0 0 1px #333, 0 24px 60px rgba(0,0,0,0.35);margin:0 4px 28px;">
-        <!-- 상단 얇은 베젤 + 카메라홀 -->
-        <div style="background:#111;height:10px;display:flex;align-items:center;justify-content:center;">
-          <div style="width:8px;height:8px;background:#222;border-radius:50%;"></div>
-        </div>
-        <div class="landing-preview">
-        <!-- 탭 헤더 -->
-        <div class="preview-header">
-          <div class="preview-logo">프차<span>인덱스</span></div>
-          <div class="preview-badge">메가커피</div>
-        </div>
-        <div class="preview-tabs">
-          <div class="preview-tab active" id="preview-tab-data" onclick="switchPreview('data')">📊 수익 비교</div>
-          <div class="preview-tab" id="preview-tab-comm" onclick="switchPreview('comm')">💬 점주방</div>
+      <!-- 폰 두 개 프리뷰 -->
+      <div style="display:flex;gap:12px;margin-bottom:28px;justify-content:center;align-items:flex-start;">
+
+        <!-- 폰 1: 수익 비교 -->
+        <div style="flex:1;max-width:170px;">
+          <div style="font-size:10px;font-weight:600;color:var(--gray);text-align:center;margin-bottom:8px;">📊 수익 비교</div>
+          <div style="background:#1a1a1a;border-radius:28px;padding:4px;box-shadow:0 0 0 1px #333,0 16px 40px rgba(0,0,0,0.3);">
+            <div style="background:#1a1a1a;height:8px;display:flex;align-items:center;justify-content:center;">
+              <div style="width:6px;height:6px;background:#2a2a2a;border-radius:50%;"></div>
+            </div>
+            <div style="background:#F5F3EE;border-radius:20px;overflow:hidden;">
+              <!-- 상단바 -->
+              <div style="background:#1C2B3A;padding:7px 10px;display:flex;justify-content:space-between;align-items:center;">
+                <div style="font-size:9px;font-weight:700;color:#fff;">프차<span style="color:#E8790C;">인덱스</span></div>
+                <div style="background:#E8790C;color:#fff;font-size:6px;padding:2px 6px;border-radius:4px;">메가커피</div>
+              </div>
+              <!-- 본문 -->
+              <div style="padding:8px 8px 6px;">
+                <div style="font-size:7px;color:#6B7280;margin-bottom:6px;">안녕하세요, <b style="color:#1C2B3A;">김사장</b>님</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:6px;">
+                  <div style="background:#fff;border-radius:6px;padding:5px 6px;border:1px solid #E5E0D8;">
+                    <div style="font-size:5px;color:#6B7280;margin-bottom:1px;">월 매출</div>
+                    <div style="font-size:10px;font-weight:700;color:#1C2B3A;">2,340만</div>
+                  </div>
+                  <div style="background:#fff;border-radius:6px;padding:5px 6px;border:1px solid #E5E0D8;">
+                    <div style="font-size:5px;color:#6B7280;margin-bottom:1px;">순수익률</div>
+                    <div style="font-size:10px;font-weight:700;color:#16A34A;">18.2%</div>
+                  </div>
+                  <div style="background:#fff;border-radius:6px;padding:5px 6px;border:1px solid #E5E0D8;">
+                    <div style="font-size:5px;color:#6B7280;margin-bottom:1px;">인건비율</div>
+                    <div style="font-size:10px;font-weight:700;color:#E8790C;">24.1%</div>
+                    <div style="font-size:5px;color:#D97706;">평균 초과</div>
+                  </div>
+                  <div style="background:#fff;border-radius:6px;padding:5px 6px;border:1px solid #E5E0D8;">
+                    <div style="font-size:5px;color:#6B7280;margin-bottom:1px;">식재료비율</div>
+                    <div style="font-size:10px;font-weight:700;color:#1C2B3A;">31.5%</div>
+                    <div style="font-size:5px;color:#378ADD;">평균 수준</div>
+                  </div>
+                </div>
+                <!-- 비교바 -->
+                <div style="background:#fff;border-radius:6px;padding:6px 7px;border:1px solid #E5E0D8;">
+                  <div style="font-size:6px;font-weight:600;color:#6B7280;margin-bottom:5px;">항목별 비교</div>
+                  <div style="margin-bottom:4px;">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:2px;"><span style="font-size:5px;color:#6B7280;">인건비</span><span style="font-size:5px;color:#D97706;font-weight:600;">▲3.1%</span></div>
+                    <div style="display:flex;align-items:center;gap:2px;margin-bottom:1px;">
+                      <span style="font-size:4px;color:#E8790C;width:16px;">내매장</span>
+                      <div style="flex:1;background:#F3F4F6;border-radius:2px;height:4px;"><div style="width:72%;height:4px;background:#E8790C;border-radius:2px;"></div></div>
+                      <span style="font-size:5px;color:#E8790C;width:20px;text-align:right;">24.1%</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:2px;">
+                      <span style="font-size:4px;color:#378ADD;width:16px;">평균</span>
+                      <div style="flex:1;background:#F3F4F6;border-radius:2px;height:4px;"><div style="width:63%;height:4px;background:#378ADD;border-radius:2px;"></div></div>
+                      <span style="font-size:5px;color:#378ADD;width:20px;text-align:right;">21.0%</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="display:flex;justify-content:space-between;margin-bottom:2px;"><span style="font-size:5px;color:#6B7280;">식재료비</span><span style="font-size:5px;color:#378ADD;font-weight:600;">▼0.5%</span></div>
+                    <div style="display:flex;align-items:center;gap:2px;margin-bottom:1px;">
+                      <span style="font-size:4px;color:#E8790C;width:16px;">내매장</span>
+                      <div style="flex:1;background:#F3F4F6;border-radius:2px;height:4px;"><div style="width:63%;height:4px;background:#E8790C;border-radius:2px;"></div></div>
+                      <span style="font-size:5px;color:#E8790C;width:20px;text-align:right;">31.5%</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:2px;">
+                      <span style="font-size:4px;color:#378ADD;width:16px;">평균</span>
+                      <div style="flex:1;background:#F3F4F6;border-radius:2px;height:4px;"><div style="width:64%;height:4px;background:#378ADD;border-radius:2px;"></div></div>
+                      <span style="font-size:5px;color:#378ADD;width:20px;text-align:right;">32.0%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- 하단바 -->
+              <div style="background:#fff;border-top:1px solid #E5E0D8;display:flex;height:24px;">
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#E8790C" stroke-width="2.5" stroke-linecap="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/></svg>
+                  <div style="font-size:4px;color:#E8790C;font-weight:600;">홈</div>
+                </div>
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  <div style="font-size:4px;color:#9CA3AF;">입력</div>
+                </div>
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                  <div style="font-size:4px;color:#9CA3AF;">점주방</div>
+                </div>
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <div style="font-size:4px;color:#9CA3AF;">마이</div>
+                </div>
+              </div>
+            </div>
+            <div style="height:8px;display:flex;align-items:center;justify-content:center;">
+              <div style="width:40px;height:2px;background:#333;border-radius:2px;"></div>
+            </div>
+          </div>
         </div>
 
-        <!-- 수익 비교 화면 -->
-        <div id="preview-data" class="preview-body">
-          <div style="font-size:11px;color:var(--gray);margin-bottom:10px;">안녕하세요, <span style="font-weight:600;color:var(--navy);">김사장</span>님</div>
-          <div class="preview-grid">
-            <div class="preview-card">
-              <div class="preview-card-label">월 매출</div>
-              <div class="preview-card-value">2,340만</div>
-              <div class="preview-card-sub">원</div>
+        <!-- 폰 2: 점주방 -->
+        <div style="flex:1;max-width:170px;margin-top:24px;">
+          <div style="font-size:10px;font-weight:600;color:var(--gray);text-align:center;margin-bottom:8px;">💬 점주방</div>
+          <div style="background:#1a1a1a;border-radius:28px;padding:4px;box-shadow:0 0 0 1px #333,0 16px 40px rgba(0,0,0,0.3);">
+            <div style="background:#1a1a1a;height:8px;display:flex;align-items:center;justify-content:center;">
+              <div style="width:6px;height:6px;background:#2a2a2a;border-radius:50%;"></div>
             </div>
-            <div class="preview-card">
-              <div class="preview-card-label">순수익률</div>
-              <div class="preview-card-value green">18.2%</div>
-              <div class="preview-card-sub">= 426만원</div>
-            </div>
-            <div class="preview-card">
-              <div class="preview-card-label">인건비율</div>
-              <div class="preview-card-value orange">24.1%</div>
-              <div class="preview-card-sub warn">평균 21% 초과</div>
-            </div>
-            <div class="preview-card">
-              <div class="preview-card-label">식재료비율</div>
-              <div class="preview-card-value">31.5%</div>
-              <div class="preview-card-sub ok">평균 수준</div>
-            </div>
-          </div>
-          <div class="preview-compare">
-            <div class="preview-compare-title">
-              <span>항목별 비교</span>
-              <span style="font-size:9px;display:flex;gap:8px;">
-                <span style="color:var(--orange);">■ 내 매장</span>
-                <span style="color:var(--blue);">■ 평균</span>
-              </span>
-            </div>
-            <div class="preview-bar-row">
-              <div class="preview-bar-label">
-                <span class="preview-bar-name">인건비</span>
-                <span class="preview-bar-diff">▲ 3.1%</span>
+            <div style="background:#F5F3EE;border-radius:20px;overflow:hidden;">
+              <!-- 상단바 -->
+              <div style="background:#1C2B3A;padding:7px 10px;display:flex;justify-content:space-between;align-items:center;">
+                <div style="font-size:9px;font-weight:700;color:#fff;">프차<span style="color:#E8790C;">인덱스</span></div>
+                <div style="background:rgba(55,138,221,0.2);color:#378ADD;font-size:6px;padding:2px 6px;border-radius:4px;">인증점주만</div>
               </div>
-              <div class="preview-bars">
-                <div class="preview-bar-line">
-                  <span class="preview-bar-who my">내매장</span>
-                  <div class="preview-bar-track"><div class="preview-bar-fill orange" style="width:72%;"></div></div>
-                  <span class="preview-bar-pct my">24.1%</span>
+              <!-- 본문 -->
+              <div style="padding:8px 8px 6px;">
+                <div style="font-size:7px;font-weight:600;color:#1C2B3A;margin-bottom:8px;">메가커피 점주방</div>
+                <!-- 글 목록 -->
+                <div style="background:#fff;border-radius:7px;padding:7px 8px;border:1px solid #E5E0D8;margin-bottom:5px;">
+                  <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
+                    <div style="width:14px;height:14px;border-radius:50%;background:#E8790C;display:flex;align-items:center;justify-content:center;font-size:6px;color:#fff;font-weight:700;">김</div>
+                    <div style="font-size:5px;color:#6B7280;">익명점주 · 3시간 전</div>
+                  </div>
+                  <div style="font-size:7px;font-weight:500;color:#1C2B3A;line-height:1.4;margin-bottom:4px;">로열티 인상 공문 받으셨나요?</div>
+                  <div style="display:flex;gap:6px;"><span style="font-size:5px;color:#9CA3AF;">💬 12</span><span style="font-size:5px;color:#9CA3AF;">👍 34</span></div>
                 </div>
-                <div class="preview-bar-line">
-                  <span class="preview-bar-who avg">평균</span>
-                  <div class="preview-bar-track"><div class="preview-bar-fill blue" style="width:63%;"></div></div>
-                  <span class="preview-bar-pct avg">21.0%</span>
+                <div style="background:#fff;border-radius:7px;padding:7px 8px;border:1px solid #E5E0D8;margin-bottom:5px;">
+                  <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
+                    <div style="width:14px;height:14px;border-radius:50%;background:#378ADD;display:flex;align-items:center;justify-content:center;font-size:6px;color:#fff;font-weight:700;">박</div>
+                    <div style="font-size:5px;color:#6B7280;">익명점주 · 5시간 전</div>
+                  </div>
+                  <div style="font-size:7px;font-weight:500;color:#1C2B3A;line-height:1.4;margin-bottom:4px;">배달수수료 다들 얼마 나왔어요?</div>
+                  <div style="display:flex;gap:6px;"><span style="font-size:5px;color:#9CA3AF;">💬 8</span><span style="font-size:5px;color:#9CA3AF;">👍 21</span></div>
+                </div>
+                <div style="background:#fff;border-radius:7px;padding:7px 8px;border:1px solid #E5E0D8;">
+                  <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
+                    <div style="width:14px;height:14px;border-radius:50%;background:#1D9E75;display:flex;align-items:center;justify-content:center;font-size:6px;color:#fff;font-weight:700;">이</div>
+                    <div style="font-size:5px;color:#6B7280;">익명점주 · 어제</div>
+                  </div>
+                  <div style="font-size:7px;font-weight:500;color:#1C2B3A;line-height:1.4;margin-bottom:4px;">식재료 단가 올랐는데 다들 그런가요?</div>
+                  <div style="display:flex;gap:6px;"><span style="font-size:5px;color:#9CA3AF;">💬 5</span><span style="font-size:5px;color:#9CA3AF;">👍 18</span></div>
                 </div>
               </div>
+              <!-- 하단바 -->
+              <div style="background:#fff;border-top:1px solid #E5E0D8;display:flex;height:24px;">
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/></svg>
+                  <div style="font-size:4px;color:#9CA3AF;">홈</div>
+                </div>
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  <div style="font-size:4px;color:#9CA3AF;">입력</div>
+                </div>
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#E8790C" stroke-width="2.5" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                  <div style="font-size:4px;color:#E8790C;font-weight:600;">점주방</div>
+                </div>
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <div style="font-size:4px;color:#9CA3AF;">마이</div>
+                </div>
+              </div>
             </div>
-            <div class="preview-bar-row">
-              <div class="preview-bar-label">
-                <span class="preview-bar-name">식재료비</span>
-                <span class="preview-bar-diff ok">▼ 0.5%</span>
-              </div>
-              <div class="preview-bars">
-                <div class="preview-bar-line">
-                  <span class="preview-bar-who my">내매장</span>
-                  <div class="preview-bar-track"><div class="preview-bar-fill orange" style="width:63%;"></div></div>
-                  <span class="preview-bar-pct my">31.5%</span>
-                </div>
-                <div class="preview-bar-line">
-                  <span class="preview-bar-who avg">평균</span>
-                  <div class="preview-bar-track"><div class="preview-bar-fill blue" style="width:64%;"></div></div>
-                  <span class="preview-bar-pct avg">32.0%</span>
-                </div>
-              </div>
+            <div style="height:8px;display:flex;align-items:center;justify-content:center;">
+              <div style="width:40px;height:2px;background:#333;border-radius:2px;"></div>
             </div>
           </div>
         </div>
 
-        <!-- 커뮤니티 화면 -->
-        <div id="preview-comm" class="preview-community hidden">
-          <div class="preview-comm-title">
-            💬 메가커피 점주방
-            <span class="badge badge-blue" style="font-size:9px;">인증 점주만</span>
-          </div>
-          <div class="preview-post">
-            <div class="preview-post-header">
-              <div class="preview-post-avatar" style="background:#E8790C;">김</div>
-              <div class="preview-post-meta">익명 점주 · 메가커피 · 3시간 전</div>
-            </div>
-            <div class="preview-post-title">로열티 인상 공문 받으셨나요? 단체 대응 필요할 것 같아요</div>
-            <div class="preview-post-stats">
-              <span class="preview-post-stat">💬 댓글 12</span>
-              <span class="preview-post-stat">👍 공감 34</span>
-            </div>
-          </div>
-          <div class="preview-post">
-            <div class="preview-post-header">
-              <div class="preview-post-avatar" style="background:#378ADD;">박</div>
-              <div class="preview-post-meta">익명 점주 · 메가커피 · 5시간 전</div>
-            </div>
-            <div class="preview-post-title">이번달 배달수수료 다들 얼마 나왔어요?</div>
-            <div class="preview-post-stats">
-              <span class="preview-post-stat">💬 댓글 8</span>
-              <span class="preview-post-stat">👍 공감 21</span>
-            </div>
-          </div>
-          <div class="preview-post">
-            <div class="preview-post-header">
-              <div class="preview-post-avatar" style="background:#1D9E75;">이</div>
-              <div class="preview-post-meta">익명 점주 · 메가커피 · 어제</div>
-            </div>
-            <div class="preview-post-title">식재료 단가 올랐는데 다른 분들도 그런가요?</div>
-            <div class="preview-post-stats">
-              <span class="preview-post-stat">💬 댓글 5</span>
-              <span class="preview-post-stat">👍 공감 18</span>
-            </div>
-          </div>
-        </div>
-        <!-- 하단 얇은 베젤 + 홈바 -->
-        <div style="background:#111;height:14px;display:flex;align-items:center;justify-content:center;">
-          <div style="width:60px;height:3px;background:#333;border-radius:2px;"></div>
-        </div>
-      </div>
       </div>
 
       <div class="landing-feats">
