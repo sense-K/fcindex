@@ -814,7 +814,7 @@ body {
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
           <div id="detail-avatar" style="width:32px;height:32px;border-radius:50%;background:var(--orange);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0;"></div>
           <div>
-            <div style="font-size:12px;font-weight:500;color:var(--navy);">익명 점주</div>
+            <div id="detail-author" style="font-size:12px;font-weight:500;color:var(--navy);">익명 점주</div>
             <div id="detail-meta" style="font-size:10px;color:var(--gray);"></div>
           </div>
         </div>
@@ -1091,6 +1091,10 @@ async function doSignup() {
   // 이메일 중복 체크
   const { data: emailCheck } = await sb.from('profiles').select('id').eq('email', email).maybeSingle();
   if (emailCheck) return showAlert('signup-alert', '이미 가입된 이메일이에요.', 'error');
+
+  // 닉네임 중복 체크
+  const { data: nickCheck } = await sb.from('profiles').select('id').eq('nickname', nick).maybeSingle();
+  if (nickCheck) return showAlert('signup-alert', '이미 사용 중인 닉네임이에요.', 'error');
 
   // 사업자번호 중복 체크
   const { data: dupCheck } = await sb.from('profiles').select('id').eq('biz_number', biz).maybeSingle();
@@ -1424,7 +1428,7 @@ async function loadCommunity() {
   document.getElementById('comm-brand-badge').textContent = brandName + ' 점주방';
 
   let query = sb.from('posts')
-    .select('id, author_id, brand_id, title, content, like_count, comment_count, created_at, is_anonymous, region')
+    .select('id, author_id, brand_id, title, content, like_count, comment_count, created_at, is_anonymous, region, nickname')
     .order('created_at', { ascending: false });
   if (currentProfile?.brand_id) {
     query = query.eq('brand_id', currentProfile.brand_id);
@@ -1445,7 +1449,7 @@ async function loadCommunity() {
     div.innerHTML = `
       <div class="post-top">
         <div class="post-avatar" style="background:${color};">익</div>
-        <div><div class="post-user">${p.region ? p.region + ' ' : ''}익명 점주</div><div class="post-brand">${currentBrand?.name||'전체'} · ${date}</div></div>
+        <div><div class="post-user">${authorLabel(p.nickname, p.region)}</div><div class="post-brand">${currentBrand?.name||'전체'} · ${date}</div></div>
       </div>
       <div class="post-title">${p.title}</div>
       <div class="post-footer"><span class="post-stat">💬 ${p.comment_count||0}</span><span class="post-stat">👍 ${p.like_count||0}</span></div>`;
@@ -1463,8 +1467,8 @@ function showPostDetail(p, color) {
   const date = new Date(p.created_at).toLocaleDateString('ko-KR');
   document.getElementById('detail-avatar').textContent = '익';
   document.getElementById('detail-avatar').style.background = color || 'var(--orange)';
-  const regionLabel = p.region ? p.region + ' · ' : '';
-  document.getElementById('detail-meta').textContent = regionLabel + (currentBrand?.name||'') + ' · ' + date;
+  document.getElementById('detail-author').textContent = authorLabel(p.nickname, p.region);
+  document.getElementById('detail-meta').textContent = (currentBrand?.name||'') + ' · ' + date;
   document.getElementById('detail-title').textContent = p.title;
   document.getElementById('detail-content').textContent = p.content;
   document.getElementById('detail-likes').textContent = p.like_count || 0;
@@ -1490,7 +1494,7 @@ function showPostDetail(p, color) {
 async function loadComments() {
   if (!currentPostId) return;
   const { data, error } = await sb.from('post_comments')
-    .select('id, author_id, content, created_at, region')
+    .select('id, author_id, content, created_at, region, nickname')
     .eq('post_id', currentPostId)
     .order('created_at', { ascending: true });
   const list = document.getElementById('comment-list');
@@ -1514,7 +1518,7 @@ async function loadComments() {
     div.className = 'comment-item';
     div.innerHTML = `
       <div class="comment-header">
-        <span class="comment-author">${c.region ? c.region + ' ' : ''}익명 점주</span>
+        <span class="comment-author">${authorLabel(c.nickname, c.region)}</span>
         <div style="display:flex;align-items:center;gap:8px;">
           <span class="comment-date">${date}</span>
           ${isMine ? `<button class="comment-delete-btn" onclick="deleteComment('${c.id}')">삭제</button>` : ''}
@@ -1534,7 +1538,8 @@ async function submitComment() {
     post_id: currentPostId,
     author_id: currentUser.id,
     content,
-    region: currentProfile?.region || null
+    region: currentProfile?.region || null,
+    nickname: currentProfile?.nickname || null
   });
   if (error) { alert('댓글 등록 실패: ' + error.message); return; }
   input.value = '';
@@ -1664,6 +1669,7 @@ async function submitPost() {
     author_id: currentUser.id,
     brand_id: currentProfile?.brand_id || null,
     region: currentProfile?.region || null,
+    nickname: currentProfile?.nickname || null,
     title, content, is_anonymous: true
   }).select();
 
@@ -1714,6 +1720,12 @@ async function updateStatus(userId, status) {
 }
 
 // ===== 유틸 =====
+function authorLabel(nickname, region) {
+  if (nickname && region) return `${nickname}_${region}`;
+  if (nickname) return nickname;
+  if (region) return `${region} 익명 점주`;
+  return '익명 점주';
+}
 function num(id) { return parseFloat(document.getElementById(id).value) || 0; }
 function numFmt(n) { return Math.round(n||0).toLocaleString('ko-KR'); }
 function pctFmt(n) { return (n||0).toFixed(1) + '%'; }
