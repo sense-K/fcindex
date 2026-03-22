@@ -506,6 +506,25 @@ body {
     </div>
   </div>
 
+  <!-- 비밀번호 재설정 -->
+  <div id="page-reset-password" class="page">
+    <nav class="nav"><div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div></nav>
+    <div class="container" style="padding-top:40px;">
+      <h2 style="font-family:'Paperlogy', sans-serif;font-size:26px;font-weight:900;margin-bottom:6px;">비밀번호 재설정</h2>
+      <p style="font-size:13px;color:var(--gray);margin-bottom:28px;">새로운 비밀번호를 입력해주세요</p>
+      <div id="reset-alert"></div>
+      <div class="form-group">
+        <label class="form-label">새 비밀번호</label>
+        <input class="form-input" type="password" id="reset-pw" placeholder="6자 이상">
+      </div>
+      <div class="form-group">
+        <label class="form-label">비밀번호 확인</label>
+        <input class="form-input" type="password" id="reset-pw2" placeholder="비밀번호 재입력">
+      </div>
+      <button class="btn btn-primary" onclick="doResetPassword()" style="margin-top:8px;">비밀번호 변경</button>
+    </div>
+  </div>
+
   <!-- 회원가입 -->
   <div id="page-signup" class="page">
     <nav class="nav"><div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div></nav>
@@ -900,7 +919,31 @@ let existingDataId = null;
 
 // ===== 초기화 =====
 async function init() {
+  // PASSWORD_RECOVERY 이벤트 감지 (비밀번호 재설정 링크 정상 클릭 시)
+  sb.auth.onAuthStateChange((event) => {
+    if (event === 'PASSWORD_RECOVERY') {
+      history.replaceState(null, '', window.location.pathname);
+      showPage('reset-password');
+    }
+  });
+
+  // getSession()을 먼저 호출해 DOM 파싱이 완료되도록 대기
   const { data: { session } } = await sb.auth.getSession();
+
+  const hash = window.location.hash;
+  const params = new URLSearchParams(hash.slice(1));
+
+  // 비밀번호 재설정 링크 오류 (만료 등) — await 이후라 global-tab-bar 존재함
+  if (params.get('error')) {
+    history.replaceState(null, '', window.location.pathname);
+    loadBrands();
+    showPage('login');
+    showAlert('login-alert', '비밀번호 재설정 링크가 만료됐어요. 다시 요청해주세요.', 'error');
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    return;
+  }
+
   if (session) {
     currentUser = session.user;
     await loadProfile();
@@ -1027,7 +1070,7 @@ const ADMIN_TABS = [
 
 function renderTabBar(activePage) {
   const bar = document.getElementById('global-tab-bar');
-  const noTabPages = ['landing', 'login', 'signup'];
+  const noTabPages = ['landing', 'login', 'signup', 'reset-password'];
   if (noTabPages.includes(activePage) || !currentUser) {
     bar.classList.add('hidden');
     return;
@@ -1046,6 +1089,11 @@ function renderTabBar(activePage) {
 
 // ===== 페이지 전환 =====
 function showPage(name) {
+  const restrictedPages = ['store-data', 'community'];
+  if (restrictedPages.includes(name) && currentProfile?.auth_status !== 'approved') {
+    showRestrictedPage(name);
+    return;
+  }
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const pg = document.getElementById('page-' + name);
   if (pg) { pg.classList.add('active'); window.scrollTo(0, 0); }
@@ -1055,6 +1103,23 @@ function showPage(name) {
   if (name === 'store-data') loadStoreDataPage();
   if (name === 'community') loadCommunity();
   if (name === 'admin') loadAdmin();
+}
+
+function showRestrictedPage(name) {
+  const labels = { 'store-data': '데이터 입력', 'community': '점주방' };
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const pg = document.getElementById('page-' + name);
+  if (pg) { pg.classList.add('active'); window.scrollTo(0, 0); }
+  renderTabBar(name);
+  const notice = `<div style="text-align:center;padding:80px 20px;">
+    <div style="font-size:40px;margin-bottom:16px;">🔒</div>
+    <div style="font-size:16px;font-weight:700;margin-bottom:8px;">${labels[name]}</div>
+    <div style="font-size:13px;color:var(--gray);">점주 인증 승인 후 이용 가능해요.<br>마이페이지에서 심사 상태를 확인해보세요.</div>
+    <button class="btn btn-outline btn-sm" style="margin-top:20px;width:auto;padding:10px 24px;" onclick="showPage('mypage')">마이페이지로 이동</button>
+  </div>`;
+  // 페이지 내 .container 전체를 안내 메시지로 교체
+  const container = pg?.querySelector('.container');
+  if (container) container.innerHTML = notice;
 }
 
 // ===== 로그인 =====
@@ -1070,6 +1135,19 @@ async function doLogin() {
   if (currentUser.email === ADMIN_EMAIL) return showPage('admin');
   if (currentProfile?.auth_status === 'approved') showPage('home');
   else showPage('mypage');
+}
+
+// ===== 비밀번호 재설정 =====
+async function doResetPassword() {
+  const pw = document.getElementById('reset-pw').value;
+  const pw2 = document.getElementById('reset-pw2').value;
+  if (!pw || pw.length < 6) return showAlert('reset-alert', '비밀번호는 6자 이상 입력해주세요.', 'error');
+  if (pw !== pw2) return showAlert('reset-alert', '비밀번호가 일치하지 않아요.', 'error');
+  const { error } = await sb.auth.updateUser({ password: pw });
+  if (error) return showAlert('reset-alert', '비밀번호 변경에 실패했어요. 링크가 만료됐을 수 있어요.', 'error');
+  showAlert('reset-alert', '비밀번호가 변경됐어요! 로그인 페이지로 이동합니다.', 'success');
+  await sb.auth.signOut();
+  setTimeout(() => showPage('login'), 2000);
 }
 
 // ===== 회원가입 =====
