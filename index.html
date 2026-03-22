@@ -264,6 +264,16 @@ body {
 /* 게시글 상세 */
 .post-detail-content { font-size:14px; line-height:1.8; color:var(--navy); white-space:pre-wrap; }
 
+/* 댓글 */
+.comment-item { padding:10px 0; border-bottom:0.5px solid var(--border); }
+.comment-item:last-child { border-bottom:none; }
+.comment-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+.comment-author { font-size:11px; font-weight:600; color:var(--navy); }
+.comment-date { font-size:10px; color:var(--gray); }
+.comment-text { font-size:13px; color:var(--navy); line-height:1.6; }
+.comment-delete-btn { font-size:10px; color:var(--gray); background:none; border:none; cursor:pointer; padding:0; font-family:'Paperlogy',sans-serif; }
+.comment-delete-btn:hover { color:#EF4444; }
+
 @media (max-width:768px) {
   .form-row { grid-template-columns:1fr; }
 }
@@ -608,6 +618,17 @@ body {
           <div id="compare-bars"></div>
         </div>
         <div id="warn-box" class="warn-box hidden"></div>
+        <!-- 월별 추이 차트 -->
+        <div class="card hidden" id="trend-chart-section">
+          <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+            <span>월별 추이</span>
+            <div style="display:flex;gap:10px;font-size:10px;color:var(--gray);">
+              <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--blue);margin-right:3px;vertical-align:middle;"></span>매출</span>
+              <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#16A34A;margin-right:3px;vertical-align:middle;"></span>순수익률</span>
+            </div>
+          </div>
+          <div id="trend-chart-svg-wrap"></div>
+        </div>
       </div>
       <div id="home-empty" class="hidden">
         <div class="empty-state">
@@ -743,9 +764,11 @@ body {
   <div id="page-post-detail" class="page">
     <nav class="nav">
       <div class="nav-logo" onclick="showPage('community')" style="cursor:pointer;">← 점주방</div>
+      <div class="nav-right" id="post-author-actions"></div>
     </nav>
     <div class="container">
-      <div class="card">
+      <!-- 본문 카드 -->
+      <div class="card" id="post-view-card">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
           <div id="detail-avatar" style="width:32px;height:32px;border-radius:50%;background:var(--orange);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0;"></div>
           <div>
@@ -762,6 +785,31 @@ body {
           <button style="display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:13px;cursor:pointer;font-family:'Paperlogy',sans-serif;">
             💬 <span id="detail-comments">0</span>
           </button>
+        </div>
+      </div>
+      <!-- 수정 카드 (숨김) -->
+      <div class="card hidden" id="post-edit-card">
+        <div class="card-title">게시글 수정</div>
+        <div class="form-group">
+          <label class="form-label">제목</label>
+          <input class="form-input" type="text" id="edit-title-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">내용</label>
+          <textarea class="form-input" id="edit-content-input" rows="6" style="resize:none;"></textarea>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-primary" onclick="saveEditPost()" style="flex:1;">저장</button>
+          <button class="btn btn-ghost" onclick="cancelEditPost()" style="flex:1;">취소</button>
+        </div>
+      </div>
+      <!-- 댓글 카드 -->
+      <div class="card" id="comment-section">
+        <div class="card-title">댓글 <span id="comment-count-label" style="color:var(--orange);font-weight:700;">0</span></div>
+        <div id="comment-list"></div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <input class="form-input" id="comment-input" placeholder="댓글을 입력해주세요" style="flex:1;">
+          <button class="btn btn-primary btn-sm" onclick="submitComment()" style="flex-shrink:0;width:auto;white-space:nowrap;">등록</button>
         </div>
       </div>
     </div>
@@ -1098,6 +1146,69 @@ async function loadHome() {
     tabs.appendChild(tab);
   });
   renderDashboard(recent[recent.length - 1]);
+  renderTrendChart(recent);
+}
+
+function renderTrendChart(data) {
+  const section = document.getElementById('trend-chart-section');
+  const wrap = document.getElementById('trend-chart-svg-wrap');
+  if (!section || !wrap || data.length < 2) {
+    section?.classList.add('hidden');
+    return;
+  }
+  section.classList.remove('hidden');
+
+  const W = 320, H = 130;
+  const PAD = { top: 24, right: 12, bottom: 28, left: 8 };
+  const innerW = W - PAD.left - PAD.right;
+  const innerH = H - PAD.top - PAD.bottom;
+
+  const revenues = data.map(d => d.revenue || 0);
+  const rates = data.map(d => d.net_profit_rate || 0);
+  const maxRev = Math.max(...revenues) * 1.15 || 1;
+  const maxRate = Math.max(...rates, 20) * 1.2 || 1;
+  const n = data.length;
+  const xStep = innerW / (n - 1);
+
+  const revPts = revenues.map((r, i) => [PAD.left + i * xStep, PAD.top + innerH - (r / maxRev) * innerH]);
+  const ratePts = rates.map((r, i) => [PAD.left + i * xStep, PAD.top + innerH - (r / maxRate) * innerH]);
+  const toPoly = pts => pts.map(p => p.join(',')).join(' ');
+
+  const areaBottom = PAD.top + innerH;
+  const areaPoints = revPts.map(p => p.join(',')).join(' ') + ` ${revPts[n-1][0]},${areaBottom} ${revPts[0][0]},${areaBottom}`;
+
+  const xLabels = data.map((d, i) => {
+    const x = PAD.left + i * xStep;
+    return `<text x="${x}" y="${H - 4}" text-anchor="middle" font-size="9" fill="#9CA3AF">${d.data_month}월</text>`;
+  }).join('');
+
+  const revDots = revPts.map((p, i) => {
+    const val = Math.round(revenues[i] / 10000);
+    return `<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="#378ADD" stroke="#fff" stroke-width="1.5"/>
+      <text x="${p[0]}" y="${p[1]-8}" text-anchor="middle" font-size="8" fill="#378ADD" font-weight="600">${val}만</text>`;
+  }).join('');
+
+  const rateDots = ratePts.map((p, i) => {
+    return `<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="#16A34A" stroke="#fff" stroke-width="1.5"/>
+      <text x="${p[0]}" y="${p[1]-7}" text-anchor="middle" font-size="8" fill="#16A34A" font-weight="600">${rates[i].toFixed(1)}%</text>`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;">
+      <defs>
+        <linearGradient id="revArea" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#378ADD" stop-opacity="0.12"/>
+          <stop offset="100%" stop-color="#378ADD" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <line x1="${PAD.left}" y1="${PAD.top + innerH * 0.5}" x2="${PAD.left + innerW}" y2="${PAD.top + innerH * 0.5}" stroke="#E5E0D8" stroke-width="0.5" stroke-dasharray="3,3"/>
+      <polygon points="${areaPoints}" fill="url(#revArea)"/>
+      <polyline points="${toPoly(revPts)}" fill="none" stroke="#378ADD" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      <polyline points="${toPoly(ratePts)}" fill="none" stroke="#16A34A" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="5,3"/>
+      ${revDots}
+      ${rateDots}
+      ${xLabels}
+    </svg>`;
 }
 
 function renderDashboard(d) {
@@ -1257,17 +1368,16 @@ async function loadMypage() {
 
 // ===== 커뮤니티 =====
 async function loadCommunity() {
-  if (!currentProfile) return;
   const brandName = currentBrand?.name || '전체';
   document.getElementById('comm-brand-badge').textContent = brandName + ' 점주방';
 
-  let query = sb.from('posts').select('*, profiles(nickname)').order('created_at', { ascending: false });
-  if (currentProfile.brand_id) {
+  let query = sb.from('posts')
+    .select('id, author_id, brand_id, title, content, like_count, comment_count, created_at, is_anonymous')
+    .order('created_at', { ascending: false });
+  if (currentProfile?.brand_id) {
     query = query.eq('brand_id', currentProfile.brand_id);
   }
   const { data, error } = await query;
-
-  console.log('posts data:', data, 'error:', error);
 
   const list = document.getElementById('post-list');
   const empty = document.getElementById('comm-empty');
@@ -1282,44 +1392,206 @@ async function loadCommunity() {
     div.className = 'post-card';
     div.innerHTML = `
       <div class="post-top">
-        <div class="post-avatar" style="background:${color};">${(p.profiles?.nickname||'익명')[0]}</div>
+        <div class="post-avatar" style="background:${color};">익</div>
         <div><div class="post-user">익명 점주</div><div class="post-brand">${currentBrand?.name||'전체'} · ${date}</div></div>
       </div>
       <div class="post-title">${p.title}</div>
-      <div class="post-preview">${p.content?.substring(0,80)}${p.content?.length>80?'...':''}</div>
-      <div class="post-footer"><span class="post-stat">댓글 ${p.comment_count||0}</span><span class="post-stat">공감 ${p.like_count||0}</span></div>`;
+      <div class="post-footer"><span class="post-stat">💬 ${p.comment_count||0}</span><span class="post-stat">👍 ${p.like_count||0}</span></div>`;
     div.onclick = () => showPostDetail(p, color);
     list.appendChild(div);
   });
 }
 
 let currentPostId = null;
+let currentPostAuthorId = null;
 
 function showPostDetail(p, color) {
   currentPostId = p.id;
+  currentPostAuthorId = p.author_id;
   const date = new Date(p.created_at).toLocaleDateString('ko-KR');
-  document.getElementById('detail-avatar').textContent = (p.profiles?.nickname||'익명')[0];
+  document.getElementById('detail-avatar').textContent = '익';
   document.getElementById('detail-avatar').style.background = color || 'var(--orange)';
   document.getElementById('detail-meta').textContent = (currentBrand?.name||'') + ' · ' + date;
   document.getElementById('detail-title').textContent = p.title;
   document.getElementById('detail-content').textContent = p.content;
   document.getElementById('detail-likes').textContent = p.like_count || 0;
   document.getElementById('detail-comments').textContent = p.comment_count || 0;
-  const btn = document.getElementById('detail-like-btn');
-  btn.style.borderColor = 'var(--border)';
-  btn.style.color = 'var(--navy)';
+  setLikeBtn(false); // DB 확인 전 기본값
+
+  // 삭제 버튼 — 본인 글 또는 관리자
+  const actions = document.getElementById('post-author-actions');
+  const isAuthor = currentUser && String(p.author_id) === String(currentUser.id);
+  const isAdmin  = currentUser?.email === ADMIN_EMAIL;
+  if (isAuthor || isAdmin) {
+    actions.innerHTML = `<button class="nav-btn" onclick="deletePost()" style="font-size:12px;color:#FCA5A5;">삭제</button>`;
+  } else {
+    actions.innerHTML = '';
+  }
+
+  document.getElementById('post-view-card').classList.remove('hidden');
+  document.getElementById('post-edit-card').classList.add('hidden');
   showPage('post-detail');
+  loadComments();
+  loadLikeStatus(p.id);
+}
+
+async function loadComments() {
+  if (!currentPostId) return;
+  const { data, error } = await sb.from('post_comments')
+    .select('id, author_id, content, created_at')
+    .eq('post_id', currentPostId)
+    .order('created_at', { ascending: true });
+  const list = document.getElementById('comment-list');
+  if (error) {
+    list.innerHTML = `<div style="padding:12px;font-size:12px;color:#DC2626;background:#FEF2F2;border-radius:8px;">⚠️ ${error.message}<br><span style="color:#6B7280;">supabase-rls.sql을 실행했는지 확인해주세요.</span></div>`;
+    document.getElementById('comment-count-label').textContent = 0;
+    return;
+  }
+  if (!data || data.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:16px 0;font-size:12px;color:var(--gray);">아직 댓글이 없어요. 첫 댓글을 남겨보세요!</div>';
+    document.getElementById('comment-count-label').textContent = 0;
+    return;
+  }
+  document.getElementById('comment-count-label').textContent = data.length;
+  document.getElementById('detail-comments').textContent = data.length;
+  list.innerHTML = '';
+  data.forEach(c => {
+    const date = new Date(c.created_at).toLocaleDateString('ko-KR');
+    const isMine = currentUser && c.author_id === currentUser.id;
+    const div = document.createElement('div');
+    div.className = 'comment-item';
+    div.innerHTML = `
+      <div class="comment-header">
+        <span class="comment-author">익명 점주</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="comment-date">${date}</span>
+          ${isMine ? `<button class="comment-delete-btn" onclick="deleteComment('${c.id}')">삭제</button>` : ''}
+        </div>
+      </div>
+      <div class="comment-text">${c.content}</div>`;
+    list.appendChild(div);
+  });
+}
+
+async function submitComment() {
+  const input = document.getElementById('comment-input');
+  const content = input.value.trim();
+  if (!content) return;
+  if (!currentUser || !currentPostId) return;
+  const { error } = await sb.from('post_comments').insert({
+    post_id: currentPostId,
+    author_id: currentUser.id,
+    content
+  });
+  if (error) { alert('댓글 등록 실패: ' + error.message); return; }
+  input.value = '';
+  // comment_count 업데이트
+  const { data: post } = await sb.from('posts').select('comment_count').eq('id', currentPostId).single();
+  const newCount = (post?.comment_count || 0) + 1;
+  await sb.from('posts').update({ comment_count: newCount }).eq('id', currentPostId);
+  document.getElementById('detail-comments').textContent = newCount;
+  loadComments();
+}
+
+async function deleteComment(commentId) {
+  if (!confirm('댓글을 삭제할까요?')) return;
+  await sb.from('post_comments').delete().eq('id', commentId);
+  const { data: post } = await sb.from('posts').select('comment_count').eq('id', currentPostId).single();
+  const newCount = Math.max((post?.comment_count || 1) - 1, 0);
+  await sb.from('posts').update({ comment_count: newCount }).eq('id', currentPostId);
+  document.getElementById('detail-comments').textContent = newCount;
+  loadComments();
+}
+
+function startEditPost() {
+  const title = document.getElementById('detail-title').textContent;
+  const content = document.getElementById('detail-content').textContent;
+  document.getElementById('edit-title-input').value = title;
+  document.getElementById('edit-content-input').value = content;
+  document.getElementById('post-view-card').classList.add('hidden');
+  document.getElementById('post-edit-card').classList.remove('hidden');
+}
+
+function cancelEditPost() {
+  document.getElementById('post-view-card').classList.remove('hidden');
+  document.getElementById('post-edit-card').classList.add('hidden');
+}
+
+async function saveEditPost() {
+  const title = document.getElementById('edit-title-input').value.trim();
+  const content = document.getElementById('edit-content-input').value.trim();
+  if (!title || !content) { alert('제목과 내용을 입력해주세요.'); return; }
+  const { error } = await sb.from('posts').update({ title, content }).eq('id', currentPostId);
+  if (error) { alert('수정 실패: ' + error.message); return; }
+  document.getElementById('detail-title').textContent = title;
+  document.getElementById('detail-content').textContent = content;
+  cancelEditPost();
+}
+
+async function deletePost() {
+  if (!currentPostId) { alert('게시글 ID를 찾을 수 없어요.'); return; }
+  if (!confirm('게시글을 삭제할까요? 삭제 후 복구할 수 없어요.')) return;
+  const { error } = await sb.from('posts').delete().eq('id', currentPostId);
+  if (error) {
+    alert('삭제 실패: ' + error.message);
+    return;
+  }
+  currentPostId = null;
+  showPage('community');
+  loadCommunity();
+}
+
+function setLikeBtn(liked) {
+  const btn = document.getElementById('detail-like-btn');
+  if (!btn) return;
+  if (liked) {
+    btn.style.borderColor = 'var(--orange)';
+    btn.style.color = 'var(--orange)';
+    btn.style.background = 'rgba(232,121,12,0.08)';
+  } else {
+    btn.style.borderColor = 'var(--border)';
+    btn.style.color = 'var(--navy)';
+    btn.style.background = '#fff';
+  }
+}
+
+async function loadLikeStatus(postId) {
+  if (!currentUser || !postId) return;
+  const { data } = await sb.from('post_likes')
+    .select('post_id')
+    .eq('post_id', postId)
+    .eq('user_id', currentUser.id)
+    .maybeSingle();
+  setLikeBtn(!!data);
 }
 
 async function toggleLike() {
-  if (!currentPostId) return;
-  const { data: post } = await sb.from('posts').select('like_count').eq('id', currentPostId).single();
-  const newCount = (post?.like_count || 0) + 1;
-  await sb.from('posts').update({ like_count: newCount }).eq('id', currentPostId);
-  document.getElementById('detail-likes').textContent = newCount;
-  const btn = document.getElementById('detail-like-btn');
-  btn.style.borderColor = 'var(--orange)';
-  btn.style.color = 'var(--orange)';
+  if (!currentPostId || !currentUser) return;
+  const { data: existing } = await sb.from('post_likes')
+    .select('post_id')
+    .eq('post_id', currentPostId)
+    .eq('user_id', currentUser.id)
+    .maybeSingle();
+
+  const countEl = document.getElementById('detail-likes');
+  const current = parseInt(countEl.textContent) || 0;
+
+  if (existing) {
+    // 좋아요 취소
+    await sb.from('post_likes').delete()
+      .eq('post_id', currentPostId).eq('user_id', currentUser.id);
+    const newCount = Math.max(current - 1, 0);
+    await sb.from('posts').update({ like_count: newCount }).eq('id', currentPostId);
+    countEl.textContent = newCount;
+    setLikeBtn(false);
+  } else {
+    // 좋아요
+    await sb.from('post_likes').insert({ post_id: currentPostId, user_id: currentUser.id });
+    const newCount = current + 1;
+    await sb.from('posts').update({ like_count: newCount }).eq('id', currentPostId);
+    countEl.textContent = newCount;
+    setLikeBtn(true);
+  }
 }
 
 function showWritePost() { document.getElementById('write-post-form').classList.remove('hidden'); }
