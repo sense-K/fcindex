@@ -917,23 +917,32 @@ let currentProfile = null;
 let currentBrand = null;
 let existingDataId = null;
 
+// createClient 직후 즉시 등록 — PASSWORD_RECOVERY 이벤트를 놓치지 않기 위함
+let _recoveryHandled = false;
+sb.auth.onAuthStateChange((event) => {
+  if (event === 'PASSWORD_RECOVERY' && !_recoveryHandled) {
+    _recoveryHandled = true;
+    history.replaceState(null, '', window.location.pathname);
+    // DOM이 준비된 후 실행
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    loadBrands();
+    showPage('reset-password');
+  }
+});
+
 // ===== 초기화 =====
 async function init() {
-  // PASSWORD_RECOVERY 이벤트 감지 (비밀번호 재설정 링크 정상 클릭 시)
-  sb.auth.onAuthStateChange((event) => {
-    if (event === 'PASSWORD_RECOVERY') {
-      history.replaceState(null, '', window.location.pathname);
-      showPage('reset-password');
-    }
-  });
-
   // getSession()을 먼저 호출해 DOM 파싱이 완료되도록 대기
   const { data: { session } } = await sb.auth.getSession();
+
+  // recovery 링크 처리 중이면 init 이후 처리 중단
+  if (_recoveryHandled) return;
 
   const hash = window.location.hash;
   const params = new URLSearchParams(hash.slice(1));
 
-  // 비밀번호 재설정 링크 오류 (만료 등) — await 이후라 global-tab-bar 존재함
+  // 비밀번호 재설정 링크 오류 (만료 등)
   if (params.get('error')) {
     history.replaceState(null, '', window.location.pathname);
     loadBrands();
