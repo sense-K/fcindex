@@ -1088,6 +1088,10 @@ async function doSignup() {
   if (pw.length < 6) return showAlert('signup-alert','비밀번호는 6자 이상이어야 해요.','error');
   if (biz.length !== 10 || !/^\d+$/.test(biz)) return showAlert('signup-alert','사업자등록번호는 숫자 10자리예요.','error');
 
+  // 이메일 중복 체크
+  const { data: emailCheck } = await sb.from('profiles').select('id').eq('email', email).maybeSingle();
+  if (emailCheck) return showAlert('signup-alert', '이미 가입된 이메일이에요.', 'error');
+
   // 사업자번호 중복 체크
   const { data: dupCheck } = await sb.from('profiles').select('id').eq('biz_number', biz).maybeSingle();
   if (dupCheck) return showAlert('signup-alert', '이미 가입된 사업자등록번호예요.', 'error');
