@@ -1416,7 +1416,7 @@ async function loadCommunity() {
   document.getElementById('comm-brand-badge').textContent = brandName + ' 점주방';
 
   let query = sb.from('posts')
-    .select('id, author_id, brand_id, title, content, like_count, comment_count, created_at, is_anonymous')
+    .select('id, author_id, brand_id, title, content, like_count, comment_count, created_at, is_anonymous, region')
     .order('created_at', { ascending: false });
   if (currentProfile?.brand_id) {
     query = query.eq('brand_id', currentProfile.brand_id);
@@ -1482,7 +1482,7 @@ function showPostDetail(p, color) {
 async function loadComments() {
   if (!currentPostId) return;
   const { data, error } = await sb.from('post_comments')
-    .select('id, author_id, content, created_at')
+    .select('id, author_id, content, created_at, region')
     .eq('post_id', currentPostId)
     .order('created_at', { ascending: true });
   const list = document.getElementById('comment-list');
@@ -1506,7 +1506,7 @@ async function loadComments() {
     div.className = 'comment-item';
     div.innerHTML = `
       <div class="comment-header">
-        <span class="comment-author">익명 점주</span>
+        <span class="comment-author">${c.region ? c.region + ' ' : ''}익명 점주</span>
         <div style="display:flex;align-items:center;gap:8px;">
           <span class="comment-date">${date}</span>
           ${isMine ? `<button class="comment-delete-btn" onclick="deleteComment('${c.id}')">삭제</button>` : ''}
@@ -1525,7 +1525,8 @@ async function submitComment() {
   const { error } = await sb.from('post_comments').insert({
     post_id: currentPostId,
     author_id: currentUser.id,
-    content
+    content,
+    region: currentProfile?.region || null
   });
   if (error) { alert('댓글 등록 실패: ' + error.message); return; }
   input.value = '';
