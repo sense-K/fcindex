@@ -1418,11 +1418,10 @@ function showPostDetail(p, color) {
   document.getElementById('detail-comments').textContent = p.comment_count || 0;
   setLikeBtn(false); // DB 확인 전 기본값
 
-  // 삭제 버튼 — 본인 글 또는 관리자
+  // 삭제 버튼 — 본인 글만
   const actions = document.getElementById('post-author-actions');
   const isAuthor = currentUser && String(p.author_id) === String(currentUser.id);
-  const isAdmin  = currentUser?.email === ADMIN_EMAIL;
-  if (isAuthor || isAdmin) {
+  if (isAuthor) {
     actions.innerHTML = `<button class="nav-btn" onclick="deletePost()" style="font-size:12px;color:#FCA5A5;">삭제</button>`;
   } else {
     actions.innerHTML = '';

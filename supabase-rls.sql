@@ -70,14 +70,12 @@ CREATE POLICY "인증 유저 게시글 업데이트"
   ON posts FOR UPDATE
   USING (auth.role() = 'authenticated');
 
--- 삭제: 작성자 본인 또는 관리자
+-- 삭제: 작성자 본인만
 DROP POLICY IF EXISTS "본인 또는 관리자 게시글 삭제" ON posts;
-CREATE POLICY "본인 또는 관리자 게시글 삭제"
+DROP POLICY IF EXISTS "본인 게시글 삭제" ON posts;
+CREATE POLICY "본인 게시글 삭제"
   ON posts FOR DELETE
-  USING (
-    auth.uid() = author_id
-    OR (SELECT email FROM auth.users WHERE id = auth.uid()) = 'zzabhm@gmail.com'
-  );
+  USING (auth.uid() = author_id);
 
 -- ── 4. is_dummy 컬럼 (없으면 추가) ───────────────────────
 ALTER TABLE posts         ADD COLUMN IF NOT EXISTS is_dummy boolean DEFAULT false;
