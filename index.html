@@ -561,7 +561,7 @@ body {
               <input id="brand-search" class="form-input" type="text" placeholder="브랜드 검색..." style="padding-left:36px;" oninput="filterBrands()">
             </div>
             <!-- 카테고리 필터 -->
-            <div id="brand-categories" style="display:flex;gap:6px;margin-top:10px;overflow-x:auto;padding-bottom:4px;">
+            <div id="brand-categories" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;">
               <button class="brand-cat-btn active" onclick="filterCategory('전체')" data-cat="전체">전체</button>
               <button class="brand-cat-btn" onclick="filterCategory('커피')" data-cat="커피">☕ 커피</button>
               <button class="brand-cat-btn" onclick="filterCategory('치킨')" data-cat="치킨">🍗 치킨</button>
