@@ -912,39 +912,33 @@ const ADMIN_EMAIL = 'zzabhm@gmail.com';
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// 스크립트 시작 시점에 해시 저장 (getSession이 처리하기 전)
+const _initParams = new URLSearchParams(window.location.hash.slice(1));
+
 let currentUser = null;
 let currentProfile = null;
 let currentBrand = null;
 let existingDataId = null;
 
-// createClient 직후 즉시 등록 — PASSWORD_RECOVERY 이벤트를 놓치지 않기 위함
-let _recoveryHandled = false;
-sb.auth.onAuthStateChange((event) => {
-  if (event === 'PASSWORD_RECOVERY' && !_recoveryHandled) {
-    _recoveryHandled = true;
-    history.replaceState(null, '', window.location.pathname);
-    // DOM이 준비된 후 실행
-    document.getElementById('loading').classList.add('hidden');
-    document.getElementById('app').classList.remove('hidden');
-    loadBrands();
-    showPage('reset-password');
-  }
-});
-
 // ===== 초기화 =====
 async function init() {
-  // getSession()을 먼저 호출해 DOM 파싱이 완료되도록 대기
+  // getSession() 호출 — await 이후엔 DOM 파싱 완료, global-tab-bar 존재
   const { data: { session } } = await sb.auth.getSession();
 
-  // recovery 링크 처리 중이면 init 이후 처리 중단
-  if (_recoveryHandled) return;
+  // 해시 제거
+  if (window.location.hash) history.replaceState(null, '', window.location.pathname);
 
-  const hash = window.location.hash;
-  const params = new URLSearchParams(hash.slice(1));
+  // 비밀번호 재설정 정상 링크 (type=recovery)
+  if (_initParams.get('type') === 'recovery') {
+    loadBrands();
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    showPage('reset-password');
+    return;
+  }
 
   // 비밀번호 재설정 링크 오류 (만료 등)
-  if (params.get('error')) {
-    history.replaceState(null, '', window.location.pathname);
+  if (_initParams.get('error')) {
     loadBrands();
     showPage('login');
     showAlert('login-alert', '비밀번호 재설정 링크가 만료됐어요. 다시 요청해주세요.', 'error');
