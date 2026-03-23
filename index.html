@@ -291,7 +291,7 @@ body {
   <div id="page-landing" class="page">
     <nav class="nav">
       <div class="nav-logo">프차<span>인덱스</span></div>
-      <div class="nav-right">
+      <div class="nav-right" id="landing-nav-right">
         <button class="nav-btn" onclick="showPage('login')">로그인</button>
         <button class="btn btn-primary btn-sm" onclick="showPage('signup')">시작하기</button>
       </div>
@@ -478,7 +478,7 @@ body {
         </div>
       </div>
 
-      <div class="landing-actions">
+      <div class="landing-actions" id="landing-actions">
         <button class="btn btn-primary" onclick="showPage('signup')" style="padding:14px;">무료로 시작하기 →</button>
         <button class="btn btn-outline" onclick="showPage('login')" style="padding:14px;">로그인</button>
       </div>
@@ -523,7 +523,7 @@ body {
 
   <!-- 재신청 페이지 -->
   <div id="page-reapply" class="page">
-    <nav class="nav"><div class="nav-logo" onclick="showPage('mypage')">프차<span>인덱스</span></div></nav>
+    <nav class="nav"><div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div></nav>
     <div class="container" style="padding-top:32px;">
       <h2 style="font-family:'Paperlogy', sans-serif;font-size:26px;font-weight:900;margin-bottom:6px;">점주 인증 재신청</h2>
       <p style="font-size:13px;color:var(--gray);margin-bottom:24px;">사업자등록증을 다시 제출해주세요. 검토 후 승인 처리돼요.</p>
@@ -692,7 +692,7 @@ body {
   <!-- 홈 -->
   <div id="page-home" class="page">
     <nav class="nav">
-      <div class="nav-logo">프차<span>인덱스</span></div>
+      <div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div>
       <div class="nav-right"><span class="nav-brand" id="home-brand-name">-</span></div>
     </nav>
     <div class="container">
@@ -745,7 +745,7 @@ body {
   <!-- 데이터 입력 -->
   <div id="page-store-data" class="page">
     <nav class="nav">
-      <div class="nav-logo">프차<span>인덱스</span></div>
+      <div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div>
       <div class="nav-right"><span class="badge" id="sd-mode-badge" style="background:var(--orange);color:#fff;">신규 입력</span></div>
     </nav>
     <div class="container">
@@ -802,7 +802,7 @@ body {
 
   <!-- 마이페이지 -->
   <div id="page-mypage" class="page">
-    <nav class="nav"><div class="nav-logo">프차<span>인덱스</span></div></nav>
+    <nav class="nav"><div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div></nav>
     <div class="container">
       <!-- 대기중 -->
       <div id="mp-pending" class="hidden">
@@ -834,7 +834,7 @@ body {
   <!-- 커뮤니티 목록 -->
   <div id="page-community" class="page">
     <nav class="nav">
-      <div class="nav-logo">프차<span>인덱스</span></div>
+      <div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div>
       <div class="nav-right">
         <span class="badge badge-blue" id="comm-brand-badge">-</span>
         <span class="badge" style="background:rgba(55,138,221,0.15);color:var(--blue);font-size:9px;">인증 점주만</span>
@@ -920,7 +920,7 @@ body {
   <!-- 어드민 -->
   <div id="page-admin" class="page">
     <nav class="nav">
-      <div class="nav-logo">프차<span>인덱스</span></div>
+      <div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div>
       <div class="nav-right"><span style="font-size:11px;color:rgba(255,255,255,0.5);">관리자 전용</span></div>
     </nav>
     <div class="container-wide">
@@ -1154,6 +1154,7 @@ function showPage(name) {
   if (name === 'community') loadCommunity();
   if (name === 'admin') loadAdmin();
   if (name === 'reapply') loadReapplyPage();
+  if (name === 'landing') renderLandingForUser();
 }
 
 function showRestrictedPage(name) {
@@ -1230,6 +1231,19 @@ async function doResetPassword() {
 }
 
 // ===== 재신청 =====
+function renderLandingForUser() {
+  const navRight = document.getElementById('landing-nav-right');
+  const actions = document.getElementById('landing-actions');
+  if (currentUser) {
+    const dest = currentUser.email === ADMIN_EMAIL ? 'admin' : (currentProfile?.auth_status === 'approved' ? 'home' : 'mypage');
+    navRight.innerHTML = `<button class="btn btn-primary btn-sm" onclick="showPage('${dest}')">앱으로 이동</button>`;
+    actions.innerHTML = `<button class="btn btn-primary" onclick="showPage('${dest}')" style="padding:14px;">앱으로 이동 →</button>`;
+  } else {
+    navRight.innerHTML = `<button class="nav-btn" onclick="showPage('login')">로그인</button><button class="btn btn-primary btn-sm" onclick="showPage('signup')">시작하기</button>`;
+    actions.innerHTML = `<button class="btn btn-primary" onclick="showPage('signup')" style="padding:14px;">무료로 시작하기 →</button><button class="btn btn-outline" onclick="showPage('login')" style="padding:14px;">로그인</button>`;
+  }
+}
+
 function loadReapplyPage() {
   document.getElementById('ra-nick').textContent = currentProfile?.nickname || '-';
   document.getElementById('ra-brand').textContent = currentBrand?.name || '-';
