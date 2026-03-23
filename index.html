@@ -292,8 +292,8 @@ body {
     <nav class="nav">
       <div class="nav-logo">프차<span>인덱스</span></div>
       <div class="nav-right" id="landing-nav-right">
-        <button class="nav-btn" onclick="showPage('login')">로그인</button>
-        <button class="btn btn-primary btn-sm" onclick="showPage('signup')">시작하기</button>
+        <button class="nav-btn" data-page="login">로그인</button>
+        <button class="btn btn-primary btn-sm" data-page="signup">시작하기</button>
       </div>
     </nav>
     <div class="landing-hero">
@@ -479,15 +479,15 @@ body {
       </div>
 
       <div class="landing-actions" id="landing-actions">
-        <button class="btn btn-primary" onclick="showPage('signup')" style="padding:14px;">무료로 시작하기 →</button>
-        <button class="btn btn-outline" onclick="showPage('login')" style="padding:14px;">로그인</button>
+        <button class="btn btn-primary" data-page="signup" style="padding:14px;">무료로 시작하기 →</button>
+        <button class="btn btn-outline" data-page="login" style="padding:14px;">로그인</button>
       </div>
     </div>
   </div>
 
   <!-- 로그인 -->
   <div id="page-login" class="page">
-    <nav class="nav"><div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div></nav>
+    <nav class="nav"><div class="nav-logo" data-page="landing">프차<span>인덱스</span></div></nav>
     <div class="container" style="padding-top:40px;">
       <h2 style="font-family:'Paperlogy', sans-serif;font-size:26px;font-weight:900;margin-bottom:6px;">로그인</h2>
       <p style="font-size:13px;color:var(--gray);margin-bottom:28px;">점주 전용 매장 수익 분석 서비스</p>
@@ -503,7 +503,7 @@ body {
       <button class="btn btn-primary" onclick="doLogin()" style="margin-top:8px;">로그인</button>
       <p style="text-align:right;margin-top:12px;"><span style="font-size:12px;color:var(--gray);cursor:pointer;text-decoration:underline;" onclick="showForgotPassword()">비밀번호를 잊으셨나요?</span></p>
       <hr class="divider">
-      <p style="text-align:center;font-size:13px;color:var(--gray);">아직 회원이 아니신가요? <span style="color:var(--orange);cursor:pointer;font-weight:500;" onclick="showPage('signup')">회원가입</span></p>
+      <p style="text-align:center;font-size:13px;color:var(--gray);">아직 회원이 아니신가요? <span style="color:var(--orange);cursor:pointer;font-weight:500;" data-page="signup">회원가입</span></p>
     </div>
 
     <!-- 비밀번호 재설정 이메일 입력 모달 -->
@@ -523,7 +523,7 @@ body {
 
   <!-- 재신청 페이지 -->
   <div id="page-reapply" class="page">
-    <nav class="nav"><div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div></nav>
+    <nav class="nav"><div class="nav-logo" data-page="landing">프차<span>인덱스</span></div></nav>
     <div class="container" style="padding-top:32px;">
       <h2 style="font-family:'Paperlogy', sans-serif;font-size:26px;font-weight:900;margin-bottom:6px;">점주 인증 재신청</h2>
       <p style="font-size:13px;color:var(--gray);margin-bottom:24px;">사업자등록증을 다시 제출해주세요. 검토 후 승인 처리돼요.</p>
@@ -543,13 +543,13 @@ body {
         <input class="form-input" type="file" id="ra-biz-img" accept="image/*">
       </div>
       <button class="btn btn-primary" onclick="doReapply()">재신청하기</button>
-      <button class="btn btn-ghost" onclick="showPage('mypage')" style="margin-top:8px;">취소</button>
+      <button class="btn btn-ghost" data-page="mypage" style="margin-top:8px;">취소</button>
     </div>
   </div>
 
   <!-- 비밀번호 재설정 -->
   <div id="page-reset-password" class="page">
-    <nav class="nav"><div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div></nav>
+    <nav class="nav"><div class="nav-logo" data-page="landing">프차<span>인덱스</span></div></nav>
     <div class="container" style="padding-top:40px;">
       <h2 style="font-family:'Paperlogy', sans-serif;font-size:26px;font-weight:900;margin-bottom:6px;">비밀번호 재설정</h2>
       <p style="font-size:13px;color:var(--gray);margin-bottom:28px;">새로운 비밀번호를 입력해주세요</p>
@@ -568,7 +568,7 @@ body {
 
   <!-- 회원가입 -->
   <div id="page-signup" class="page">
-    <nav class="nav"><div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div></nav>
+    <nav class="nav"><div class="nav-logo" data-page="landing">프차<span>인덱스</span></div></nav>
     <div class="container" style="padding-top:32px;">
       <h2 style="font-family:'Paperlogy', sans-serif;font-size:26px;font-weight:900;margin-bottom:6px;">회원가입</h2>
       <p style="font-size:13px;color:var(--gray);margin-bottom:24px;">사업자등록증으로 점주 인증을 진행해요</p>
@@ -685,14 +685,14 @@ body {
       </div>
       <button class="btn btn-primary" onclick="doSignup()" style="margin-top:8px;">가입하기</button>
       <hr class="divider">
-      <p style="text-align:center;font-size:13px;color:var(--gray);">이미 회원이신가요? <span style="color:var(--orange);cursor:pointer;font-weight:500;" onclick="showPage('login')">로그인</span></p>
+      <p style="text-align:center;font-size:13px;color:var(--gray);">이미 회원이신가요? <span style="color:var(--orange);cursor:pointer;font-weight:500;" data-page="login">로그인</span></p>
     </div>
   </div>
 
   <!-- 홈 -->
   <div id="page-home" class="page">
     <nav class="nav">
-      <div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div>
+      <div class="nav-logo" data-page="landing">프차<span>인덱스</span></div>
       <div class="nav-right"><span class="nav-brand" id="home-brand-name">-</span></div>
     </nav>
     <div class="container">
@@ -736,7 +736,7 @@ body {
           <div class="empty-icon">📊</div>
           <div class="empty-title">아직 데이터가 없어요</div>
           <div class="empty-desc">첫 번째 매장 데이터를 입력하면<br>브랜드 평균과 비교할 수 있어요.</div>
-          <button class="btn btn-primary" onclick="showPage('store-data')" style="width:auto;padding:12px 28px;">데이터 입력하기 →</button>
+          <button class="btn btn-primary" data-page="store-data" style="width:auto;padding:12px 28px;">데이터 입력하기 →</button>
         </div>
       </div>
     </div>
@@ -745,7 +745,7 @@ body {
   <!-- 데이터 입력 -->
   <div id="page-store-data" class="page">
     <nav class="nav">
-      <div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div>
+      <div class="nav-logo" data-page="landing">프차<span>인덱스</span></div>
       <div class="nav-right"><span class="badge" id="sd-mode-badge" style="background:var(--orange);color:#fff;">신규 입력</span></div>
     </nav>
     <div class="container">
@@ -796,13 +796,13 @@ body {
         <div style="text-align:right;"><div class="profit-value" id="sd-profit-val">0원</div><div class="profit-rate" id="sd-profit-rate">순수익률 0%</div></div>
       </div>
       <button class="btn btn-primary" id="sd-save-btn" onclick="saveStoreData()">저장하기</button>
-      <button class="btn btn-ghost" onclick="showPage('home')" style="margin-top:8px;">취소</button>
+      <button class="btn btn-ghost" data-page="home" style="margin-top:8px;">취소</button>
     </div>
     </div>
 
   <!-- 마이페이지 -->
   <div id="page-mypage" class="page">
-    <nav class="nav"><div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div></nav>
+    <nav class="nav"><div class="nav-logo" data-page="landing">프차<span>인덱스</span></div></nav>
     <div class="container">
       <!-- 대기중 -->
       <div id="mp-pending" class="hidden">
@@ -815,7 +815,7 @@ body {
       <!-- 반려 -->
       <div id="mp-rejected" class="hidden">
         <div class="alert alert-error" style="margin-bottom:12px;">가입이 반려됐어요. 사업자등록증을 확인 후 재신청해주세요.</div>
-        <button class="btn btn-primary" onclick="showPage('reapply')" style="margin-bottom:16px;">재신청하기</button>
+        <button class="btn btn-primary" data-page="reapply" style="margin-bottom:16px;">재신청하기</button>
       </div>
       <!-- 내 정보 -->
       <div class="card">
@@ -834,7 +834,7 @@ body {
   <!-- 커뮤니티 목록 -->
   <div id="page-community" class="page">
     <nav class="nav">
-      <div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div>
+      <div class="nav-logo" data-page="landing">프차<span>인덱스</span></div>
       <div class="nav-right">
         <span class="badge badge-blue" id="comm-brand-badge">-</span>
         <span class="badge" style="background:rgba(55,138,221,0.15);color:var(--blue);font-size:9px;">인증 점주만</span>
@@ -865,7 +865,7 @@ body {
   <!-- 게시글 상세 -->
   <div id="page-post-detail" class="page">
     <nav class="nav">
-      <div class="nav-logo" onclick="showPage('community')" style="cursor:pointer;">← 점주방</div>
+      <div class="nav-logo" data-page="community" style="cursor:pointer;">← 점주방</div>
       <div class="nav-right" id="post-author-actions"></div>
     </nav>
     <div class="container">
@@ -920,7 +920,7 @@ body {
   <!-- 어드민 -->
   <div id="page-admin" class="page">
     <nav class="nav">
-      <div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div>
+      <div class="nav-logo" data-page="landing">프차<span>인덱스</span></div>
       <div class="nav-right"><span style="font-size:11px;color:rgba(255,255,255,0.5);">관리자 전용</span></div>
     </nav>
     <div class="container-wide">
@@ -1131,7 +1131,7 @@ function renderTabBar(activePage) {
   // post-detail은 community가 active
   const activeKey = activePage === 'post-detail' ? 'community' : activePage;
   bar.innerHTML = tabs.map(t => `
-    <button class="tab-item${t.page === activeKey ? ' active' : ''}" onclick="showPage('${t.page}')">
+    <button class="tab-item${t.page === activeKey ? ' active' : ''}" data-page="${t.page}">
       <span class="tab-icon">${TAB_ICONS[t.page]}</span>
       <span class="tab-label">${t.label}</span>
     </button>`).join('');
@@ -1168,7 +1168,7 @@ function showRestrictedPage(name) {
     <div style="font-size:40px;margin-bottom:16px;">🔒</div>
     <div style="font-size:16px;font-weight:700;margin-bottom:8px;">${labels[name]}</div>
     <div style="font-size:13px;color:var(--gray);">점주 인증 승인 후 이용 가능해요.<br>마이페이지에서 심사 상태를 확인해보세요.</div>
-    <button class="btn btn-outline btn-sm" style="margin-top:20px;width:auto;padding:10px 24px;" onclick="showPage('mypage')">마이페이지로 이동</button>
+    <button class="btn btn-outline btn-sm" style="margin-top:20px;width:auto;padding:10px 24px;" data-page="mypage">마이페이지로 이동</button>
   </div>`;
   // 페이지 내 .container 전체를 안내 메시지로 교체
   const container = pg?.querySelector('.container');
@@ -1237,11 +1237,11 @@ function renderLandingForUser() {
   const actions = document.getElementById('landing-actions');
   if (currentUser) {
     const dest = currentUser.email === ADMIN_EMAIL ? 'admin' : (currentProfile?.auth_status === 'approved' ? 'home' : 'mypage');
-    navRight.innerHTML = `<button class="btn btn-primary btn-sm" onclick="showPage('${dest}')">앱으로 이동</button>`;
-    actions.innerHTML = `<button class="btn btn-primary" onclick="showPage('${dest}')" style="padding:14px;">앱으로 이동 →</button>`;
+    navRight.innerHTML = `<button class="btn btn-primary btn-sm" data-page="${dest}">앱으로 이동</button>`;
+    actions.innerHTML = `<button class="btn btn-primary" data-page="${dest}" style="padding:14px;">앱으로 이동 →</button>`;
   } else {
-    navRight.innerHTML = `<button class="nav-btn" onclick="showPage('login')">로그인</button><button class="btn btn-primary btn-sm" onclick="showPage('signup')">시작하기</button>`;
-    actions.innerHTML = `<button class="btn btn-primary" onclick="showPage('signup')" style="padding:14px;">무료로 시작하기 →</button><button class="btn btn-outline" onclick="showPage('login')" style="padding:14px;">로그인</button>`;
+    navRight.innerHTML = `<button class="nav-btn" data-page="login">로그인</button><button class="btn btn-primary btn-sm" data-page="signup">시작하기</button>`;
+    actions.innerHTML = `<button class="btn btn-primary" data-page="signup" style="padding:14px;">무료로 시작하기 →</button><button class="btn btn-outline" data-page="login" style="padding:14px;">로그인</button>`;
   }
 }
 
@@ -1975,6 +1975,12 @@ function showAlert(id, msg, type) {
   el.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
   if (type !== 'info') setTimeout(() => el.innerHTML = '', 4000);
 }
+
+// ===== 페이지 이동 이벤트 위임 =====
+document.addEventListener('click', e => {
+  const btn = e.target.closest('[data-page]');
+  if (btn) showPage(btn.dataset.page);
+});
 
 init();
 </script>
