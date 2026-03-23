@@ -822,7 +822,7 @@ body {
         <div class="card-title">내 정보</div>
         <div class="info-row"><span class="info-label">닉네임</span><span class="info-value" id="mp-nick">-</span></div>
         <div class="info-row"><span class="info-label">이메일</span><span class="info-value" id="mp-email">-</span></div>
-        <div class="info-row"><span class="info-label">브랜드</span><span class="info-value" id="mp-brand">-</span></div>
+        <div class="info-row"><span class="info-label">브랜드</span><span class="info-value" id="mp-brand">-</span><span id="mp-brand-edit"></span></div>
         <div class="info-row"><span class="info-label">매장 지역</span><span class="info-value" id="mp-region">-</span></div>
         <div class="info-row"><span class="info-label">사업자등록번호</span><span class="info-value" id="mp-biz">-</span></div>
         <div class="info-row"><span class="info-label">인증 상태</span><span id="mp-status">-</span></div>
@@ -1634,6 +1634,25 @@ async function loadMypage() {
     statusEl.innerHTML = '<span class="badge badge-rejected">반려</span>';
     document.getElementById('mp-rejected').classList.remove('hidden');
   }
+
+  // 어드민 브랜드 변경 드롭다운
+  const editEl = document.getElementById('mp-brand-edit');
+  if (currentUser?.email === ADMIN_EMAIL) {
+    const { data: brands } = await sb.from('brands').select('id, name, category').order('category').order('name');
+    const options = (brands || []).map(b =>
+      `<option value="${b.id}" ${b.id === currentProfile.brand_id ? 'selected' : ''}>${b.category} · ${b.name}</option>`
+    ).join('');
+    editEl.innerHTML = `<select class="form-select" style="margin-left:8px;font-size:12px;padding:4px 8px;height:auto;" onchange="adminChangeBrand(this.value)">${options}</select>`;
+  } else {
+    editEl.innerHTML = '';
+  }
+}
+
+async function adminChangeBrand(brandId) {
+  const { error } = await sb.from('profiles').update({ brand_id: brandId }).eq('id', currentUser.id);
+  if (error) return alert('브랜드 변경 실패: ' + error.message);
+  await loadProfile();
+  document.getElementById('mp-brand').textContent = currentBrand?.name || '-';
 }
 
 // ===== 커뮤니티 =====
