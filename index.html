@@ -1164,7 +1164,13 @@ async function sendResetEmail() {
   const { error } = await sb.auth.resetPasswordForEmail(email, {
     redirectTo: window.location.origin + window.location.pathname
   });
-  if (error) return showAlert('forgot-alert', '전송에 실패했어요. 이메일을 확인해주세요.', 'error');
+  if (error) {
+    const msg = error.message?.toLowerCase() || '';
+    if (msg.includes('rate limit') || msg.includes('too many') || msg.includes('over_email_send_rate_limit')) {
+      return showAlert('forgot-alert', '잠시 후 다시 시도해주세요. (이메일 발송 횟수 제한)', 'error');
+    }
+    return showAlert('forgot-alert', `전송 실패: ${error.message}`, 'error');
+  }
   showAlert('forgot-alert', '재설정 링크를 발송했어요. 이메일을 확인해주세요.', 'success');
   setTimeout(hideForgotPassword, 3000);
 }
