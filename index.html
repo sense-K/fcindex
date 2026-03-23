@@ -1615,6 +1615,20 @@ async function saveStoreData() {
 
 // ===== 마이페이지 =====
 async function loadMypage() {
+  const isAdmin = currentUser?.email === ADMIN_EMAIL;
+
+  // 어드민 브랜드 변경 드롭다운 (profile 유무와 무관하게 항상 렌더)
+  const editEl = document.getElementById('mp-brand-edit');
+  if (isAdmin) {
+    const { data: brands } = await sb.from('brands').select('id, name, category').order('category').order('name');
+    const options = (brands || []).map(b =>
+      `<option value="${b.id}" ${b.id === currentProfile?.brand_id ? 'selected' : ''}>${b.category} · ${b.name}</option>`
+    ).join('');
+    editEl.innerHTML = `<select class="form-select" style="margin-left:8px;font-size:12px;padding:4px 8px;height:auto;" onchange="adminChangeBrand(this.value)"><option value="">브랜드 선택</option>${options}</select>`;
+  } else {
+    editEl.innerHTML = '';
+  }
+
   if (!currentProfile) return;
   document.getElementById('mp-nick').textContent = currentProfile.nickname || '-';
   document.getElementById('mp-email').textContent = currentProfile.email || '-';
@@ -1634,22 +1648,16 @@ async function loadMypage() {
     statusEl.innerHTML = '<span class="badge badge-rejected">반려</span>';
     document.getElementById('mp-rejected').classList.remove('hidden');
   }
-
-  // 어드민 브랜드 변경 드롭다운
-  const editEl = document.getElementById('mp-brand-edit');
-  if (currentUser?.email === ADMIN_EMAIL) {
-    const { data: brands } = await sb.from('brands').select('id, name, category').order('category').order('name');
-    const options = (brands || []).map(b =>
-      `<option value="${b.id}" ${b.id === currentProfile.brand_id ? 'selected' : ''}>${b.category} · ${b.name}</option>`
-    ).join('');
-    editEl.innerHTML = `<select class="form-select" style="margin-left:8px;font-size:12px;padding:4px 8px;height:auto;" onchange="adminChangeBrand(this.value)">${options}</select>`;
-  } else {
-    editEl.innerHTML = '';
-  }
 }
 
 async function adminChangeBrand(brandId) {
-  const { error } = await sb.from('profiles').update({ brand_id: brandId }).eq('id', currentUser.id);
+  if (!brandId) return;
+  const { error } = await sb.from('profiles').upsert({
+    id: currentUser.id,
+    email: currentUser.email,
+    brand_id: brandId,
+    auth_status: 'approved'
+  }, { onConflict: 'id' });
   if (error) return alert('브랜드 변경 실패: ' + error.message);
   await loadProfile();
   document.getElementById('mp-brand').textContent = currentBrand?.name || '-';
