@@ -521,6 +521,32 @@ body {
     </div>
   </div>
 
+  <!-- 재신청 페이지 -->
+  <div id="page-reapply" class="page">
+    <nav class="nav"><div class="nav-logo" onclick="showPage('mypage')">프차<span>인덱스</span></div></nav>
+    <div class="container" style="padding-top:32px;">
+      <h2 style="font-family:'Paperlogy', sans-serif;font-size:26px;font-weight:900;margin-bottom:6px;">점주 인증 재신청</h2>
+      <p style="font-size:13px;color:var(--gray);margin-bottom:24px;">사업자등록증을 다시 제출해주세요. 검토 후 승인 처리돼요.</p>
+      <div id="reapply-alert"></div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">현재 정보</div>
+        <div class="info-row"><span class="info-label">닉네임</span><span class="info-value" id="ra-nick">-</span></div>
+        <div class="info-row"><span class="info-label">브랜드</span><span class="info-value" id="ra-brand">-</span></div>
+        <div class="info-row"><span class="info-label">지역</span><span class="info-value" id="ra-region">-</span></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">사업자등록번호 * (숫자만)</label>
+        <input class="form-input" type="text" id="ra-biz" placeholder="예: 1234567890" maxlength="10">
+      </div>
+      <div class="form-group">
+        <label class="form-label">사업자등록증 이미지 *</label>
+        <input class="form-input" type="file" id="ra-biz-img" accept="image/*">
+      </div>
+      <button class="btn btn-primary" onclick="doReapply()">재신청하기</button>
+      <button class="btn btn-ghost" onclick="showPage('mypage')" style="margin-top:8px;">취소</button>
+    </div>
+  </div>
+
   <!-- 비밀번호 재설정 -->
   <div id="page-reset-password" class="page">
     <nav class="nav"><div class="nav-logo" onclick="showPage('landing')">프차<span>인덱스</span></div></nav>
@@ -789,7 +815,7 @@ body {
       <!-- 반려 -->
       <div id="mp-rejected" class="hidden">
         <div class="alert alert-error" style="margin-bottom:12px;">가입이 반려됐어요. 사업자등록증을 확인 후 재신청해주세요.</div>
-        <button class="btn btn-primary" onclick="showPage('signup')" style="margin-bottom:16px;">재신청하기</button>
+        <button class="btn btn-primary" onclick="showPage('reapply')" style="margin-bottom:16px;">재신청하기</button>
       </div>
       <!-- 내 정보 -->
       <div class="card">
@@ -1094,7 +1120,7 @@ const ADMIN_TABS = [
 
 function renderTabBar(activePage) {
   const bar = document.getElementById('global-tab-bar');
-  const noTabPages = ['landing', 'login', 'signup', 'reset-password'];
+  const noTabPages = ['landing', 'login', 'signup', 'reset-password', 'reapply'];
   if (noTabPages.includes(activePage) || !currentUser) {
     bar.classList.add('hidden');
     return;
@@ -1127,6 +1153,7 @@ function showPage(name) {
   if (name === 'store-data') loadStoreDataPage();
   if (name === 'community') loadCommunity();
   if (name === 'admin') loadAdmin();
+  if (name === 'reapply') loadReapplyPage();
 }
 
 function showRestrictedPage(name) {
@@ -1200,6 +1227,48 @@ async function doResetPassword() {
   showAlert('reset-alert', '비밀번호가 변경됐어요! 로그인 페이지로 이동합니다.', 'success');
   await sb.auth.signOut();
   setTimeout(() => showPage('login'), 2000);
+}
+
+// ===== 재신청 =====
+function loadReapplyPage() {
+  document.getElementById('ra-nick').textContent = currentProfile?.nickname || '-';
+  document.getElementById('ra-brand').textContent = currentBrand?.name || '-';
+  document.getElementById('ra-region').textContent = currentProfile?.region || '-';
+  document.getElementById('ra-biz').value = currentProfile?.biz_number || '';
+  document.getElementById('ra-biz-img').value = '';
+  document.getElementById('reapply-alert').innerHTML = '';
+}
+
+async function doReapply() {
+  const biz = document.getElementById('ra-biz').value.trim().replace(/-/g, '');
+  const file = document.getElementById('ra-biz-img').files[0];
+  if (!biz || !file) return showAlert('reapply-alert', '사업자등록번호와 이미지를 모두 입력해주세요.', 'error');
+  if (biz.length !== 10 || !/^\d+$/.test(biz)) return showAlert('reapply-alert', '사업자등록번호는 숫자 10자리예요.', 'error');
+
+  // 다른 계정의 사업자번호 중복 체크
+  const { data: dupCheck } = await sb.from('profiles').select('id').eq('biz_number', biz).maybeSingle();
+  if (dupCheck && dupCheck.id !== currentUser.id) return showAlert('reapply-alert', '이미 가입된 사업자등록번호예요.', 'error');
+
+  showAlert('reapply-alert', '처리 중이에요...', 'info');
+
+  const ext = file.name.split('.').pop();
+  const filePath = `biz/${Date.now()}.${ext}`;
+  const { error: upErr } = await sb.storage.from('biz-images').upload(filePath, file);
+  if (upErr) return showAlert('reapply-alert', '이미지 업로드에 실패했어요: ' + upErr.message, 'error');
+
+  const { data: urlData } = sb.storage.from('biz-images').getPublicUrl(filePath);
+  const bizImageUrl = urlData.publicUrl;
+
+  const { error } = await sb.from('profiles').update({
+    biz_number: biz,
+    biz_image: bizImageUrl,
+    auth_status: 'pending'
+  }).eq('id', currentUser.id);
+
+  if (error) return showAlert('reapply-alert', '재신청에 실패했어요: ' + error.message, 'error');
+
+  await loadProfile();
+  showPage('mypage');
 }
 
 // ===== 회원가입 =====
