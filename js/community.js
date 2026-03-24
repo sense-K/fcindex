@@ -1,4 +1,5 @@
 // ===== 커뮤니티 =====
+let likeInProgress = false;
 async function loadCommunity() {
   const brandName = currentBrand?.name || '전체';
   document.getElementById('comm-brand-badge').textContent = brandName + ' 점주방';
@@ -94,10 +95,14 @@ async function loadComments() {
         <span class="comment-author">${authorLabel(c.nickname, c.region)}</span>
         <div style="display:flex;align-items:center;gap:8px;">
           <span class="comment-date">${date}</span>
-          ${isMine ? `<button class="comment-delete-btn" onclick="deleteComment('${c.id}')">삭제</button>` : ''}
+          ${isMine ? `<button class="comment-delete-btn">삭제</button>` : ''}
         </div>
       </div>
-      <div class="comment-text">${c.content}</div>`;
+      <div class="comment-text"></div>`;
+    div.querySelector('.comment-text').textContent = c.content;
+    if (isMine) {
+      div.querySelector('.comment-delete-btn').addEventListener('click', () => deleteComment(c.id));
+    }
     list.appendChild(div);
   });
 }
@@ -107,30 +112,35 @@ async function submitComment() {
   const content = input.value.trim();
   if (!content) return;
   if (!currentUser || !currentPostId) return;
-  const { error } = await sb.from('post_comments').insert({
-    post_id: currentPostId,
-    author_id: currentUser.id,
-    content,
-    region: currentProfile?.region || null,
-    nickname: currentProfile?.nickname || null
-  });
-  if (error) { alert('댓글 등록 실패: ' + error.message); return; }
-  input.value = '';
-  const { data: post } = await sb.from('posts').select('comment_count').eq('id', currentPostId).single();
-  const newCount = (post?.comment_count || 0) + 1;
-  await sb.from('posts').update({ comment_count: newCount }).eq('id', currentPostId);
-  document.getElementById('detail-comments').textContent = newCount;
-  loadComments();
+  const btn = document.getElementById('comment-submit-btn');
+  if (btn) btn.disabled = true;
+  try {
+    const { error } = await sb.from('post_comments').insert({
+      post_id: currentPostId,
+      author_id: currentUser.id,
+      content,
+      region: currentProfile?.region || null,
+      nickname: currentProfile?.nickname || null
+    });
+    if (error) { alert('댓글 등록 실패: ' + error.message); return; }
+    input.value = '';
+    const { data: post } = await sb.from('posts').select('comment_count').eq('id', currentPostId).single();
+    const newCount = (post?.comment_count || 0) + 1;
+    await sb.from('posts').update({ comment_count: newCount }).eq('id', currentPostId);
+    await loadComments();
+  } finally {
+    if (btn) btn.disabled = false;
+  }
 }
 
 async function deleteComment(commentId) {
   if (!confirm('댓글을 삭제할까요?')) return;
-  await sb.from('post_comments').delete().eq('id', commentId);
+  const { error } = await sb.from('post_comments').delete().eq('id', commentId);
+  if (error) { alert('댓글 삭제 실패: ' + error.message); return; }
   const { data: post } = await sb.from('posts').select('comment_count').eq('id', currentPostId).single();
   const newCount = Math.max((post?.comment_count || 1) - 1, 0);
   await sb.from('posts').update({ comment_count: newCount }).eq('id', currentPostId);
-  document.getElementById('detail-comments').textContent = newCount;
-  loadComments();
+  await loadComments();
 }
 
 function startEditPost() {
@@ -150,9 +160,9 @@ function cancelEditPost() {
 async function saveEditPost() {
   const title = document.getElementById('edit-title-input').value.trim();
   const content = document.getElementById('edit-content-input').value.trim();
-  if (!title || !content) { alert('제목과 내용을 입력해주세요.'); return; }
+  if (!title || !content) { showAlert('post-edit-alert', '제목과 내용을 입력해주세요.', 'error'); return; }
   const { error } = await sb.from('posts').update({ title, content }).eq('id', currentPostId);
-  if (error) { alert('수정 실패: ' + error.message); return; }
+  if (error) { showAlert('post-edit-alert', '수정 실패: ' + error.message, 'error'); return; }
   document.getElementById('detail-title').textContent = title;
   document.getElementById('detail-content').textContent = content;
   cancelEditPost();
@@ -194,6 +204,9 @@ async function loadLikeStatus(postId) {
 
 async function toggleLike() {
   if (!currentPostId || !currentUser) return;
+  if (likeInProgress) return;
+  likeInProgress = true;
+  try {
   const { data: existing } = await sb.from('post_likes')
     .select('post_id')
     .eq('post_id', currentPostId)
@@ -217,6 +230,9 @@ async function toggleLike() {
     countEl.textContent = newCount;
     setLikeBtn(true);
   }
+  } finally {
+    likeInProgress = false;
+  }
 }
 
 function showWritePost() { document.getElementById('write-post-form').classList.remove('hidden'); }
@@ -230,8 +246,8 @@ function hideWritePost() {
 async function submitPost() {
   const title = document.getElementById('post-title').value.trim();
   const content = document.getElementById('post-content').value.trim();
-  if (!title || !content) return alert('제목과 내용을 입력해주세요.');
-  if (!currentUser) return alert('로그인이 필요해요.');
+  if (!title || !content) return showAlert('comm-alert', '제목과 내용을 입력해주세요.', 'error');
+  if (!currentUser) return showAlert('comm-alert', '로그인이 필요해요.', 'error');
 
   const { data, error } = await sb.from('posts').insert({
     author_id: currentUser.id,
@@ -241,7 +257,7 @@ async function submitPost() {
     title, content, is_anonymous: true
   }).select();
 
-  if (error) { alert('글 등록 실패: ' + error.message); return; }
+  if (error) { showAlert('comm-alert', '글 등록 실패: ' + error.message, 'error'); return; }
   hideWritePost();
   loadCommunity();
 }

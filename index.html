@@ -3,7 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>프차인덱스</title>
+<title>프차인덱스 - 프랜차이즈 수익 비교 분석</title>
+<meta name="description" content="내 매장 수익을 브랜드 평균과 비교하고, 점주 커뮤니티에서 솔직한 정보를 나눠보세요. 프랜차이즈 점주를 위한 수익 분석 플랫폼.">
+<meta property="og:title" content="프차인덱스 - 프랜차이즈 수익 비교 분석">
+<meta property="og:description" content="내 매장 수익을 브랜드 평균과 비교하고, 점주 커뮤니티에서 솔직한 정보를 나눠보세요.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ko_KR">
+<meta name="robots" content="index, follow">
 <link href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -846,6 +852,7 @@ body {
         <div class="card-title">익명으로 글 쓰기</div>
         <div class="form-group"><label class="form-label">제목</label><input class="form-input" type="text" id="post-title" placeholder="제목을 입력해주세요"></div>
         <div class="form-group"><label class="form-label">내용</label><textarea class="form-input" id="post-content" rows="4" placeholder="내용을 입력해주세요" style="resize:none;"></textarea></div>
+        <div id="comm-alert"></div>
         <div style="display:flex;gap:8px;">
           <button class="btn btn-primary" onclick="submitPost()" style="flex:1;">등록</button>
           <button class="btn btn-ghost" onclick="hideWritePost()" style="flex:1;">취소</button>
@@ -900,6 +907,7 @@ body {
           <label class="form-label">내용</label>
           <textarea class="form-input" id="edit-content-input" rows="6" style="resize:none;"></textarea>
         </div>
+        <div id="post-edit-alert"></div>
         <div style="display:flex;gap:8px;">
           <button class="btn btn-primary" onclick="saveEditPost()" style="flex:1;">저장</button>
           <button class="btn btn-ghost" onclick="cancelEditPost()" style="flex:1;">취소</button>
@@ -911,7 +919,7 @@ body {
         <div id="comment-list"></div>
         <div style="display:flex;gap:8px;margin-top:12px;">
           <input class="form-input" id="comment-input" placeholder="댓글을 입력해주세요" style="flex:1;">
-          <button class="btn btn-primary btn-sm" onclick="submitComment()" style="flex-shrink:0;width:auto;white-space:nowrap;">등록</button>
+          <button class="btn btn-primary btn-sm" id="comment-submit-btn" onclick="submitComment()" style="flex-shrink:0;width:auto;white-space:nowrap;">등록</button>
         </div>
       </div>
     </div>

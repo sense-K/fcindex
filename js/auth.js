@@ -21,7 +21,7 @@ async function init() {
     if (access_token && refresh_token) {
       await sb.auth.setSession({ access_token, refresh_token });
     }
-    loadBrands();
+    await loadBrands();
     document.getElementById('loading').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
     showPage('reset-password');
@@ -30,7 +30,7 @@ async function init() {
 
   // 비밀번호 재설정 링크 오류 (만료 등)
   if (_initParams.get('error')) {
-    loadBrands();
+    await loadBrands();
     showPage('login');
     showAlert('login-alert', '비밀번호 재설정 링크가 만료됐어요. 다시 요청해주세요.', 'error');
     document.getElementById('loading').classList.add('hidden');
@@ -51,9 +51,9 @@ async function init() {
   } else {
     showPage('landing');
   }
+  await loadBrands();
   document.getElementById('loading').classList.add('hidden');
   document.getElementById('app').classList.remove('hidden');
-  loadBrands();
 }
 
 // ===== 로그인 =====
@@ -71,6 +71,7 @@ function hideForgotPassword() {
 async function sendResetEmail() {
   const email = document.getElementById('forgot-email').value.trim();
   if (!email) return showAlert('forgot-alert', '이메일을 입력해주세요.', 'error');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showAlert('forgot-alert', '올바른 이메일 형식이 아니에요.', 'error');
   const { error } = await sb.auth.resetPasswordForEmail(email, {
     redirectTo: window.location.origin + window.location.pathname
   });

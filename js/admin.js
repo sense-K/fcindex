@@ -35,6 +35,14 @@ async function loadAdmin() {
 }
 
 async function updateStatus(userId, status) {
-  await sb.from('profiles').update({ auth_status: status }).eq('id', userId);
-  loadAdmin();
+  if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
+    alert('관리자만 처리할 수 있어요.');
+    return;
+  }
+  const { error } = await sb.from('profiles').update({ auth_status: status }).eq('id', userId);
+  if (error) {
+    alert('처리 실패: ' + error.message);
+    return;
+  }
+  await loadAdmin();
 }

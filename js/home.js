@@ -124,8 +124,8 @@ function renderDashboard(d) {
     { name: '기타', my: d.other_rate, avg: avg?.avg_other_rate },
   ];
   const bars = document.getElementById('compare-bars');
-  bars.innerHTML = '';
   const warns = [];
+  const rows = [];
   items.forEach(item => {
     const diff = item.avg ? (item.my - item.avg) : 0;
     const scale = 50;
@@ -134,13 +134,14 @@ function renderDashboard(d) {
     const diffClass = diff > 0 ? 'up' : diff < 0 ? 'ok' : 'same';
     const diffText = diff > 0 ? `▲ ${diff.toFixed(1)}%` : diff < 0 ? `▼ ${Math.abs(diff).toFixed(1)}%` : '평균 수준';
     if (diff > 3) warns.push(`${item.name}율이 브랜드 평균보다 ${diff.toFixed(1)}% 높아요`);
-    bars.innerHTML += `
+    rows.push(`
       <div class="compare-row">
         <div class="compare-meta"><span class="compare-name">${item.name}</span><span class="compare-diff ${diffClass}">${diffText}</span></div>
         <div class="bar-row"><div class="bar-label-small" style="color:var(--orange);font-size:9px;">내 매장</div><div class="bar-track"><div class="bar-fill orange" style="width:${myW}%"></div></div><div class="bar-pct" style="color:var(--orange);">${pctFmt(item.my)}</div></div>
         <div class="bar-row"><div class="bar-label-small" style="color:var(--blue);font-size:9px;">평균</div><div class="bar-track"><div class="bar-fill blue" style="width:${avgW}%"></div></div><div class="bar-pct" style="color:var(--blue);">${item.avg ? pctFmt(item.avg) : '-'}</div></div>
-      </div>`;
+      </div>`);
   });
+  bars.innerHTML = rows.join('');
   const wb = document.getElementById('warn-box');
   if (warns.length > 0) { wb.classList.remove('hidden'); wb.textContent = '⚠️ ' + warns[0]; }
   else { wb.classList.add('hidden'); }

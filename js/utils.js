@@ -4,7 +4,11 @@ function pctFmt(n) { return (n || 0).toFixed(1) + '%'; }
 
 function showAlert(id, msg, type) {
   const el = document.getElementById(id);
-  el.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+  const div = document.createElement('div');
+  div.className = `alert alert-${type}`;
+  div.textContent = msg;
+  el.innerHTML = '';
+  el.appendChild(div);
   if (type !== 'info') setTimeout(() => el.innerHTML = '', 4000);
 }
 

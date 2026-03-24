@@ -42,13 +42,19 @@ function renderBrandList(brands) {
   }
   const catEmoji = { '커피':'☕', '치킨':'🍗', '버거':'🍔', '한식':'🍱', '피자':'🍕', '디저트':'🧋', '편의점':'🏪', '기타':'🏬' };
   list.innerHTML = brands.map(b => `
-    <div class="brand-item" onclick="selectBrand('${b.id}','${b.name}','${b.category}')">
+    <div class="brand-item" data-brand-id="${b.id}">
       <div>
-        <div class="brand-item-name">${b.name}</div>
-        <div class="brand-item-cat">${catEmoji[b.category] || '🏬'} ${b.category}</div>
+        <div class="brand-item-name"></div>
+        <div class="brand-item-cat"></div>
       </div>
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--border)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </div>`).join('');
+  list.querySelectorAll('.brand-item').forEach((el, i) => {
+    const b = brands[i];
+    el.querySelector('.brand-item-name').textContent = b.name;
+    el.querySelector('.brand-item-cat').textContent = (catEmoji[b.category] || '🏬') + ' ' + b.category;
+    el.addEventListener('click', () => selectBrand(b.id, b.name, b.category));
+  });
 }
 
 function selectBrand(id, name, category) {
