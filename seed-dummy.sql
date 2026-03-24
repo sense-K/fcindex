@@ -19,6 +19,15 @@ DECLARE
   i           int;
   j           int;
   v_cmt_count int;
+  v_nick_bases text[] := ARRAY[
+    '커피사랑', '치킨마스터', '새벽사장님', '열정점주', '알뜰사장',
+    '단골만들기', '오늘도영업', '배달달인', '맛집도전중', '아메리카노러버',
+    '따뜻한라떼', '황금손사장', '꼼꼼한점주', '성실한사장', '파이팅사장님',
+    '수익극대화', '직원사랑해', '친절한매장', '아침여는가게', '월세뚝딱',
+    '흑자도전기', '단골왕', '서비스최고', '청결달인', '비용절감중',
+    '매출쑥쑥', '점심타임왕', '야간사장님', '계절메뉴달인', '가맹점주'
+  ];
+  v_nick_counter int := 0;
 
   -- ── 게시글 제목 50개 ──────────────────────────────────────
   v_titles text[] := ARRAY[
@@ -160,6 +169,7 @@ BEGIN
 
     FOR i IN 1..30 LOOP
       v_user_id := gen_random_uuid();
+      v_nick_counter := v_nick_counter + 1;
 
       -- auth.users 등록 (비밀번호는 사용하지 않으므로 고정 bcrypt hash)
       INSERT INTO auth.users (
@@ -190,7 +200,8 @@ BEGIN
       ) VALUES (
         v_user_id,
         'dummy_' || left(v_user_id::text, 8) || '_' || i || '@fcindex.dummy',
-        '익명점주' || (1000 + floor(random() * 9000)::int)::text,
+        v_nick_bases[((v_nick_counter - 1) % array_length(v_nick_bases, 1)) + 1]
+          || (10 + (v_nick_counter / array_length(v_nick_bases, 1)))::text,
         v_brand.id,
         'approved',
         left(replace(gen_random_uuid()::text, '-', ''), 10),
