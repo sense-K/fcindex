@@ -8,15 +8,15 @@ const TAB_ICONS = {
 };
 
 const NORMAL_TABS = [
-  { page: 'home', label: '홈' },
-  { page: 'store-data', label: '데이터 입력' },
+  { page: 'store-data', label: '매출 기록' },
+  { page: 'home', label: '분석' },
   { page: 'community', label: '점주방' },
   { page: 'mypage', label: '마이페이지' },
 ];
 
 const ADMIN_TABS = [
-  { page: 'home', label: '홈' },
-  { page: 'store-data', label: '데이터 입력' },
+  { page: 'store-data', label: '매출 기록' },
+  { page: 'home', label: '분석' },
   { page: 'community', label: '점주방' },
   { page: 'mypage', label: '마이페이지' },
   { page: 'admin', label: '관리자' },
@@ -71,7 +71,7 @@ function showPage(name) {
 }
 
 function showRestrictedPage(name) {
-  const labels = { 'store-data': '데이터 입력', 'community': '점주방' };
+  const labels = { 'store-data': '매출 기록', 'community': '점주방' };
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const pg = document.getElementById('page-' + name);
   if (pg) { pg.classList.add('active'); window.scrollTo(0, 0); }

@@ -380,12 +380,12 @@ body {
               <!-- 하단바 -->
               <div style="background:#fff;border-top:1px solid #E5E0D8;display:flex;height:24px;">
                 <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;">
-                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#E8790C" stroke-width="2.5" stroke-linecap="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/></svg>
-                  <div style="font-size:4px;color:#E8790C;font-weight:600;">홈</div>
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#E8790C" stroke-width="2.5" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  <div style="font-size:4px;color:#E8790C;font-weight:600;">매출기록</div>
                 </div>
                 <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;">
-                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                  <div style="font-size:4px;color:#9CA3AF;">입력</div>
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/></svg>
+                  <div style="font-size:4px;color:#9CA3AF;">분석</div>
                 </div>
                 <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;">
                   <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
@@ -448,12 +448,12 @@ body {
               <!-- 하단바 -->
               <div style="background:#fff;border-top:1px solid #E5E0D8;display:flex;height:24px;">
                 <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;">
-                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/></svg>
-                  <div style="font-size:4px;color:#9CA3AF;">홈</div>
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  <div style="font-size:4px;color:#9CA3AF;">매출기록</div>
                 </div>
                 <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;">
-                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                  <div style="font-size:4px;color:#9CA3AF;">입력</div>
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/></svg>
+                  <div style="font-size:4px;color:#9CA3AF;">분석</div>
                 </div>
                 <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;">
                   <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#E8790C" stroke-width="2.5" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
@@ -740,21 +740,22 @@ body {
       <div id="home-empty" class="hidden">
         <div class="empty-state">
           <div class="empty-icon">📊</div>
-          <div class="empty-title">아직 데이터가 없어요</div>
-          <div class="empty-desc">첫 번째 매장 데이터를 입력하면<br>브랜드 평균과 비교할 수 있어요.</div>
-          <button class="btn btn-primary" data-page="store-data" style="width:auto;padding:12px 28px;">데이터 입력하기 →</button>
+          <div class="empty-title">아직 기록된 매출이 없어요</div>
+          <div class="empty-desc">이번 달 매출을 기록하면<br>브랜드 평균과 바로 비교해드려요.</div>
+          <button class="btn btn-primary" data-page="store-data" style="width:auto;padding:12px 28px;">매출 기록하기 →</button>
         </div>
       </div>
     </div>
     </div>
 
-  <!-- 데이터 입력 -->
+  <!-- 매출 기록 -->
   <div id="page-store-data" class="page">
     <nav class="nav">
       <div class="nav-logo" data-page="landing">프차<span>인덱스</span></div>
       <div class="nav-right"><span class="badge" id="sd-mode-badge" style="background:var(--orange);color:#fff;">신규 입력</span></div>
     </nav>
     <div class="container">
+      <p style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px;margin-top:4px;">이달 매출을 기록하면 브랜드 평균과 비교해드려요</p>
       <p style="font-size:11px;color:var(--gray);background:var(--light);padding:10px 14px;border-radius:var(--r-sm);margin-bottom:16px;">🔒 입력하신 데이터는 본인만 확인 가능해요. 브랜드 평균 비교에만 익명으로 반영돼요.</p>
       <div id="sd-alert"></div>
       <div class="card">
