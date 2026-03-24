@@ -11,8 +11,10 @@ async function loadProfile() {
 async function init() {
   const { data: { session } } = await sb.auth.getSession();
 
-  // 해시 제거
-  if (window.location.hash) history.replaceState(null, '', window.location.pathname);
+  // 토큰이 포함된 해시(비밀번호 재설정 등)만 제거, 페이지 해시는 유지
+  if (window.location.hash && window.location.hash.includes('=')) {
+    history.replaceState(null, '', window.location.pathname);
+  }
 
   // 비밀번호 재설정 정상 링크 (type=recovery)
   if (_initParams.get('type') === 'recovery') {
@@ -41,10 +43,18 @@ async function init() {
   if (session) {
     currentUser = session.user;
     await loadProfile();
+
+    // 새로고침 시 마지막 페이지 복원
+    const savedPage = window.location.hash.slice(1);
+    const adminPages = ['admin'];
+    const approvedPages = ['home', 'store-data', 'community', 'mypage'];
+
     if (currentUser.email === ADMIN_EMAIL) {
-      showPage('admin');
+      const target = [...adminPages, ...approvedPages].includes(savedPage) ? savedPage : 'admin';
+      showPage(target);
     } else if (currentProfile?.auth_status === 'approved') {
-      showPage('home');
+      const target = approvedPages.includes(savedPage) ? savedPage : 'home';
+      showPage(target);
     } else {
       showPage('mypage');
     }

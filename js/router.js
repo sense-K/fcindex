@@ -48,6 +48,15 @@ function showPage(name) {
     showRestrictedPage(name);
     return;
   }
+
+  // URL 해시 업데이트 (새로고침 시 복원용)
+  const noHashPages = ['landing', 'login', 'signup', 'reset-password', 'reapply'];
+  if (!noHashPages.includes(name)) {
+    history.replaceState(null, '', '#' + name);
+  } else {
+    history.replaceState(null, '', window.location.pathname);
+  }
+
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const pg = document.getElementById('page-' + name);
   if (pg) { pg.classList.add('active'); window.scrollTo(0, 0); }
