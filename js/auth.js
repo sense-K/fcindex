@@ -1,7 +1,7 @@
 // ===== 프로필 로드 =====
 async function loadProfile() {
   const { data } = await sb.from('profiles')
-    .select('*, brands(name, avg_labor_rate, avg_material_rate, avg_rent_rate, avg_delivery_rate, avg_utility_rate, avg_royalty_rate, avg_other_rate, avg_net_profit_rate)')
+    .select('*, brands(name, category, avg_labor_rate, avg_material_rate, avg_rent_rate, avg_delivery_rate, avg_utility_rate, avg_royalty_rate, avg_other_rate, avg_net_profit_rate)')
     .eq('id', currentUser.id).single();
   currentProfile = data;
   currentBrand = data?.brands;

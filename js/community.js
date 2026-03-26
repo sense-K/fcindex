@@ -17,6 +17,9 @@ function getDisplayName(board) {
     const region = currentProfile?.region || '';
     return region ? `${brandName}_${region}` : brandName;
   }
+  if (board === 'incident') {
+    return currentBrand?.category || '프랜차이즈';
+  }
   return brandName;
 }
 
@@ -50,6 +53,20 @@ function renderBoardTabs() {
     brand:    `${currentBrand?.name || ''} 점주분들만의 공간이에요`
   };
   document.getElementById('comm-board-desc').textContent = descs[currentBoard];
+
+  // 사건사고 면책조항 표시/숨김
+  document.getElementById('incident-disclaimer')?.classList.toggle('hidden', currentBoard !== 'incident');
+
+  // 글쓰기 폼 안내 텍스트
+  const noticeEl = document.getElementById('write-post-notice');
+  if (noticeEl) {
+    const notices = {
+      free:     '브랜드명으로 익명 작성돼요',
+      incident: '업종 카테고리로만 표시돼요 (예: 치킨)',
+      brand:    '브랜드명_지역으로 작성돼요'
+    };
+    noticeEl.textContent = notices[currentBoard];
+  }
 }
 
 function renderFlairFilter() {

@@ -885,11 +885,15 @@ body {
     </div>
     <div class="container" style="padding-top:12px;">
       <p id="comm-board-desc" style="font-size:11px;color:var(--gray);margin-bottom:10px;"></p>
+      <!-- 사건사고 면책조항 -->
+      <div id="incident-disclaimer" class="hidden" style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:11px;color:#92400E;line-height:1.6;">
+        ⚠️ 이 게시판의 내용은 작성자 개인의 경험과 의견이며, 서비스 운영자는 게시물 내용에 대한 법적 책임을 지지 않습니다. 작성자는 <b>업종 카테고리</b>로만 표시되어 브랜드가 노출되지 않습니다.
+      </div>
       <!-- 플레어 필터 -->
       <div class="month-tabs" id="flair-filter" style="margin-bottom:12px;"></div>
       <button class="btn btn-primary" onclick="showWritePost()" style="margin-bottom:12px;">+ 글 쓰기</button>
       <div id="write-post-form" class="card hidden">
-        <div class="card-title">브랜드명으로 익명 작성돼요</div>
+        <div id="write-post-notice" class="card-title">브랜드명으로 익명 작성돼요</div>
         <div class="form-group">
           <label class="form-label">머릿글</label>
           <select class="form-select" id="post-flair"></select>
