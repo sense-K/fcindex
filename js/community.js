@@ -33,7 +33,7 @@ async function switchBoard(board) {
 
 // 플레어 필터 전환
 async function switchFlair(flair) {
-  currentFlair = currentFlair === flair ? null : flair;
+  currentFlair = flair;
   renderFlairFilter();
   await loadCommunity();
 }
@@ -71,9 +71,11 @@ function renderBoardTabs() {
 
 function renderFlairFilter() {
   const container = document.getElementById('flair-filter');
-  container.innerHTML = BOARD_FLAIRS[currentBoard].map(f => `
+  const allBtn = `<button class="month-tab${currentFlair === null ? ' active' : ''}" onclick="switchFlair(null)">전체</button>`;
+  const flairBtns = BOARD_FLAIRS[currentBoard].map(f => `
     <button class="month-tab${currentFlair === f ? ' active' : ''}" onclick="switchFlair('${f}')">${f}</button>
   `).join('');
+  container.innerHTML = allBtn + flairBtns;
 }
 
 function renderWriteFlairs() {
