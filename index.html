@@ -267,6 +267,10 @@ body {
 .brand-item-name { font-size:14px; color:var(--navy); font-weight:500; }
 .brand-item-cat { font-size:11px; color:var(--gray); margin-top:2px; }
 
+/* 게시판 탭 */
+.board-tab { flex:1; padding:11px 4px; font-size:13px; font-weight:500; border:none; border-bottom:2px solid transparent; background:transparent; color:var(--gray); cursor:pointer; font-family:'Paperlogy',sans-serif; transition:all 0.2s; }
+.board-tab.active { color:var(--orange); border-bottom-color:var(--orange); font-weight:700; }
+
 /* 게시글 상세 */
 .post-detail-content { font-size:14px; line-height:1.8; color:var(--navy); white-space:pre-wrap; }
 
@@ -870,16 +874,28 @@ body {
     <nav class="nav">
       <div class="nav-logo" data-page="landing">프차<span>인덱스</span></div>
       <div class="nav-right">
-        <span class="badge badge-blue" id="comm-brand-badge">-</span>
         <span class="badge" style="background:rgba(55,138,221,0.15);color:var(--blue);font-size:9px;">인증 점주만</span>
       </div>
     </nav>
-    <div class="container">
-      <button class="btn btn-primary" onclick="showWritePost()" style="margin-bottom:16px;">+ 글 쓰기</button>
+    <!-- 게시판 탭 -->
+    <div style="position:sticky;top:56px;z-index:90;background:var(--cream);border-bottom:1px solid var(--border);display:flex;">
+      <button id="board-tab-free" class="board-tab active" onclick="switchBoard('free')">자유게시판</button>
+      <button id="board-tab-incident" class="board-tab" onclick="switchBoard('incident')">사건사고</button>
+      <button id="board-tab-brand" class="board-tab" onclick="switchBoard('brand')">점주톡</button>
+    </div>
+    <div class="container" style="padding-top:12px;">
+      <p id="comm-board-desc" style="font-size:11px;color:var(--gray);margin-bottom:10px;"></p>
+      <!-- 플레어 필터 -->
+      <div class="month-tabs" id="flair-filter" style="margin-bottom:12px;"></div>
+      <button class="btn btn-primary" onclick="showWritePost()" style="margin-bottom:12px;">+ 글 쓰기</button>
       <div id="write-post-form" class="card hidden">
-        <div class="card-title">익명으로 글 쓰기</div>
-        <div class="form-group"><label class="form-label">제목</label><input class="form-input" type="text" id="post-title" placeholder="제목을 입력해주세요"></div>
-        <div class="form-group"><label class="form-label">내용</label><textarea class="form-input" id="post-content" rows="4" placeholder="내용을 입력해주세요" style="resize:none;"></textarea></div>
+        <div class="card-title">브랜드명으로 익명 작성돼요</div>
+        <div class="form-group">
+          <label class="form-label">머릿글</label>
+          <select class="form-select" id="post-flair"></select>
+        </div>
+        <div class="form-group"><label class="form-label">제목 *</label><input class="form-input" type="text" id="post-title" placeholder="제목을 입력해주세요"></div>
+        <div class="form-group"><label class="form-label">내용 *</label><textarea class="form-input" id="post-content" rows="4" placeholder="내용을 입력해주세요" style="resize:none;"></textarea></div>
         <div id="comm-alert"></div>
         <div style="display:flex;gap:8px;">
           <button class="btn btn-primary" onclick="submitPost()" style="flex:1;">등록</button>
@@ -891,16 +907,16 @@ body {
         <div class="empty-state">
           <div class="empty-icon">💬</div>
           <div class="empty-title">아직 글이 없어요</div>
-          <div class="empty-desc">점주들끼리 솔직하게 이야기해요.<br>첫 글을 올려보세요!</div>
+          <div class="empty-desc">첫 글을 올려보세요!</div>
         </div>
       </div>
     </div>
-    </div>
+  </div>
 
   <!-- 게시글 상세 -->
   <div id="page-post-detail" class="page">
     <nav class="nav">
-      <div class="nav-logo" data-page="community" style="cursor:pointer;">← 점주방</div>
+      <div class="nav-logo" data-page="community" style="cursor:pointer;">← 게시판</div>
       <div class="nav-right" id="post-author-actions"></div>
     </nav>
     <div class="container">
