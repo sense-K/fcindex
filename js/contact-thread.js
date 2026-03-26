@@ -72,7 +72,7 @@ async function loadContactThread() {
     .filter(m => !m.is_read && (currentThreadIsAdmin ? m.sender_type === 'user' : m.sender_type === 'admin'))
     .map(m => m.id);
   if (unreadIds.length > 0) {
-    sb.from('contact_messages').update({ is_read: true }).in('id', unreadIds);
+    await sb.from('contact_messages').update({ is_read: true }).in('id', unreadIds);
   }
 }
 
