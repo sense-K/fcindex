@@ -35,6 +35,32 @@ async function loadMypage() {
   }
 }
 
+// ===== 비밀번호 변경 =====
+function togglePwChange() {
+  const form = document.getElementById('pw-change-form');
+  const icon = document.getElementById('pw-toggle-icon');
+  const isHidden = form.classList.contains('hidden');
+  form.classList.toggle('hidden');
+  icon.style.transform = isHidden ? 'rotate(180deg)' : '';
+  if (isHidden) {
+    document.getElementById('pw-change-alert').innerHTML = '';
+    document.getElementById('pw-new').value = '';
+    document.getElementById('pw-new2').value = '';
+  }
+}
+
+async function doChangePassword() {
+  const pw = document.getElementById('pw-new').value;
+  const pw2 = document.getElementById('pw-new2').value;
+  if (!pw || pw.length < 6) return showAlert('pw-change-alert', '비밀번호는 6자 이상 입력해주세요.', 'error');
+  if (pw !== pw2) return showAlert('pw-change-alert', '비밀번호가 일치하지 않아요.', 'error');
+  const { error } = await sb.auth.updateUser({ password: pw });
+  if (error) return showAlert('pw-change-alert', '변경 실패: ' + error.message, 'error');
+  showAlert('pw-change-alert', '비밀번호가 변경됐어요!', 'success');
+  document.getElementById('pw-new').value = '';
+  document.getElementById('pw-new2').value = '';
+}
+
 async function adminChangeBrand(brandId) {
   if (!brandId) return;
   const { error } = await sb.from('profiles').upsert({
