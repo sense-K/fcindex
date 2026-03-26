@@ -33,6 +33,54 @@ async function loadMypage() {
     statusEl.innerHTML = '<span class="badge badge-rejected">반려</span>';
     document.getElementById('mp-rejected').classList.remove('hidden');
   }
+
+  // 관리자는 내 문의 카드 숨김
+  const contactCard = document.getElementById('mp-contact-card');
+  if (isAdmin) { contactCard.classList.add('hidden'); return; }
+  contactCard.classList.remove('hidden');
+
+  // 내 문의 스레드 로드
+  const { data: threads } = await sb.from('contact_threads')
+    .select('*, contact_messages(id, is_read, sender_type)')
+    .eq('user_id', currentUser.id)
+    .order('updated_at', { ascending: false })
+    .limit(10);
+
+  const myThreadsEl = document.getElementById('mp-contact-threads');
+  const badge = document.getElementById('mp-contact-badge');
+
+  if (!threads || threads.length === 0) {
+    myThreadsEl.innerHTML = '<div style="font-size:13px;color:var(--gray);padding:4px 0 8px;">문의 내역이 없어요</div>';
+    badge.style.display = 'none';
+    return;
+  }
+
+  const unreadCount = threads.filter(t =>
+    t.contact_messages?.some(m => !m.is_read && m.sender_type === 'admin')
+  ).length;
+  if (unreadCount > 0) {
+    badge.textContent = `답변 ${unreadCount}건`;
+    badge.style.display = '';
+  } else {
+    badge.style.display = 'none';
+  }
+
+  myThreadsEl.innerHTML = threads.map(t => {
+    const hasUnread = t.contact_messages?.some(m => !m.is_read && m.sender_type === 'admin');
+    const date = new Date(t.updated_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
+    const isClosed = t.status === 'closed';
+    return `
+      <div class="info-row" style="cursor:pointer;" onclick="openContactThread('${t.id}', false)">
+        <div>
+          <div style="font-size:13px;font-weight:500;color:var(--navy);">${escapeHtml(t.subject)}</div>
+          <div style="font-size:11px;color:var(--gray);margin-top:2px;">${date} · ${isClosed ? '종료됨' : '진행중'}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          ${hasUnread ? '<span class="badge badge-orange" style="font-size:9px;">답변</span>' : ''}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>`;
+  }).join('');
 }
 
 // ===== 비밀번호 변경 =====

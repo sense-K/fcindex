@@ -847,10 +847,20 @@ body {
           <button class="btn btn-primary" onclick="doChangePassword()" style="margin-top:14px;">변경하기</button>
         </div>
       </div>
+      <!-- 내 문의 -->
+      <div class="card" id="mp-contact-card" style="margin-top:4px;">
+        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+          <span>내 문의</span>
+          <span id="mp-contact-badge" class="badge badge-orange" style="display:none;"></span>
+        </div>
+        <div id="mp-contact-threads">
+          <div style="font-size:13px;color:var(--gray);padding:4px 0 8px;">문의 내역이 없어요</div>
+        </div>
+        <button class="btn btn-outline btn-sm" data-page="contact" style="margin-top:4px;width:100%;">+ 새 문의하기</button>
+      </div>
       <!-- 하단 버튼 -->
-      <div style="display:flex;gap:8px;margin-top:8px;">
-        <button class="btn btn-outline" data-page="contact" style="flex:1;">문의하기</button>
-        <button class="btn btn-ghost" onclick="doLogout()" style="flex:1;">로그아웃</button>
+      <div style="margin-top:8px;">
+        <button class="btn btn-ghost" onclick="doLogout()" style="width:100%;">로그아웃</button>
       </div>
     </div>
     </div>
@@ -943,6 +953,32 @@ body {
     </div>
     </div>
 
+  <!-- 문의 스레드 상세 -->
+  <div id="page-contact-thread" class="page">
+    <nav class="nav">
+      <div class="nav-logo" id="contact-thread-back-btn" data-page="mypage" style="cursor:pointer;">← 뒤로</div>
+      <div class="nav-right">
+        <span id="contact-thread-status-badge" class="badge badge-approved">진행중</span>
+      </div>
+    </nav>
+    <div class="container" style="padding-top:20px;padding-bottom:140px;">
+      <div id="contact-thread-subject" style="font-size:17px;font-weight:700;margin-bottom:4px;"></div>
+      <div id="contact-thread-date" style="font-size:11px;color:var(--gray);margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:16px;"></div>
+      <div id="contact-thread-messages" style="display:flex;flex-direction:column;gap:12px;"></div>
+    </div>
+    <!-- 답장 영역 (탭바 위에 고정) -->
+    <div style="position:fixed;bottom:56px;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid var(--border);padding:10px 16px;z-index:50;">
+      <div id="contact-thread-closed-notice" class="hidden" style="text-align:center;font-size:13px;color:var(--gray);padding:8px 0;">이 문의는 종료됐어요</div>
+      <div id="contact-thread-reply-form" style="display:flex;gap:8px;align-items:flex-end;">
+        <textarea id="contact-thread-reply-input" class="form-input" rows="2" placeholder="메시지를 입력해주세요" style="resize:none;flex:1;padding:10px 12px;"></textarea>
+        <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;">
+          <button class="btn btn-primary btn-sm" id="contact-thread-send-btn" onclick="sendThreadReply()" style="white-space:nowrap;">전송</button>
+          <button id="contact-thread-close-btn" class="btn btn-ghost btn-sm hidden" onclick="closeContactThread()" style="font-size:11px;white-space:nowrap;color:#EF4444;">종료</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- 문의하기 -->
   <div id="page-contact" class="page">
     <nav class="nav">
@@ -952,10 +988,6 @@ body {
       <h2 style="font-size:22px;font-weight:900;margin-bottom:6px;">문의하기</h2>
       <p style="font-size:13px;color:var(--gray);margin-bottom:24px;line-height:1.7;">불편하신 점이나 제안 사항을 알려주세요.<br>빠르게 검토하고 답변드릴게요.</p>
       <div id="contact-alert"></div>
-      <div class="form-group">
-        <label class="form-label">이름 / 닉네임</label>
-        <input class="form-input" type="text" id="contact-name" placeholder="이름 또는 닉네임">
-      </div>
       <div class="form-group">
         <label class="form-label">문의 유형 *</label>
         <select class="form-select" id="contact-subject">
@@ -1002,7 +1034,7 @@ body {
       <div class="card">
         <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
           <span>문의 목록</span>
-          <span class="badge badge-blue" id="admin-contact-badge">미확인 0건</span>
+          <span class="badge badge-orange" id="admin-contact-badge" style="display:none;"></span>
         </div>
         <div id="admin-contact-list">
           <div style="text-align:center;padding:24px;color:var(--gray);font-size:13px;">접수된 문의가 없어요</div>
@@ -1024,6 +1056,7 @@ body {
 <script src="js/contact.js"></script>
 <script src="js/community.js"></script>
 <script src="js/admin.js"></script>
+<script src="js/contact-thread.js"></script>
 <script src="js/app.js"></script>
 <!-- 공통 탭바 -->
 <div id="global-tab-bar" class="tab-bar hidden"></div>

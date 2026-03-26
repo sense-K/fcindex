@@ -68,6 +68,7 @@ function showPage(name) {
   if (name === 'admin') loadAdmin();
   if (name === 'reapply') loadReapplyPage();
   if (name === 'contact') loadContact();
+  if (name === 'contact-thread') loadContactThread();
   if (name === 'landing') renderLandingForUser();
 }
 
