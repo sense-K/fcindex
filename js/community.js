@@ -78,9 +78,6 @@ function renderBoardTabs() {
       </div>
     </div>`;
 
-  // 사건사고 면책조항 표시/숨김
-  document.getElementById('incident-disclaimer')?.classList.toggle('hidden', currentBoard !== 'incident');
-
   // 글쓰기 폼 안내 텍스트
   const noticeEl = document.getElementById('write-post-notice');
   if (noticeEl) {
