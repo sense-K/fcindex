@@ -10,14 +10,14 @@ const TAB_ICONS = {
 const NORMAL_TABS = [
   { page: 'store-data', label: '매출 기록' },
   { page: 'home', label: '분석' },
-  { page: 'community', label: '점주방' },
+  { page: 'community', label: '점주톡' },
   { page: 'mypage', label: '마이페이지' },
 ];
 
 const ADMIN_TABS = [
   { page: 'store-data', label: '매출 기록' },
   { page: 'home', label: '분석' },
-  { page: 'community', label: '점주방' },
+  { page: 'community', label: '점주톡' },
   { page: 'mypage', label: '마이페이지' },
   { page: 'admin', label: '관리자' },
 ];
