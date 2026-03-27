@@ -14,8 +14,9 @@ const BOARD_FLAIRS = {
 function getDisplayName(board) {
   const brandName = currentBrand?.name || '익명';
   if (board === 'brand') {
+    const nickname = currentProfile?.nickname || brandName;
     const region = currentProfile?.region || '';
-    return region ? `${brandName}_${region}` : brandName;
+    return region ? `${nickname}_${region}` : nickname;
   }
   if (board === 'incident') {
     return currentBrand?.category || '프랜차이즈';
