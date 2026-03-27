@@ -48,11 +48,34 @@ function renderBoardTabs() {
     document.getElementById(`board-tab-${b}`)?.classList.toggle('active', b === currentBoard);
   });
   const descs = {
-    free:     '모든 점주가 자유롭게 이야기해요',
-    incident: '경험을 공유하고 서로 주의를 나눠요',
-    brand:    `${currentBrand?.name || ''} 점주분들만의 공간이에요`
+    free: {
+      icon: '🗣️',
+      title: '브랜드 상관없이 모든 점주',
+      sub: '누구인지 알 수 없게, 완전 익명으로 소통하는 공간',
+      bg: '#FFF7ED', border: '#FED7AA', color: '#92400E', iconBg: '#E8790C'
+    },
+    incident: {
+      icon: '🔒',
+      title: '브랜드명도 공개되지 않는 익명 게시판',
+      sub: '업종 카테고리(치킨·커피 등)로만 표시돼 신원이 철저히 보호됩니다',
+      bg: '#FEF2F2', border: '#FECACA', color: '#991B1B', iconBg: '#DC2626'
+    },
+    brand: {
+      icon: '💬',
+      title: `${currentBrand?.name || '우리 브랜드'} 점주끼리만`,
+      sub: '같은 프랜차이즈 점주만 입장 가능한 단톡방 같은 공간',
+      bg: '#EFF6FF', border: '#BFDBFE', color: '#1E40AF', iconBg: '#378ADD'
+    }
   };
-  document.getElementById('comm-board-desc').textContent = descs[currentBoard];
+  const d = descs[currentBoard];
+  document.getElementById('comm-board-desc').innerHTML = `
+    <div style="background:${d.bg};border:1px solid ${d.border};border-radius:12px;padding:11px 14px;display:flex;align-items:flex-start;gap:10px;">
+      <div style="width:32px;height:32px;border-radius:8px;background:${d.iconBg};display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">${d.icon}</div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:${d.color};margin-bottom:2px;">${d.title}</div>
+        <div style="font-size:11px;color:${d.color};opacity:0.8;line-height:1.5;">${d.sub}</div>
+      </div>
+    </div>`;
 
   // 사건사고 면책조항 표시/숨김
   document.getElementById('incident-disclaimer')?.classList.toggle('hidden', currentBoard !== 'incident');
