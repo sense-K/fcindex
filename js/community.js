@@ -64,7 +64,7 @@ function renderBoardTabs() {
     brand: {
       icon: '💬',
       title: `${currentBrand?.name || '우리 브랜드'} 점주끼리만`,
-      sub: '같은 프랜차이즈 점주만 입장 가능한 단톡방 같은 공간',
+      sub: '같은 프랜차이즈 점주만 입장 가능한 우리들만의 단톡방',
       bg: '#EFF6FF', border: '#BFDBFE', color: '#1E40AF', iconBg: '#378ADD'
     }
   };
