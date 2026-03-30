@@ -51,6 +51,10 @@ function showPage(name) {
 
   // URL 해시 업데이트 (새로고침 시 복원용)
   const noHashPages = ['landing', 'login', 'signup', 'reset-password', 'reapply', 'privacy', 'terms'];
+  const noTabPages2 = ['privacy', 'terms'];
+  if (noTabPages2.includes(name)) {
+    document.getElementById('global-tab-bar').classList.add('hidden');
+  }
   if (!noHashPages.includes(name)) {
     history.replaceState(null, '', '#' + name);
   } else {
