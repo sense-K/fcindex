@@ -168,6 +168,26 @@ async function adminDeleteBrand(id, name) {
   await loadAdminBrands();
 }
 
+// ===== 회원 탈퇴 =====
+async function deleteAccount() {
+  const confirmed = confirm('정말 탈퇴하시겠어요?\n\n탈퇴 시 모든 개인정보와 매출 데이터가 즉시 삭제되며 복구할 수 없어요.\n작성한 게시글과 댓글은 익명으로 유지됩니다.');
+  if (!confirmed) return;
+  const confirmed2 = confirm('마지막 확인입니다.\n탈퇴 후에는 동일한 사업자등록번호로 재가입이 가능해요.\n정말 탈퇴하시겠어요?');
+  if (!confirmed2) return;
+
+  try {
+    // 프로필 데이터 삭제 (게시글/댓글은 유지, 개인정보만 삭제)
+    await sb.from('store_data').delete().eq('owner_id', currentUser.id);
+    await sb.from('profiles').delete().eq('id', currentUser.id);
+    await sb.auth.signOut();
+    currentUser = null; currentProfile = null; currentBrand = null;
+    showPage('landing');
+    setTimeout(() => alert('탈퇴가 완료됐어요. 이용해주셔서 감사합니다.'), 300);
+  } catch (e) {
+    alert('탈퇴 처리 중 오류가 발생했어요. 고객센터에 문의해주세요.');
+  }
+}
+
 // ===== 재신청 =====
 function loadReapplyPage() {
   document.getElementById('ra-nick').textContent = currentProfile?.nickname || '-';

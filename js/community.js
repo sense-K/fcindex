@@ -3,6 +3,8 @@ let likeInProgress = false;
 let currentBoard = 'free';
 let currentFlair = null;
 let currentPostBoard = 'free';
+let communityPage = 0;
+const POSTS_PER_PAGE = 20;
 
 const BOARD_FLAIRS = {
   free:     ['자유', '수익·매출', '본사 이야기', '직원·인력', '창업·폐업', '세무·법률', '마케팅·배달', '질문'],
@@ -28,6 +30,7 @@ function getDisplayName(board) {
 async function switchBoard(board) {
   currentBoard = board;
   currentFlair = null;
+  communityPage = 0;
   renderBoardUI();
   await loadCommunity();
 }
@@ -35,6 +38,7 @@ async function switchBoard(board) {
 // 플레어 필터 전환
 async function switchFlair(flair) {
   currentFlair = flair;
+  communityPage = 0;
   renderFlairFilter();
   await loadCommunity();
 }
@@ -106,13 +110,18 @@ function renderWriteFlairs() {
 }
 
 // ===== 글 목록 로드 =====
-async function loadCommunity() {
+async function loadCommunity(append = false) {
+  if (!append) communityPage = 0;
   renderBoardUI();
+
+  const from = communityPage * POSTS_PER_PAGE;
+  const to = from + POSTS_PER_PAGE - 1;
 
   let query = sb.from('posts')
     .select('id, author_id, brand_id, title, content, like_count, comment_count, created_at, nickname, flair, board')
     .eq('board', currentBoard)
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
+    .range(from, to);
 
   if (currentBoard === 'brand' && currentProfile?.brand_id) {
     query = query.eq('brand_id', currentProfile.brand_id);
@@ -124,14 +133,20 @@ async function loadCommunity() {
   const { data } = await query;
   const list = document.getElementById('post-list');
   const empty = document.getElementById('comm-empty');
-  list.innerHTML = '';
+  const loadMoreBtn = document.getElementById('community-load-more');
 
-  if (!data || data.length === 0) { empty.classList.remove('hidden'); return; }
+  if (!append) list.innerHTML = '';
+
+  if (!data || data.length === 0) {
+    if (!append) { empty.classList.remove('hidden'); }
+    if (loadMoreBtn) loadMoreBtn.classList.add('hidden');
+    return;
+  }
   empty.classList.add('hidden');
 
   const colors = ['#E8790C', '#378ADD', '#1D9E75', '#D4537E', '#888780'];
   data.forEach((p, i) => {
-    const color = colors[i % colors.length];
+    const color = colors[(from + i) % colors.length];
     const date = new Date(p.created_at).toLocaleDateString('ko-KR');
     const div = document.createElement('div');
     div.className = 'post-card';
@@ -153,6 +168,15 @@ async function loadCommunity() {
     div.onclick = () => showPostDetail(p, color);
     list.appendChild(div);
   });
+
+  if (loadMoreBtn) {
+    loadMoreBtn.classList.toggle('hidden', data.length < POSTS_PER_PAGE);
+  }
+}
+
+async function loadMorePosts() {
+  communityPage++;
+  await loadCommunity(true);
 }
 
 // ===== 글 상세 =====
@@ -312,7 +336,7 @@ async function submitReply(parentCommentId, inputEl) {
       nickname: getDisplayName(currentPostBoard),
       parent_comment_id: parentCommentId
     });
-    if (error) { alert('답글 등록 실패: ' + error.message); return; }
+    if (error) { showAlert('comm-alert', '답글 등록 실패: ' + error.message, 'error'); return; }
     const { data: post } = await sb.from('posts').select('comment_count').eq('id', currentPostId).single();
     await sb.from('posts').update({ comment_count: (post?.comment_count || 0) + 1 }).eq('id', currentPostId);
     await loadComments();
@@ -334,7 +358,7 @@ async function submitComment() {
       content,
       nickname: getDisplayName(currentPostBoard)
     });
-    if (error) { alert('댓글 등록 실패: ' + error.message); return; }
+    if (error) { showAlert('comm-alert', '댓글 등록 실패: ' + error.message, 'error'); return; }
     input.value = '';
     const { data: post } = await sb.from('posts').select('comment_count').eq('id', currentPostId).single();
     await sb.from('posts').update({ comment_count: (post?.comment_count || 0) + 1 }).eq('id', currentPostId);
@@ -352,7 +376,7 @@ async function deleteComment(commentId) {
     .or(`id.eq.${commentId},parent_comment_id.eq.${commentId}`);
   const deleteCount = withReplies?.length || 1;
   const { error } = await sb.from('post_comments').delete().eq('id', commentId);
-  if (error) { alert('댓글 삭제 실패: ' + error.message); return; }
+  if (error) { showAlert('comm-alert', '댓글 삭제 실패: ' + error.message, 'error'); return; }
   const { data: post } = await sb.from('posts').select('comment_count').eq('id', currentPostId).single();
   await sb.from('posts').update({ comment_count: Math.max((post?.comment_count || deleteCount) - deleteCount, 0) }).eq('id', currentPostId);
   await loadComments();
@@ -417,7 +441,7 @@ async function deletePost() {
   if (!currentPostId) return;
   if (!confirm('게시글을 삭제할까요?')) return;
   const { error } = await sb.from('posts').delete().eq('id', currentPostId);
-  if (error) { alert('삭제 실패: ' + error.message); return; }
+  if (error) { showAlert('comm-alert', '삭제 실패: ' + error.message, 'error'); return; }
   currentPostId = null;
   showPage('community');
 }

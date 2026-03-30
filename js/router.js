@@ -56,9 +56,9 @@ function showPage(name) {
     document.getElementById('global-tab-bar').classList.add('hidden');
   }
   if (!noHashPages.includes(name)) {
-    history.replaceState(null, '', '#' + name);
+    if (!_poppingState) history.pushState({ page: name }, '', '#' + name);
   } else {
-    history.replaceState(null, '', window.location.pathname);
+    if (!_poppingState) history.replaceState(null, '', window.location.pathname);
   }
 
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -104,6 +104,14 @@ function renderLandingForUser() {
     actions.innerHTML = `<button class="btn btn-primary" data-page="signup" style="padding:14px;">무료로 시작하기 →</button><button class="btn btn-outline" data-page="login" style="padding:14px;">로그인</button>`;
   }
 }
+
+let _poppingState = false;
+window.addEventListener('popstate', function(e) {
+  _poppingState = true;
+  const page = e.state?.page || window.location.hash.slice(1);
+  if (page) showPage(page);
+  _poppingState = false;
+});
 
 function switchPreview(tab) {
   document.getElementById('preview-data').classList.toggle('hidden', tab !== 'data');

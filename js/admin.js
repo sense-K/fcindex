@@ -53,6 +53,9 @@ async function loadAdmin() {
     return;
   }
 
+  // 게시글 관리 로드
+  await loadAdminPosts();
+
   contactList.innerHTML = '';
   threads.forEach(t => {
     const hasUnread = t.contact_messages?.some(m => !m.is_read && m.sender_type === 'user');
@@ -71,6 +74,58 @@ async function loadAdmin() {
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>`;
   });
+}
+
+// ===== 관리자: 게시글 관리 =====
+let adminPostPage = 0;
+const ADMIN_POSTS_PER_PAGE = 20;
+
+async function loadAdminPosts(append = false) {
+  if (!append) adminPostPage = 0;
+  const from = adminPostPage * ADMIN_POSTS_PER_PAGE;
+  const to = from + ADMIN_POSTS_PER_PAGE - 1;
+
+  const { data: posts } = await sb.from('posts')
+    .select('id, title, nickname, board, created_at, like_count, comment_count')
+    .order('created_at', { ascending: false })
+    .range(from, to);
+
+  const list = document.getElementById('admin-posts-list');
+  if (!append) list.innerHTML = '';
+
+  const boardLabels = { free: '자유', incident: '사건사고', brand: '브랜드' };
+  if (!posts || posts.length === 0) {
+    if (!append) list.innerHTML = '<div style="text-align:center;padding:24px;color:var(--gray);font-size:13px;">게시글이 없어요</div>';
+    document.getElementById('admin-posts-load-more')?.classList.add('hidden');
+    return;
+  }
+
+  posts.forEach(p => {
+    const date = new Date(p.created_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
+    list.innerHTML += `
+      <div class="admin-row">
+        <div class="admin-info" style="flex:1;min-width:0;">
+          <div class="admin-name" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(p.title)}</div>
+          <div class="admin-sub">${boardLabels[p.board] || p.board} · ${escapeHtml(p.nickname)} · ${date} · 💬${p.comment_count||0} 👍${p.like_count||0}</div>
+        </div>
+        <button class="btn btn-sm" style="background:#FEE2E2;color:#DC2626;border:none;flex-shrink:0;" onclick="adminDeletePost('${p.id}')">삭제</button>
+      </div>`;
+  });
+
+  const loadMoreBtn = document.getElementById('admin-posts-load-more');
+  if (loadMoreBtn) loadMoreBtn.classList.toggle('hidden', posts.length < ADMIN_POSTS_PER_PAGE);
+}
+
+async function loadMoreAdminPosts() {
+  adminPostPage++;
+  await loadAdminPosts(true);
+}
+
+async function adminDeletePost(postId) {
+  if (!confirm('이 게시글을 삭제할까요?')) return;
+  const { error } = await sb.from('posts').delete().eq('id', postId);
+  if (error) { alert('삭제 실패: ' + error.message); return; }
+  await loadAdminPosts();
 }
 
 async function updateStatus(userId, status) {
