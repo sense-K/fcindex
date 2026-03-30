@@ -50,7 +50,7 @@ function showPage(name) {
   }
 
   // URL 해시 업데이트 (새로고침 시 복원용)
-  const noHashPages = ['landing', 'login', 'signup', 'reset-password', 'reapply'];
+  const noHashPages = ['landing', 'login', 'signup', 'reset-password', 'reapply', 'privacy', 'terms'];
   if (!noHashPages.includes(name)) {
     history.replaceState(null, '', '#' + name);
   } else {
