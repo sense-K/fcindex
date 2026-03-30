@@ -162,7 +162,7 @@ async function doSignup() {
 
   // 국세청 사업자번호 유효성 검증
   try {
-    const bizRes = await fetch('https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=test', {
+    const bizRes = await fetch('https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=93e94121cb07ec28f29f47201298fe3b5aaf830ce9dc0b2f603fcfcd53d4ada9', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({ b_no: [biz] })
