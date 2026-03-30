@@ -188,7 +188,7 @@ function showPostDetail(p, color) {
 async function loadComments() {
   if (!currentPostId) return;
   const { data, error } = await sb.from('post_comments')
-    .select('id, author_id, content, created_at, nickname')
+    .select('id, author_id, content, created_at, nickname, parent_comment_id')
     .eq('post_id', currentPostId)
     .order('created_at', { ascending: true });
   const list = document.getElementById('comment-list');
@@ -204,27 +204,121 @@ async function loadComments() {
   }
   document.getElementById('comment-count-label').textContent = data.length;
   document.getElementById('detail-comments').textContent = data.length;
+
+  const topLevel = data.filter(c => !c.parent_comment_id);
+  const replies = data.filter(c => c.parent_comment_id);
+
   list.innerHTML = '';
-  data.forEach(c => {
-    const date = new Date(c.created_at).toLocaleDateString('ko-KR');
-    const isMine = currentUser && c.author_id === currentUser.id;
-    const div = document.createElement('div');
-    div.className = 'comment-item';
-    div.innerHTML = `
-      <div class="comment-header">
-        <span class="comment-author">${escapeHtml(c.nickname || '익명')}</span>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span class="comment-date">${date}</span>
-          ${isMine ? `<button class="comment-delete-btn">삭제</button>` : ''}
-        </div>
-      </div>
-      <div class="comment-text"></div>`;
-    div.querySelector('.comment-text').textContent = c.content;
-    if (isMine) {
-      div.querySelector('.comment-delete-btn').addEventListener('click', () => deleteComment(c.id));
-    }
-    list.appendChild(div);
+  topLevel.forEach(c => {
+    // 댓글 + 대댓글 + 답글폼을 하나의 그룹으로
+    const group = document.createElement('div');
+    group.className = 'comment-group';
+
+    const commentEl = renderCommentItem(c);
+    commentEl.style.cursor = 'pointer';
+    commentEl.addEventListener('click', e => {
+      if (e.target.classList.contains('comment-delete-btn')) return;
+      toggleReplyForm(c.id);
+    });
+    group.appendChild(commentEl);
+
+    const myReplies = replies.filter(r => r.parent_comment_id === c.id);
+    myReplies.forEach(r => group.appendChild(renderReplyItem(r, c.nickname)));
+
+    group.appendChild(createReplyForm(c.id, c.nickname));
+    list.appendChild(group);
   });
+}
+
+function renderCommentItem(c) {
+  const date = new Date(c.created_at).toLocaleDateString('ko-KR');
+  const isMine = currentUser && c.author_id === currentUser.id;
+  const div = document.createElement('div');
+  div.className = 'comment-item';
+  div.dataset.commentId = c.id;
+  div.innerHTML = `
+    <div class="comment-header">
+      <span class="comment-author">${escapeHtml(c.nickname || '익명')}</span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="comment-date">${date}</span>
+        ${isMine ? `<button class="comment-delete-btn">삭제</button>` : ''}
+      </div>
+    </div>
+    <div class="comment-text"></div>
+    <div class="comment-reply-hint">↩ 답글 달기</div>`;
+  div.querySelector('.comment-text').textContent = c.content;
+  if (isMine) {
+    div.querySelector('.comment-delete-btn').addEventListener('click', e => { e.stopPropagation(); deleteComment(c.id); });
+  }
+  return div;
+}
+
+function renderReplyItem(r, parentNickname) {
+  const date = new Date(r.created_at).toLocaleDateString('ko-KR');
+  const isMine = currentUser && r.author_id === currentUser.id;
+  const div = document.createElement('div');
+  div.className = 'reply-item';
+  div.innerHTML = `
+    <div class="reply-to">↳ ${escapeHtml(parentNickname || '익명')}에게</div>
+    <div class="comment-header">
+      <span class="comment-author">${escapeHtml(r.nickname || '익명')}</span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="comment-date">${date}</span>
+        ${isMine ? `<button class="comment-delete-btn">삭제</button>` : ''}
+      </div>
+    </div>
+    <div class="comment-text"></div>`;
+  div.querySelector('.comment-text').textContent = r.content;
+  if (isMine) {
+    div.querySelector('.comment-delete-btn').addEventListener('click', e => { e.stopPropagation(); deleteComment(r.id); });
+  }
+  return div;
+}
+
+function createReplyForm(commentId, parentNickname) {
+  const div = document.createElement('div');
+  div.className = 'reply-form hidden';
+  div.id = `reply-form-${commentId}`;
+  div.innerHTML = `
+    <input class="reply-input" placeholder="${escapeHtml(parentNickname || '익명')}에게 답글 달기..." maxlength="500">
+    <button class="btn btn-primary btn-sm" style="flex-shrink:0;width:auto;white-space:nowrap;font-size:11px;padding:6px 10px;">등록</button>
+    <button class="btn btn-ghost btn-sm" style="flex-shrink:0;width:auto;white-space:nowrap;font-size:11px;padding:6px 10px;">취소</button>`;
+  const input = div.querySelector('.reply-input');
+  div.querySelectorAll('button')[0].addEventListener('click', () => submitReply(commentId, input));
+  div.querySelectorAll('button')[1].addEventListener('click', () => { div.classList.add('hidden'); input.value = ''; });
+  return div;
+}
+
+function toggleReplyForm(commentId) {
+  const form = document.getElementById(`reply-form-${commentId}`);
+  if (!form) return;
+  const isHidden = form.classList.contains('hidden');
+  document.querySelectorAll('.reply-form').forEach(f => { f.classList.add('hidden'); f.querySelector('.reply-input').value = ''; });
+  if (isHidden) {
+    form.classList.remove('hidden');
+    form.querySelector('.reply-input').focus();
+  }
+}
+
+async function submitReply(parentCommentId, inputEl) {
+  const content = inputEl.value.trim();
+  if (!content || !currentUser || !currentPostId) return;
+  inputEl.disabled = true;
+  try {
+    const { error } = await sb.from('post_comments').insert({
+      post_id: currentPostId,
+      author_id: currentUser.id,
+      content,
+      nickname: getDisplayName(currentPostBoard),
+      parent_comment_id: parentCommentId
+    });
+    if (error) { alert('답글 등록 실패: ' + error.message); return; }
+    const { data: post } = await sb.from('posts').select('comment_count').eq('id', currentPostId).single();
+    await sb.from('posts').update({ comment_count: (post?.comment_count || 0) + 1 }).eq('id', currentPostId);
+    await loadComments();
+  } finally {
+    inputEl.disabled = false;
+  }
 }
 
 async function submitComment() {
@@ -252,10 +346,15 @@ async function submitComment() {
 
 async function deleteComment(commentId) {
   if (!confirm('댓글을 삭제할까요?')) return;
+  // 대댓글 수 포함해서 차감
+  const { data: withReplies } = await sb.from('post_comments')
+    .select('id')
+    .or(`id.eq.${commentId},parent_comment_id.eq.${commentId}`);
+  const deleteCount = withReplies?.length || 1;
   const { error } = await sb.from('post_comments').delete().eq('id', commentId);
   if (error) { alert('댓글 삭제 실패: ' + error.message); return; }
   const { data: post } = await sb.from('posts').select('comment_count').eq('id', currentPostId).single();
-  await sb.from('posts').update({ comment_count: Math.max((post?.comment_count || 1) - 1, 0) }).eq('id', currentPostId);
+  await sb.from('posts').update({ comment_count: Math.max((post?.comment_count || deleteCount) - deleteCount, 0) }).eq('id', currentPostId);
   await loadComments();
 }
 
