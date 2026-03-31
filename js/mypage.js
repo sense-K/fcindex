@@ -179,6 +179,8 @@ async function deleteAccount() {
     // 프로필 데이터 삭제 (게시글/댓글은 유지, 개인정보만 삭제)
     await sb.from('store_data').delete().eq('owner_id', currentUser.id);
     await sb.from('profiles').delete().eq('id', currentUser.id);
+    // Auth 유저 삭제 (재가입 가능하도록)
+    await sb.rpc('delete_own_account');
     await sb.auth.signOut();
     currentUser = null; currentProfile = null; currentBrand = null;
     showPage('landing');
