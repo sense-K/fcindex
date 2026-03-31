@@ -199,7 +199,7 @@ async function doSignup() {
   });
 
   // 관리자에게 가입 알림 이메일 발송
-  fetch('https://vogyfomyhrvqswivqhdv.supabase.co/functions/v1/notify-signup', {
+  fetch('https://vogyfomyhrvqswivqhdv.supabase.co/functions/v1/smooth-api', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
     body: JSON.stringify({ type: 'signup', nickname: nick, brand: document.getElementById('su-brand').options[document.getElementById('su-brand').selectedIndex]?.text || brandId, biz_number: biz, email })
