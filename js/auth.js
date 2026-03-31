@@ -192,18 +192,21 @@ async function doSignup() {
   const { data: authData, error: authErr } = await sb.auth.signUp({ email, password: pw });
   if (authErr) return showAlert('signup-alert', authErr.message, 'error');
   if (!authData?.user) return showAlert('signup-alert', '이미 가입된 이메일이에요.', 'error');
+  if (authData.user.identities?.length === 0) return showAlert('signup-alert', '이미 가입된 이메일이에요.', 'error');
 
-  await sb.from('profiles').insert({
+  const { error: profileErr } = await sb.from('profiles').insert({
     id: authData.user.id, email, nickname: nick,
     biz_number: biz, biz_image: bizImageUrl,
     brand_id: brandId, auth_status: 'pending', region
   });
+  if (profileErr) return showAlert('signup-alert', '가입 처리 실패: ' + profileErr.message, 'error');
 
   // 관리자에게 가입 알림 이메일 발송
+  const brandName = allBrands.find(b => String(b.id) === String(brandId))?.name || brandId;
   fetch('https://vogyfomyhrvqswivqhdv.supabase.co/functions/v1/smooth-api', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
-    body: JSON.stringify({ type: 'signup', nickname: nick, brand: document.getElementById('su-brand').options[document.getElementById('su-brand').selectedIndex]?.text || brandId, biz_number: biz, email })
+    body: JSON.stringify({ type: 'signup', nickname: nick, brand: brandName, biz_number: biz, email })
   }).catch(() => {}); // 알림 실패해도 가입은 정상 처리
 
   currentUser = authData.user;
