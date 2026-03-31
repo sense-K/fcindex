@@ -40,6 +40,13 @@ async function submitContact() {
 
   if (msgErr) return showAlert('contact-alert', '전송 실패: ' + msgErr.message, 'error');
 
+  // 관리자에게 문의 알림 이메일 발송
+  fetch('https://vogyfomyhrvqswivqhdv.supabase.co/functions/v1/notify-signup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+    body: JSON.stringify({ type: 'contact', nickname: currentProfile?.nickname || '익명', subject, message })
+  }).catch(() => {});
+
   showAlert('contact-alert', '문의가 접수됐어요!', 'success');
   document.getElementById('contact-subject').value = '';
   document.getElementById('contact-message').value = '';

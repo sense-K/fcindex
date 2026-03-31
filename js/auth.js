@@ -202,7 +202,7 @@ async function doSignup() {
   fetch('https://vogyfomyhrvqswivqhdv.supabase.co/functions/v1/notify-signup', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
-    body: JSON.stringify({ nickname: nick, brand: document.getElementById('su-brand').options[document.getElementById('su-brand').selectedIndex]?.text || brandId, biz_number: biz, email })
+    body: JSON.stringify({ type: 'signup', nickname: nick, brand: document.getElementById('su-brand').options[document.getElementById('su-brand').selectedIndex]?.text || brandId, biz_number: biz, email })
   }).catch(() => {}); // 알림 실패해도 가입은 정상 처리
 
   currentUser = authData.user;
