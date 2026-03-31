@@ -3,6 +3,7 @@ let likeInProgress = false;
 let currentBoard = 'free';
 let currentFlair = null;
 let currentPostBoard = 'free';
+let currentPostHidden = false;
 let communityPage = 0;
 const POSTS_PER_PAGE = 20;
 
@@ -117,12 +118,17 @@ async function loadCommunity(append = false) {
   const from = communityPage * POSTS_PER_PAGE;
   const to = from + POSTS_PER_PAGE - 1;
 
+  const isAdmin = currentUser?.email === ADMIN_EMAIL;
+
   let query = sb.from('posts')
-    .select('id, author_id, brand_id, title, content, like_count, comment_count, created_at, nickname, flair, board')
+    .select('id, author_id, brand_id, title, content, like_count, comment_count, created_at, nickname, flair, board, is_hidden')
     .eq('board', currentBoard)
     .order('created_at', { ascending: false })
     .range(from, to);
 
+  if (!isAdmin) {
+    query = query.eq('is_hidden', false);
+  }
   if (currentBoard === 'brand' && currentProfile?.brand_id) {
     query = query.eq('brand_id', currentProfile.brand_id);
   }
@@ -144,20 +150,24 @@ async function loadCommunity(append = false) {
   }
   empty.classList.add('hidden');
 
+  const isAdmin2 = currentUser?.email === ADMIN_EMAIL;
   const colors = ['#E8790C', '#378ADD', '#1D9E75', '#D4537E', '#888780'];
   data.forEach((p, i) => {
     const color = colors[(from + i) % colors.length];
     const date = new Date(p.created_at).toLocaleDateString('ko-KR');
     const div = document.createElement('div');
     div.className = 'post-card';
+    if (p.is_hidden) div.style.opacity = '0.4';
     const flairBadge = p.flair
       ? `<span class="badge badge-blue" style="font-size:9px;margin-right:4px;">${p.flair}</span>` : '';
+    const hiddenBadge = p.is_hidden
+      ? `<span class="badge" style="font-size:9px;margin-right:4px;background:#FEE2E2;color:#DC2626;">숨김</span>` : '';
     div.innerHTML = `
       <div class="post-top">
         <div class="post-avatar" style="background:${color};">${(p.nickname || '익')[0]}</div>
         <div>
           <div class="post-user">${escapeHtml(p.nickname || '익명')}</div>
-          <div class="post-brand">${flairBadge}${date}</div>
+          <div class="post-brand">${hiddenBadge}${flairBadge}${date}</div>
         </div>
       </div>
       <div class="post-title">${escapeHtml(p.title)}</div>
@@ -184,6 +194,7 @@ function showPostDetail(p, color) {
   currentPostId = p.id;
   currentPostAuthorId = p.author_id;
   currentPostBoard = p.board || 'free';
+  currentPostHidden = !!p.is_hidden;
 
   const date = new Date(p.created_at).toLocaleDateString('ko-KR');
   document.getElementById('detail-avatar').textContent = (p.nickname || '익')[0];
@@ -196,10 +207,32 @@ function showPostDetail(p, color) {
   document.getElementById('detail-comments').textContent = p.comment_count || 0;
   setLikeBtn(false);
 
-  const actions = document.getElementById('post-author-actions');
+  const isAdmin = currentUser?.email === ADMIN_EMAIL;
   const isAuthor = currentUser && String(p.author_id) === String(currentUser.id);
-  actions.innerHTML = isAuthor
-    ? `<button class="nav-btn" onclick="deletePost()" style="font-size:12px;color:#FCA5A5;">삭제</button>` : '';
+  const actions = document.getElementById('post-author-actions');
+
+  // 숨김 글은 관리자에게만 블러 없이 표시, 일반 유저는 볼 수 없음
+  const contentEl = document.getElementById('detail-content');
+  const titleEl = document.getElementById('detail-title');
+  if (p.is_hidden && isAdmin) {
+    contentEl.style.filter = '';
+    titleEl.style.filter = '';
+  } else {
+    contentEl.style.filter = '';
+    titleEl.style.filter = '';
+  }
+
+  if (isAdmin) {
+    const hideLabel = p.is_hidden ? '숨김 해제' : '숨기기';
+    const hideColor = p.is_hidden ? '#059669' : '#D97706';
+    actions.innerHTML = `
+      <button class="nav-btn" onclick="adminToggleHidePost()" style="font-size:12px;color:${hideColor};">${hideLabel}</button>
+      <button class="nav-btn" onclick="deletePost()" style="font-size:12px;color:#FCA5A5;">삭제</button>`;
+  } else if (isAuthor) {
+    actions.innerHTML = `<button class="nav-btn" onclick="deletePost()" style="font-size:12px;color:#FCA5A5;">삭제</button>`;
+  } else {
+    actions.innerHTML = '';
+  }
 
   document.getElementById('post-view-card').classList.remove('hidden');
   document.getElementById('post-edit-card').classList.add('hidden');
@@ -437,6 +470,21 @@ async function saveEditPost() {
   document.getElementById('detail-content').textContent = content;
   cancelEditPost();
 }
+async function adminToggleHidePost() {
+  if (!currentPostId) return;
+  const newHidden = !currentPostHidden;
+  const label = newHidden ? '숨기기' : '숨김 해제';
+  if (!confirm(`이 게시글을 ${label} 할까요?`)) return;
+  const { error } = await sb.from('posts').update({ is_hidden: newHidden }).eq('id', currentPostId);
+  if (error) { showAlert('comm-alert', '처리 실패: ' + error.message, 'error'); return; }
+  currentPostHidden = newHidden;
+  const btn = document.querySelector('#post-author-actions .nav-btn:first-child');
+  if (btn) {
+    btn.textContent = newHidden ? '숨김 해제' : '숨기기';
+    btn.style.color = newHidden ? '#059669' : '#D97706';
+  }
+}
+
 async function deletePost() {
   if (!currentPostId) return;
   if (!confirm('게시글을 삭제할까요?')) return;

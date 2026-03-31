@@ -53,9 +53,6 @@ async function loadAdmin() {
     return;
   }
 
-  // 게시글 관리 로드
-  await loadAdminPosts();
-
   contactList.innerHTML = '';
   threads.forEach(t => {
     const hasUnread = t.contact_messages?.some(m => !m.is_read && m.sender_type === 'user');
