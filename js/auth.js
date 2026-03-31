@@ -191,6 +191,7 @@ async function doSignup() {
 
   const { data: authData, error: authErr } = await sb.auth.signUp({ email, password: pw });
   if (authErr) return showAlert('signup-alert', authErr.message, 'error');
+  if (!authData?.user) return showAlert('signup-alert', '이미 가입된 이메일이에요.', 'error');
 
   await sb.from('profiles').insert({
     id: authData.user.id, email, nickname: nick,
