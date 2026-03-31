@@ -100,6 +100,7 @@ async function doLogin() {
   const email = document.getElementById('login-email').value.trim();
   const pw = document.getElementById('login-pw').value;
   if (!email || !pw) return showAlert('login-alert', '이메일과 비밀번호를 입력해주세요.', 'error');
+
   const { error } = await sb.auth.signInWithPassword({ email, password: pw });
   if (error) return showAlert('login-alert', '이메일 또는 비밀번호가 틀렸어요.', 'error');
   const { data: { user } } = await sb.auth.getUser();

@@ -176,9 +176,15 @@ async function deleteAccount() {
   if (!confirmed2) return;
 
   try {
-    // 프로필 데이터 삭제 (게시글/댓글은 유지, 개인정보만 삭제)
-    await sb.from('store_data').delete().eq('owner_id', currentUser.id);
-    await sb.from('profiles').delete().eq('id', currentUser.id);
+    const uid = currentUser.id;
+    // 연관 데이터 순서대로 삭제 (FK 제약 순서 준수)
+    await sb.from('contact_messages').delete().in('thread_id',
+      (await sb.from('contact_threads').select('id').eq('user_id', uid)).data?.map(t => t.id) || []
+    );
+    await sb.from('contact_threads').delete().eq('user_id', uid);
+    await sb.from('post_likes').delete().eq('user_id', uid);
+    await sb.from('store_data').delete().eq('owner_id', uid);
+    await sb.from('profiles').delete().eq('id', uid);
     // Auth 유저 삭제 (재가입 가능하도록)
     await sb.rpc('delete_own_account');
     await sb.auth.signOut();
@@ -186,7 +192,7 @@ async function deleteAccount() {
     showPage('landing');
     setTimeout(() => alert('탈퇴가 완료됐어요. 이용해주셔서 감사합니다.'), 300);
   } catch (e) {
-    alert('탈퇴 처리 중 오류가 발생했어요. 고객센터에 문의해주세요.');
+    alert('탈퇴 처리 중 오류가 발생했어요: ' + e.message);
   }
 }
 
