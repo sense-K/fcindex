@@ -198,6 +198,13 @@ async function doSignup() {
     brand_id: brandId, auth_status: 'pending', region
   });
 
+  // 관리자에게 가입 알림 이메일 발송
+  fetch('https://vogyfomyhrvqswivqhdv.supabase.co/functions/v1/notify-signup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+    body: JSON.stringify({ nickname: nick, brand: document.getElementById('su-brand').options[document.getElementById('su-brand').selectedIndex]?.text || brandId, biz_number: biz, email })
+  }).catch(() => {}); // 알림 실패해도 가입은 정상 처리
+
   currentUser = authData.user;
   await loadProfile();
   showPage('mypage');
