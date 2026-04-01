@@ -86,42 +86,51 @@ async function loadAdmin() {
     });
   }
 
-  // 문의 스레드 목록
+  // 문의 스레드 목록 (contact_messages 조인 없이 별도 쿼리)
   const { data: threads } = await sb.from('contact_threads')
-    .select('*, contact_messages(id, is_read, sender_type)')
+    .select('*')
     .order('updated_at', { ascending: false });
+  const { data: allMsgs } = await sb.from('contact_messages')
+    .select('thread_id, is_read, sender_type');
 
   const contactList = document.getElementById('admin-contact-list');
-  const unreadCount = (threads || []).filter(t =>
-    t.contact_messages?.some(m => !m.is_read && m.sender_type === 'user')
-  ).length;
   const badge = document.getElementById('admin-contact-badge');
+
+  const threadMsgMap = {};
+  (allMsgs || []).forEach(m => {
+    if (!threadMsgMap[m.thread_id]) threadMsgMap[m.thread_id] = [];
+    threadMsgMap[m.thread_id].push(m);
+  });
+
+  const unreadCount = (threads || []).filter(t =>
+    (threadMsgMap[t.id] || []).some(m => !m.is_read && m.sender_type === 'user')
+  ).length;
   badge.textContent = `미확인 ${unreadCount}건`;
   badge.style.display = unreadCount > 0 ? '' : 'none';
 
   if (!threads || threads.length === 0) {
     contactList.innerHTML = '<div style="text-align:center;padding:24px;color:var(--gray);font-size:13px;">접수된 문의가 없어요</div>';
-    return;
-  }
-
-  contactList.innerHTML = '';
-  threads.forEach(t => {
-    const hasUnread = t.contact_messages?.some(m => !m.is_read && m.sender_type === 'user');
-    const date = new Date(t.updated_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
-    const isClosed = t.status === 'closed';
-    contactList.innerHTML += `
-      <div class="admin-row" style="cursor:pointer;${isClosed ? 'opacity:0.5;' : ''}" onclick="openContactThread('${t.id}', true)">
-        <div class="admin-avatar" style="background:${hasUnread ? 'var(--orange)' : 'var(--blue)'};">${(t.nickname || '?')[0]}</div>
-        <div class="admin-info">
-          <div class="admin-name" style="display:flex;align-items:center;gap:6px;">
-            ${escapeHtml(t.nickname)} · ${escapeHtml(t.subject)}
-            ${hasUnread ? '<span class="badge badge-orange" style="font-size:9px;">NEW</span>' : ''}
+  } else {
+    contactList.innerHTML = '';
+    threads.forEach(t => {
+      const msgs = threadMsgMap[t.id] || [];
+      const hasUnread = msgs.some(m => !m.is_read && m.sender_type === 'user');
+      const date = new Date(t.updated_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
+      const isClosed = t.status === 'closed';
+      contactList.innerHTML += `
+        <div class="admin-row" style="cursor:pointer;${isClosed ? 'opacity:0.5;' : ''}" onclick="openContactThread('${t.id}', true)">
+          <div class="admin-avatar" style="background:${hasUnread ? 'var(--orange)' : 'var(--blue)'};">${(t.nickname || '?')[0]}</div>
+          <div class="admin-info">
+            <div class="admin-name" style="display:flex;align-items:center;gap:6px;">
+              ${escapeHtml(t.nickname)} · ${escapeHtml(t.subject)}
+              ${hasUnread ? '<span class="badge badge-orange" style="font-size:9px;">NEW</span>' : ''}
+            </div>
+            <div class="admin-sub">${date} · ${isClosed ? '종료됨' : '진행중'}</div>
           </div>
-          <div class="admin-sub">${date} · ${isClosed ? '종료됨' : '진행중'}</div>
-        </div>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>`;
-  });
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>`;
+    });
+  }
 
   // 승인된 회원 목록
   const approvedList = document.getElementById('admin-approved-list');
