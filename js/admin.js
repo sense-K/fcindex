@@ -1,6 +1,15 @@
 // ===== 어드민 =====
 const BRAND_CAT_EMOJI = { '커피':'☕', '치킨':'🍗', '버거':'🍔', '한식':'🍱', '피자':'🍕', '디저트':'🧋', '편의점':'🏪', '기타':'🏬' };
 
+function toggleBrandManage() {
+  const body = document.getElementById('brand-manage-body');
+  const icon = document.getElementById('brand-manage-toggle-icon');
+  const isHidden = body.classList.contains('hidden');
+  body.classList.toggle('hidden');
+  icon.style.transform = isHidden ? 'rotate(180deg)' : '';
+  if (isHidden) loadAdminBrands();
+}
+
 async function loadAdminBrands() {
   if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
   const { data: brands } = await sb.from('brands').select('id, name, category').order('category').order('name');

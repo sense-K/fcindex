@@ -1342,26 +1342,31 @@ body {
       </div>
       <!-- 브랜드 관리 -->
       <div class="card">
-        <div class="card-title">브랜드 관리</div>
-        <div id="brand-manage-list"></div>
-        <div style="border-top:0.5px solid var(--border);margin-top:12px;padding-top:12px;">
-          <div style="font-size:11px;font-weight:500;color:var(--gray);margin-bottom:8px;">브랜드 추가</div>
-          <div id="brand-add-alert"></div>
-          <div class="form-row" style="margin-bottom:8px;">
-            <select class="form-select" id="new-brand-category" style="font-size:13px;">
-              <option value="">카테고리</option>
-              <option value="커피">커피</option>
-              <option value="치킨">치킨</option>
-              <option value="버거">버거</option>
-              <option value="한식">한식</option>
-              <option value="피자">피자</option>
-              <option value="디저트">디저트</option>
-              <option value="편의점">편의점</option>
-              <option value="기타">기타</option>
-            </select>
-            <input class="form-input" id="new-brand-name" type="text" placeholder="브랜드명" style="font-size:13px;">
+        <div style="font-size:11px;font-weight:500;color:var(--gray);cursor:pointer;display:flex;justify-content:space-between;align-items:center;" onclick="toggleBrandManage()">
+          <span>브랜드 관리</span>
+          <svg id="brand-manage-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div id="brand-manage-body" class="hidden" style="border-top:0.5px solid var(--border);margin-top:10px;padding-top:12px;">
+          <div id="brand-manage-list"></div>
+          <div style="border-top:0.5px solid var(--border);margin-top:12px;padding-top:12px;">
+            <div style="font-size:11px;font-weight:500;color:var(--gray);margin-bottom:8px;">브랜드 추가</div>
+            <div id="brand-add-alert"></div>
+            <div class="form-row" style="margin-bottom:8px;">
+              <select class="form-select" id="new-brand-category" style="font-size:13px;">
+                <option value="">카테고리</option>
+                <option value="커피">커피</option>
+                <option value="치킨">치킨</option>
+                <option value="버거">버거</option>
+                <option value="한식">한식</option>
+                <option value="피자">피자</option>
+                <option value="디저트">디저트</option>
+                <option value="편의점">편의점</option>
+                <option value="기타">기타</option>
+              </select>
+              <input class="form-input" id="new-brand-name" type="text" placeholder="브랜드명" style="font-size:13px;">
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="adminAddBrand()" style="width:100%;">+ 추가</button>
           </div>
-          <button class="btn btn-primary btn-sm" onclick="adminAddBrand()" style="width:100%;">+ 추가</button>
         </div>
       </div>
     </div>
