@@ -102,7 +102,13 @@ async function doLogin() {
   if (!email || !pw) return showAlert('login-alert', '이메일과 비밀번호를 입력해주세요.', 'error');
 
   const { error } = await sb.auth.signInWithPassword({ email, password: pw });
-  if (error) return showAlert('login-alert', '이메일 또는 비밀번호가 틀렸어요.', 'error');
+  if (error) {
+    const msg = error.message?.toLowerCase() || '';
+    if (msg.includes('email not confirmed')) {
+      return showAlert('login-alert', '이메일 인증이 완료되지 않았어요. 가입 시 받은 인증 메일을 확인하거나, 관리자에게 문의해주세요.', 'error');
+    }
+    return showAlert('login-alert', '이메일 또는 비밀번호가 틀렸어요.', 'error');
+  }
   const { data: { user } } = await sb.auth.getUser();
   currentUser = user;
   await loadProfile();
