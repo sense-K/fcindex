@@ -1,4 +1,13 @@
-function num(id) { return parseFloat(document.getElementById(id).value) || 0; }
+function num(id) { return parseFloat((document.getElementById(id)?.value || '').replace(/,/g, '')) || 0; }
+function formatNumberInput(input) {
+  const v = input.value.replace(/[^\d]/g, '');
+  input.value = v ? parseInt(v, 10).toLocaleString('ko-KR') : '';
+}
+function setNumInput(id, val) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.value = (val && val > 0) ? parseInt(val).toLocaleString('ko-KR') : '';
+}
 function numFmt(n) { return Math.round(n || 0).toLocaleString('ko-KR'); }
 function pctFmt(n) { return (n || 0).toFixed(1) + '%'; }
 

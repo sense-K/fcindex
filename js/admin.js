@@ -1,4 +1,46 @@
 // ===== 어드민 =====
+const BRAND_CAT_EMOJI = { '커피':'☕', '치킨':'🍗', '버거':'🍔', '한식':'🍱', '피자':'🍕', '디저트':'🧋', '편의점':'🏪', '기타':'🏬' };
+
+async function loadAdminBrands() {
+  if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
+  const { data: brands } = await sb.from('brands').select('id, name, category').order('category').order('name');
+  const listEl = document.getElementById('brand-manage-list');
+  if (!brands || brands.length === 0) {
+    listEl.innerHTML = '<div style="font-size:13px;color:var(--gray);padding:4px 0 8px;">등록된 브랜드가 없어요</div>';
+    return;
+  }
+  listEl.innerHTML = brands.map(b => `
+    <div class="admin-row" style="padding:8px 0;">
+      <span style="font-size:13px;flex:1;">${BRAND_CAT_EMOJI[b.category] || '🏬'} ${b.category} · ${escapeHtml(b.name)}</span>
+      <button class="btn btn-danger btn-sm" style="padding:4px 10px;font-size:11px;" onclick="adminDeleteBrand('${b.id}', '${escapeHtml(b.name)}')">삭제</button>
+    </div>
+  `).join('');
+}
+
+async function adminAddBrand() {
+  if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
+  const category = document.getElementById('new-brand-category').value;
+  const name = document.getElementById('new-brand-name').value.trim();
+  if (!category) return showAlert('brand-add-alert', '카테고리를 선택해주세요.', 'error');
+  if (!name) return showAlert('brand-add-alert', '브랜드명을 입력해주세요.', 'error');
+  const { error } = await sb.from('brands').insert({ name, category });
+  if (error) return showAlert('brand-add-alert', '추가 실패: ' + error.message, 'error');
+  document.getElementById('new-brand-name').value = '';
+  document.getElementById('new-brand-category').value = '';
+  document.getElementById('brand-add-alert').innerHTML = '';
+  await loadBrands();
+  await loadAdminBrands();
+}
+
+async function adminDeleteBrand(id, name) {
+  if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
+  if (!confirm(`'${name}' 브랜드를 삭제할까요?\n해당 브랜드를 사용 중인 회원이 있으면 삭제할 수 없어요.`)) return;
+  const { error } = await sb.from('brands').delete().eq('id', id);
+  if (error) return alert('삭제 실패: ' + error.message);
+  await loadBrands();
+  await loadAdminBrands();
+}
+
 async function loadAdmin() {
   const { data: profiles } = await sb.from('profiles')
     .select('*, brands(name)').order('created_at', { ascending: false });
@@ -71,6 +113,9 @@ async function loadAdmin() {
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>`;
   });
+
+  // 브랜드 관리
+  await loadAdminBrands();
 }
 
 // ===== 관리자: 게시글 관리 =====

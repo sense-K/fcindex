@@ -1028,20 +1028,40 @@ body {
       </div>
       <div class="card">
         <div class="card-title">매출</div>
-        <div class="form-group" style="margin:0;"><label class="form-label">월 총매출 (원)</label><input class="form-input right" type="number" id="sd-revenue" placeholder="0" oninput="calcProfit()"></div>
+        <div class="form-group" style="margin:0;"><label class="form-label">월 총매출 (원)</label><input class="form-input right" type="text" inputmode="numeric" id="sd-revenue" placeholder="0" oninput="formatNumberInput(this);calcProfit()"></div>
       </div>
       <div class="card">
         <div class="card-title">고정비</div>
-        <div class="form-group"><label class="form-label">인건비 (원)</label><input class="form-input right" type="number" id="sd-labor" placeholder="0" oninput="calcProfit()"></div>
-        <div class="form-group"><label class="form-label">임대료 (원)</label><input class="form-input right" type="number" id="sd-rent" placeholder="0" oninput="calcProfit()"></div>
-        <div class="form-group"><label class="form-label">본사 로열티 (원)</label><input class="form-input right" type="number" id="sd-royalty" placeholder="0" oninput="calcProfit()"></div>
-        <div class="form-group" style="margin:0;"><label class="form-label">관리비 (원)</label><input class="form-input right" type="number" id="sd-utility" placeholder="0" oninput="calcProfit()"></div>
+        <div class="form-group"><label class="form-label">인건비 (원)</label><input class="form-input right" type="text" inputmode="numeric" id="sd-labor" placeholder="0" oninput="formatNumberInput(this);calcProfit()"></div>
+        <div class="form-group"><label class="form-label">임대료 (원)</label><input class="form-input right" type="text" inputmode="numeric" id="sd-rent" placeholder="0" oninput="formatNumberInput(this);calcProfit()"></div>
+        <div class="form-group">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+            <label class="form-label" style="margin:0;">본사 로열티</label>
+            <div style="display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;font-family:'Paperlogy',sans-serif;">
+              <button id="royalty-btn-fixed" onclick="setRoyaltyMode('fixed')" style="padding:3px 12px;font-size:11px;font-family:'Paperlogy',sans-serif;border:none;background:var(--navy);color:#fff;cursor:pointer;">금액</button>
+              <button id="royalty-btn-pct" onclick="setRoyaltyMode('pct')" style="padding:3px 12px;font-size:11px;font-family:'Paperlogy',sans-serif;border:none;background:transparent;color:var(--gray);cursor:pointer;">%</button>
+            </div>
+          </div>
+          <!-- 금액 입력 (항상 DOM에 존재, pct 모드에서도 숨겨진 채로 값 업데이트됨) -->
+          <div id="royalty-fixed-wrap">
+            <input class="form-input right" type="text" inputmode="numeric" id="sd-royalty" placeholder="0" oninput="formatNumberInput(this);calcProfit()">
+          </div>
+          <!-- % 입력 -->
+          <div id="royalty-pct-wrap" class="hidden">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <input class="form-input right" type="text" inputmode="decimal" id="sd-royalty-pct" placeholder="0.0" style="flex:1;" oninput="calcProfit()">
+              <span style="font-size:14px;font-weight:500;color:var(--gray);flex-shrink:0;">%</span>
+            </div>
+            <div style="font-size:11px;color:var(--gray);margin-top:5px;text-align:right;" id="sd-royalty-pct-calc">= 0원</div>
+          </div>
+        </div>
+        <div class="form-group" style="margin:0;"><label class="form-label">관리비 (원)</label><input class="form-input right" type="text" inputmode="numeric" id="sd-utility" placeholder="0" oninput="formatNumberInput(this);calcProfit()"></div>
       </div>
       <div class="card">
         <div class="card-title">변동비</div>
-        <div class="form-group"><label class="form-label">식재료비 (원)</label><input class="form-input right" type="number" id="sd-material" placeholder="0" oninput="calcProfit()"></div>
-        <div class="form-group"><label class="form-label">배달 수수료 (원)</label><input class="form-input right" type="number" id="sd-delivery" placeholder="0" oninput="calcProfit()"></div>
-        <div class="form-group" style="margin:0;"><label class="form-label">기타비용 (원)</label><input class="form-input right" type="number" id="sd-other" placeholder="0" oninput="calcProfit()"></div>
+        <div class="form-group"><label class="form-label">식재료비 (원)</label><input class="form-input right" type="text" inputmode="numeric" id="sd-material" placeholder="0" oninput="formatNumberInput(this);calcProfit()"></div>
+        <div class="form-group"><label class="form-label">배달 수수료 (원)</label><input class="form-input right" type="text" inputmode="numeric" id="sd-delivery" placeholder="0" oninput="formatNumberInput(this);calcProfit()"></div>
+        <div class="form-group" style="margin:0;"><label class="form-label">기타비용 (원)</label><input class="form-input right" type="text" inputmode="numeric" id="sd-other" placeholder="0" oninput="formatNumberInput(this);calcProfit()"></div>
       </div>
       <div class="profit-box">
         <div><div class="profit-label">예상 순수익</div></div>
@@ -1103,30 +1123,6 @@ body {
           <div style="font-size:13px;color:var(--gray);padding:4px 0 8px;">문의 내역이 없어요</div>
         </div>
         <button class="btn btn-outline btn-sm" data-page="contact" style="margin-top:4px;width:100%;">+ 새 문의하기</button>
-      </div>
-      <!-- 관리자: 브랜드 관리 -->
-      <div class="card hidden" id="mp-brand-manage" style="margin-top:4px;">
-        <div class="card-title">브랜드 관리</div>
-        <div id="brand-manage-list"></div>
-        <div style="border-top:0.5px solid var(--border);margin-top:12px;padding-top:12px;">
-          <div style="font-size:11px;font-weight:500;color:var(--gray);margin-bottom:8px;">브랜드 추가</div>
-          <div id="brand-add-alert"></div>
-          <div class="form-row" style="margin-bottom:8px;">
-            <select class="form-select" id="new-brand-category" style="font-size:13px;">
-              <option value="">카테고리</option>
-              <option value="커피">커피</option>
-              <option value="치킨">치킨</option>
-              <option value="버거">버거</option>
-              <option value="한식">한식</option>
-              <option value="피자">피자</option>
-              <option value="디저트">디저트</option>
-              <option value="편의점">편의점</option>
-              <option value="기타">기타</option>
-            </select>
-            <input class="form-input" id="new-brand-name" type="text" placeholder="브랜드명" style="font-size:13px;">
-          </div>
-          <button class="btn btn-primary btn-sm" onclick="adminAddBrand()" style="width:100%;">+ 추가</button>
-        </div>
       </div>
       <!-- 하단 버튼 -->
       <div style="margin-top:8px;">
@@ -1332,6 +1328,30 @@ body {
           <div style="text-align:center;padding:24px;color:var(--gray);font-size:13px;">접수된 문의가 없어요</div>
         </div>
       </div>
+      <!-- 브랜드 관리 -->
+      <div class="card">
+        <div class="card-title">브랜드 관리</div>
+        <div id="brand-manage-list"></div>
+        <div style="border-top:0.5px solid var(--border);margin-top:12px;padding-top:12px;">
+          <div style="font-size:11px;font-weight:500;color:var(--gray);margin-bottom:8px;">브랜드 추가</div>
+          <div id="brand-add-alert"></div>
+          <div class="form-row" style="margin-bottom:8px;">
+            <select class="form-select" id="new-brand-category" style="font-size:13px;">
+              <option value="">카테고리</option>
+              <option value="커피">커피</option>
+              <option value="치킨">치킨</option>
+              <option value="버거">버거</option>
+              <option value="한식">한식</option>
+              <option value="피자">피자</option>
+              <option value="디저트">디저트</option>
+              <option value="편의점">편의점</option>
+              <option value="기타">기타</option>
+            </select>
+            <input class="form-input" id="new-brand-name" type="text" placeholder="브랜드명" style="font-size:13px;">
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="adminAddBrand()" style="width:100%;">+ 추가</button>
+        </div>
+      </div>
     </div>
     </div>
 
@@ -1443,16 +1463,16 @@ body {
 </div>
 
 <script src="js/config.js?v=2"></script>
-<script src="js/utils.js?v=2"></script>
+<script src="js/utils.js?v=6"></script>
 <script src="js/brands.js?v=2"></script>
 <script src="js/router.js?v=6"></script>
 <script src="js/auth.js?v=5"></script>
 <script src="js/home.js?v=6"></script>
-<script src="js/store-data.js?v=5"></script>
-<script src="js/mypage.js?v=5"></script>
+<script src="js/store-data.js?v=6"></script>
+<script src="js/mypage.js?v=6"></script>
 <script src="js/contact.js?v=5"></script>
 <script src="js/community.js?v=6"></script>
-<script src="js/admin.js?v=5"></script>
+<script src="js/admin.js?v=6"></script>
 <script src="js/contact-thread.js?v=2"></script>
 <script src="js/app.js?v=6"></script>
 <!-- 공통 탭바 -->

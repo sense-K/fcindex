@@ -1,6 +1,23 @@
 // ===== 데이터 입력 =====
+let royaltyMode = 'fixed'; // 'fixed' | 'pct'
+
+function setRoyaltyMode(mode) {
+  royaltyMode = mode;
+  document.getElementById('royalty-fixed-wrap').classList.toggle('hidden', mode === 'pct');
+  document.getElementById('royalty-pct-wrap').classList.toggle('hidden', mode === 'fixed');
+  const fixedBtn = document.getElementById('royalty-btn-fixed');
+  const pctBtn = document.getElementById('royalty-btn-pct');
+  fixedBtn.style.background = mode === 'fixed' ? 'var(--navy)' : 'transparent';
+  fixedBtn.style.color = mode === 'fixed' ? '#fff' : 'var(--gray)';
+  pctBtn.style.background = mode === 'pct' ? 'var(--navy)' : 'transparent';
+  pctBtn.style.color = mode === 'pct' ? '#fff' : 'var(--gray)';
+  calcProfit();
+}
+
 async function loadStoreDataPage() {
   existingDataId = null;
+  royaltyMode = 'fixed';
+  setRoyaltyMode('fixed');
   clearInputs();
   updateSdMode(false);
   calcProfit();
@@ -35,22 +52,36 @@ function updateSdMode(isEdit) {
 }
 
 function fillInputs(d) {
-  document.getElementById('sd-revenue').value = d.revenue || '';
-  document.getElementById('sd-labor').value = d.labor_cost || '';
-  document.getElementById('sd-rent').value = d.rent || '';
-  document.getElementById('sd-royalty').value = d.royalty || '';
-  document.getElementById('sd-utility').value = d.utility_cost || '';
-  document.getElementById('sd-material').value = d.material_cost || '';
-  document.getElementById('sd-delivery').value = d.delivery_fee || '';
-  document.getElementById('sd-other').value = d.other_cost || '';
+  setNumInput('sd-revenue', d.revenue);
+  setNumInput('sd-labor', d.labor_cost);
+  setNumInput('sd-rent', d.rent);
+  setNumInput('sd-royalty', d.royalty);
+  setNumInput('sd-utility', d.utility_cost);
+  setNumInput('sd-material', d.material_cost);
+  setNumInput('sd-delivery', d.delivery_fee);
+  setNumInput('sd-other', d.other_cost);
 }
 
 function clearInputs() {
   ['sd-revenue', 'sd-labor', 'sd-rent', 'sd-royalty', 'sd-utility', 'sd-material', 'sd-delivery', 'sd-other']
-    .forEach(id => document.getElementById(id).value = '');
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  const pctEl = document.getElementById('sd-royalty-pct');
+  if (pctEl) pctEl.value = '';
+  const calcEl = document.getElementById('sd-royalty-pct-calc');
+  if (calcEl) calcEl.textContent = '= 0원';
 }
 
 function calcProfit() {
+  // % 모드일 때 로열티 금액 자동 계산
+  if (royaltyMode === 'pct') {
+    const pct = parseFloat(document.getElementById('sd-royalty-pct')?.value) || 0;
+    const rev = num('sd-revenue');
+    const royaltyAmt = Math.round(rev * pct / 100);
+    const royaltyEl = document.getElementById('sd-royalty');
+    if (royaltyEl) royaltyEl.value = royaltyAmt ? royaltyAmt.toLocaleString('ko-KR') : '';
+    const calcEl = document.getElementById('sd-royalty-pct-calc');
+    if (calcEl) calcEl.textContent = '= ' + royaltyAmt.toLocaleString('ko-KR') + '원';
+  }
   const rev = num('sd-revenue');
   const total = num('sd-labor') + num('sd-rent') + num('sd-royalty') + num('sd-utility') + num('sd-material') + num('sd-delivery') + num('sd-other');
   const profit = rev - total;
