@@ -1251,19 +1251,26 @@ body {
         <span id="contact-thread-status-badge" class="badge badge-approved">진행중</span>
       </div>
     </nav>
-    <div class="container" style="padding-top:20px;padding-bottom:140px;">
-      <div id="contact-thread-subject" style="font-size:17px;font-weight:700;margin-bottom:4px;"></div>
-      <div id="contact-thread-date" style="font-size:11px;color:var(--gray);margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:16px;"></div>
-      <div id="contact-thread-messages" style="display:flex;flex-direction:column;gap:12px;"></div>
-    </div>
-    <!-- 답장 영역 (탭바 위에 고정) -->
-    <div style="position:fixed;bottom:56px;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid var(--border);padding:10px 16px;z-index:50;">
-      <div id="contact-thread-closed-notice" class="hidden" style="text-align:center;font-size:13px;color:var(--gray);padding:8px 0;">이 문의는 종료됐어요</div>
-      <div id="contact-thread-reply-form" style="display:flex;gap:8px;align-items:flex-end;">
-        <textarea id="contact-thread-reply-input" class="form-input" rows="2" placeholder="메시지를 입력해주세요" style="resize:none;flex:1;padding:10px 12px;"></textarea>
-        <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;">
-          <button class="btn btn-primary btn-sm" id="contact-thread-send-btn" onclick="sendThreadReply()" style="white-space:nowrap;">전송</button>
-          <button id="contact-thread-close-btn" class="btn btn-ghost btn-sm hidden" onclick="closeContactThread()" style="font-size:11px;white-space:nowrap;color:#EF4444;">종료</button>
+    <div class="container" style="padding-top:20px;padding-bottom:40px;">
+      <!-- 원본 문의 -->
+      <div class="card" style="margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+          <span id="contact-thread-subject" style="font-size:12px;font-weight:600;background:var(--light);color:var(--navy);padding:2px 8px;border-radius:4px;"></span>
+          <span id="contact-thread-date" style="font-size:11px;color:var(--gray);"></span>
+        </div>
+        <div id="contact-thread-original" style="font-size:14px;line-height:1.75;white-space:pre-wrap;word-break:break-word;color:var(--navy);"></div>
+      </div>
+      <!-- 관리자 답변 목록 -->
+      <div id="contact-thread-replies" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
+      <!-- 종료 안내 -->
+      <div id="contact-thread-closed-notice" class="hidden" style="text-align:center;font-size:13px;color:var(--gray);padding:16px 0;">이 문의는 종료됐어요</div>
+      <!-- 관리자 답변 폼 -->
+      <div id="contact-thread-reply-form" class="card hidden">
+        <div style="font-size:11px;font-weight:500;color:var(--gray);margin-bottom:8px;">답변 작성</div>
+        <textarea id="contact-thread-reply-input" class="form-input" rows="4" placeholder="답변 내용을 입력해주세요" style="resize:none;margin-bottom:10px;"></textarea>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-primary" id="contact-thread-send-btn" onclick="sendThreadReply()" style="flex:1;">답변 등록</button>
+          <button id="contact-thread-close-btn" class="btn hidden" onclick="closeContactThread()" style="background:#FEE2E2;color:#DC2626;border:none;white-space:nowrap;">문의 종료</button>
         </div>
       </div>
     </div>
@@ -1490,7 +1497,7 @@ body {
 <script src="js/contact.js?v=5"></script>
 <script src="js/community.js?v=8"></script>
 <script src="js/admin.js?v=7"></script>
-<script src="js/contact-thread.js?v=2"></script>
+<script src="js/contact-thread.js?v=3"></script>
 <script src="js/app.js?v=6"></script>
 <!-- 공통 탭바 -->
 <div id="global-tab-bar" class="tab-bar hidden"></div>
