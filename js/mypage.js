@@ -130,6 +130,7 @@ async function adminChangeBrand(brandId) {
 const BRAND_CAT_EMOJI = { '커피':'☕', '치킨':'🍗', '버거':'🍔', '한식':'🍱', '피자':'🍕', '디저트':'🧋', '편의점':'🏪', '기타':'🏬' };
 
 async function loadAdminBrands() {
+  if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
   const card = document.getElementById('mp-brand-manage');
   card.classList.remove('hidden');
   const { data: brands } = await sb.from('brands').select('id, name, category').order('category').order('name');
@@ -147,6 +148,7 @@ async function loadAdminBrands() {
 }
 
 async function adminAddBrand() {
+  if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
   const category = document.getElementById('new-brand-category').value;
   const name = document.getElementById('new-brand-name').value.trim();
   if (!category) return showAlert('brand-add-alert', '카테고리를 선택해주세요.', 'error');
@@ -161,6 +163,7 @@ async function adminAddBrand() {
 }
 
 async function adminDeleteBrand(id, name) {
+  if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
   if (!confirm(`'${name}' 브랜드를 삭제할까요?\n해당 브랜드를 사용 중인 회원이 있으면 삭제할 수 없어요.`)) return;
   const { error } = await sb.from('brands').delete().eq('id', id);
   if (error) return alert('삭제 실패: ' + error.message);
