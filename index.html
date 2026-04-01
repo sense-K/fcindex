@@ -1312,13 +1312,19 @@ body {
       <div class="nav-right"><span style="font-size:11px;color:rgba(255,255,255,0.5);">관리자 전용</span></div>
     </nav>
     <div class="container-wide">
+      <!-- 미승인 사용자 -->
       <div class="card" style="margin-bottom:16px;">
-        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-          <span>가입 신청 목록</span>
-          <span class="badge badge-pending" id="admin-pending-count">대기 0건</span>
+        <div style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;" onclick="toggleAdminPending()">
+          <span style="font-size:13px;font-weight:600;color:var(--navy);">가입 신청 목록</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-pending" id="admin-pending-count">대기 0건</span>
+            <svg id="admin-pending-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
         </div>
-        <div id="admin-list">
-          <div style="text-align:center;padding:24px;color:var(--gray);font-size:13px;">대기 중인 신청이 없어요</div>
+        <div id="admin-pending-body" class="hidden" style="border-top:0.5px solid var(--border);margin-top:10px;padding-top:12px;">
+          <input type="text" id="admin-pending-search" class="form-input" placeholder="이메일로 검색..." style="margin-bottom:10px;font-size:13px;" oninput="searchAdminPending(this.value)">
+          <div id="admin-list"></div>
+          <div id="admin-pending-pagination" style="display:flex;justify-content:center;align-items:center;gap:8px;margin-top:12px;"></div>
         </div>
       </div>
       <div class="card">
@@ -1339,12 +1345,17 @@ body {
       </div>
       <!-- 승인된 회원 목록 -->
       <div class="card">
-        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-          <span>승인된 회원 목록</span>
-          <span class="badge badge-approved" id="admin-approved-count">0명</span>
+        <div style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;" onclick="toggleAdminApproved()">
+          <span style="font-size:13px;font-weight:600;color:var(--navy);">승인된 회원 목록</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-approved" id="admin-approved-count">0명</span>
+            <svg id="admin-approved-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
         </div>
-        <div id="admin-approved-list">
-          <div style="text-align:center;padding:24px;color:var(--gray);font-size:13px;">승인된 회원이 없어요</div>
+        <div id="admin-approved-body" class="hidden" style="border-top:0.5px solid var(--border);margin-top:10px;padding-top:12px;">
+          <input type="text" id="admin-approved-search" class="form-input" placeholder="이메일로 검색..." style="margin-bottom:10px;font-size:13px;" oninput="searchAdminApproved(this.value)">
+          <div id="admin-approved-list"></div>
+          <div id="admin-approved-pagination" style="display:flex;justify-content:center;align-items:center;gap:8px;margin-top:12px;"></div>
         </div>
       </div>
       <!-- 브랜드 관리 -->
@@ -1496,7 +1507,7 @@ body {
 <script src="js/mypage.js?v=6"></script>
 <script src="js/contact.js?v=5"></script>
 <script src="js/community.js?v=8"></script>
-<script src="js/admin.js?v=8"></script>
+<script src="js/admin.js?v=9"></script>
 <script src="js/contact-thread.js?v=3"></script>
 <script src="js/app.js?v=6"></script>
 <!-- 공통 탭바 -->
