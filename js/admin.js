@@ -33,14 +33,19 @@ async function loadPendingUsers() {
   const from = adminPendingPage * ADMIN_USER_PER_PAGE;
   const to = from + ADMIN_USER_PER_PAGE - 1;
 
+  // count는 별도 쿼리 (조인 시 뻥튀기 방지)
+  let countQuery = sb.from('profiles').select('*', { count: 'exact', head: true }).eq('auth_status', 'pending');
+  if (adminPendingSearch) countQuery = countQuery.ilike('email', `%${adminPendingSearch}%`);
+  const { count } = await countQuery;
+
   let query = sb.from('profiles')
-    .select('*, brands(name)', { count: 'exact' })
+    .select('*, brands(name)')
     .eq('auth_status', 'pending')
     .order('created_at', { ascending: false })
     .range(from, to);
   if (adminPendingSearch) query = query.ilike('email', `%${adminPendingSearch}%`);
 
-  const { data, count } = await query;
+  const { data } = await query;
 
   if (!data || data.length === 0) {
     listEl.innerHTML = '<div style="text-align:center;padding:24px;color:var(--gray);font-size:13px;">대기 중인 신청이 없어요</div>';
@@ -99,14 +104,19 @@ async function loadApprovedUsers() {
   const from = adminApprovedPage * ADMIN_USER_PER_PAGE;
   const to = from + ADMIN_USER_PER_PAGE - 1;
 
+  // count는 별도 쿼리 (조인 시 뻥튀기 방지)
+  let countQuery = sb.from('profiles').select('*', { count: 'exact', head: true }).eq('auth_status', 'approved');
+  if (adminApprovedSearch) countQuery = countQuery.ilike('email', `%${adminApprovedSearch}%`);
+  const { count } = await countQuery;
+
   let query = sb.from('profiles')
-    .select('*, brands(name)', { count: 'exact' })
+    .select('*, brands(name)')
     .eq('auth_status', 'approved')
     .order('created_at', { ascending: false })
     .range(from, to);
   if (adminApprovedSearch) query = query.ilike('email', `%${adminApprovedSearch}%`);
 
-  const { data, count } = await query;
+  const { data } = await query;
 
   if (!data || data.length === 0) {
     listEl.innerHTML = '<div style="text-align:center;padding:24px;color:var(--gray);font-size:13px;">승인된 회원이 없어요</div>';
