@@ -5,6 +5,7 @@ let currentFlair = null;
 let currentPostBoard = 'free';
 let currentPostHidden = false;
 let communityPage = 0;
+let communitySearchQuery = '';
 const POSTS_PER_PAGE = 20;
 
 const BOARD_FLAIRS = {
@@ -32,6 +33,9 @@ async function switchBoard(board) {
   currentBoard = board;
   currentFlair = null;
   communityPage = 0;
+  communitySearchQuery = '';
+  const searchEl = document.getElementById('comm-search');
+  if (searchEl) searchEl.value = '';
   renderBoardUI();
   await loadCommunity();
 }
@@ -40,8 +44,22 @@ async function switchBoard(board) {
 async function switchFlair(flair) {
   currentFlair = flair;
   communityPage = 0;
+  communitySearchQuery = '';
+  const searchEl = document.getElementById('comm-search');
+  if (searchEl) searchEl.value = '';
   renderFlairFilter();
   await loadCommunity();
+}
+
+// 게시글 검색
+let _searchTimer = null;
+function searchPosts(q) {
+  clearTimeout(_searchTimer);
+  _searchTimer = setTimeout(async () => {
+    communitySearchQuery = q.trim();
+    communityPage = 0;
+    await loadCommunity();
+  }, 350);
 }
 
 function renderBoardUI() {
@@ -134,6 +152,9 @@ async function loadCommunity(append = false) {
   }
   if (currentFlair) {
     query = query.eq('flair', currentFlair);
+  }
+  if (communitySearchQuery) {
+    query = query.ilike('title', `%${communitySearchQuery}%`);
   }
 
   const { data } = await query;
@@ -298,14 +319,24 @@ function renderCommentItem(c) {
       <span class="comment-author">${escapeHtml(c.nickname || '익명')}</span>
       <div style="display:flex;align-items:center;gap:8px;">
         <span class="comment-date">${date}</span>
-        ${isMine ? `<button class="comment-delete-btn">삭제</button>` : ''}
+        ${isMine ? `<button class="comment-edit-btn">수정</button><button class="comment-delete-btn">삭제</button>` : ''}
       </div>
     </div>
     <div class="comment-text"></div>
+    <div class="comment-edit-form hidden" style="margin-top:6px;">
+      <textarea class="form-input comment-edit-input" rows="2" style="resize:none;font-size:13px;"></textarea>
+      <div style="display:flex;gap:6px;margin-top:6px;">
+        <button class="btn btn-primary btn-sm comment-edit-save" style="flex:1;">저장</button>
+        <button class="btn btn-ghost btn-sm comment-edit-cancel" style="flex:1;">취소</button>
+      </div>
+    </div>
     <div class="comment-reply-hint">↩ 답글 달기</div>`;
   div.querySelector('.comment-text').textContent = c.content;
   if (isMine) {
+    div.querySelector('.comment-edit-btn').addEventListener('click', e => { e.stopPropagation(); toggleCommentEdit(div, c); });
     div.querySelector('.comment-delete-btn').addEventListener('click', e => { e.stopPropagation(); deleteComment(c.id); });
+    div.querySelector('.comment-edit-save').addEventListener('click', e => { e.stopPropagation(); saveCommentEdit(div, c.id); });
+    div.querySelector('.comment-edit-cancel').addEventListener('click', e => { e.stopPropagation(); cancelCommentEdit(div); });
   }
   return div;
 }
@@ -321,15 +352,51 @@ function renderReplyItem(r, parentNickname) {
       <span class="comment-author">${escapeHtml(r.nickname || '익명')}</span>
       <div style="display:flex;align-items:center;gap:8px;">
         <span class="comment-date">${date}</span>
-        ${isMine ? `<button class="comment-delete-btn">삭제</button>` : ''}
+        ${isMine ? `<button class="comment-edit-btn">수정</button><button class="comment-delete-btn">삭제</button>` : ''}
       </div>
     </div>
-    <div class="comment-text"></div>`;
+    <div class="comment-text"></div>
+    <div class="comment-edit-form hidden" style="margin-top:6px;">
+      <textarea class="form-input comment-edit-input" rows="2" style="resize:none;font-size:13px;"></textarea>
+      <div style="display:flex;gap:6px;margin-top:6px;">
+        <button class="btn btn-primary btn-sm comment-edit-save" style="flex:1;">저장</button>
+        <button class="btn btn-ghost btn-sm comment-edit-cancel" style="flex:1;">취소</button>
+      </div>
+    </div>`;
   div.querySelector('.comment-text').textContent = r.content;
   if (isMine) {
+    div.querySelector('.comment-edit-btn').addEventListener('click', e => { e.stopPropagation(); toggleCommentEdit(div, r); });
     div.querySelector('.comment-delete-btn').addEventListener('click', e => { e.stopPropagation(); deleteComment(r.id); });
+    div.querySelector('.comment-edit-save').addEventListener('click', e => { e.stopPropagation(); saveCommentEdit(div, r.id); });
+    div.querySelector('.comment-edit-cancel').addEventListener('click', e => { e.stopPropagation(); cancelCommentEdit(div); });
   }
   return div;
+}
+
+function toggleCommentEdit(el, comment) {
+  const textEl = el.querySelector('.comment-text');
+  const editForm = el.querySelector('.comment-edit-form');
+  const editInput = el.querySelector('.comment-edit-input');
+  editInput.value = textEl.textContent;
+  textEl.classList.add('hidden');
+  editForm.classList.remove('hidden');
+  editInput.focus();
+}
+
+function cancelCommentEdit(el) {
+  el.querySelector('.comment-text').classList.remove('hidden');
+  el.querySelector('.comment-edit-form').classList.add('hidden');
+}
+
+async function saveCommentEdit(el, commentId) {
+  const input = el.querySelector('.comment-edit-input');
+  const newContent = input.value.trim();
+  if (!newContent) return;
+  const { error } = await sb.from('post_comments').update({ content: newContent }).eq('id', commentId);
+  if (error) { alert('수정 실패: ' + error.message); return; }
+  const textEl = el.querySelector('.comment-text');
+  textEl.textContent = newContent;
+  cancelCommentEdit(el);
 }
 
 function createReplyForm(commentId, parentNickname) {
@@ -419,10 +486,14 @@ async function deleteComment(commentId) {
 function showWritePost() {
   renderWriteFlairs();
   document.getElementById('write-post-form').classList.remove('hidden');
+  document.getElementById('fab-write-btn')?.classList.add('hidden');
+  document.getElementById('post-title').focus();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function hideWritePost() {
   document.getElementById('write-post-form').classList.add('hidden');
+  document.getElementById('fab-write-btn')?.classList.remove('hidden');
   document.getElementById('post-title').value = '';
   document.getElementById('post-content').value = '';
   document.getElementById('post-flair').value = '';

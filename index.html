@@ -393,6 +393,8 @@ body {
 .comment-delete-btn:hover { color:#EF4444; }
 .comment-reply-btn { font-size:10px; color:var(--gray); background:none; border:none; cursor:pointer; padding:0; font-family:'Paperlogy',sans-serif; }
 .comment-reply-btn:hover { color:var(--orange); }
+.comment-edit-btn { font-size:10px; color:var(--gray); background:none; border:none; cursor:pointer; padding:0; font-family:'Paperlogy',sans-serif; }
+.comment-edit-btn:hover { color:var(--blue); }
 .comment-item:hover { background:rgba(232,121,12,0.03); border-radius:6px; }
 .comment-reply-hint { font-size:10px; color:var(--gray); margin-top:5px; }
 .reply-item { padding:8px 0 8px 14px; border-bottom:0.5px solid var(--border); border-left:2px solid var(--border); margin-left:12px; }
@@ -407,6 +409,31 @@ body {
 }
 @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
 .fade { animation:fadeUp 0.5s ease both; }
+
+/* 회원가입 단계 표시 */
+.signup-steps { display:flex; align-items:center; margin-bottom:24px; padding:16px 0 4px; }
+.su-step { display:flex; align-items:center; gap:6px; flex-shrink:0; }
+.su-step span { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; background:var(--light); color:var(--gray); flex-shrink:0; transition:all 0.3s; }
+.su-step .su-label { font-size:10px; color:var(--gray); transition:color 0.3s; }
+.su-step.active span { background:var(--navy); color:#fff; }
+.su-step.active .su-label { color:var(--navy); font-weight:600; }
+.su-step.done span { background:var(--orange); color:#fff; }
+.su-step.done .su-label { color:var(--orange); }
+.su-step-line { flex:1; height:1px; background:var(--border); margin:0 8px; }
+
+/* 파일 업로드 피드백 */
+.file-feedback { font-size:11px; color:var(--orange); margin-top:6px; display:none; }
+
+/* 게시글 검색 */
+.comm-search-wrap { position:relative; margin-bottom:12px; }
+.comm-search-wrap svg { position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none; }
+.comm-search-input { width:100%; padding:10px 14px 10px 36px; border:1px solid var(--border); border-radius:var(--r-sm); font-size:13px; background:#fff; outline:none; font-family:'Paperlogy',sans-serif; transition:border 0.2s; }
+.comm-search-input:focus { border-color:var(--orange); }
+
+/* 게시글 작성 플로팅 버튼 */
+.fab-write { position:fixed; bottom:72px; right:16px; width:52px; height:52px; border-radius:50%; background:var(--orange); color:#fff; border:none; cursor:pointer; font-size:24px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(232,121,12,0.45); z-index:90; transition:all 0.2s; font-family:'Paperlogy',sans-serif; }
+.fab-write:hover { transform:scale(1.08); }
+@media (min-width:480px) { .fab-write { right:calc(50% - 240px + 16px); } }
 </style>
 </head>
 <body>
@@ -661,6 +688,7 @@ body {
 
       <div class="landing-actions" id="landing-actions">
         <button class="btn btn-primary" data-page="signup" style="padding:14px;">무료로 시작하기 →</button>
+        <p style="text-align:center;font-size:11px;color:var(--gray);margin:-4px 0 4px;">사업자등록증만 있으면 3분 안에 가입 완료 · 무료</p>
         <button class="btn btn-outline" data-page="login" style="padding:14px;">로그인</button>
       </div>
       <!-- SEO: 키워드 텍스트 섹션 -->
@@ -743,12 +771,13 @@ body {
         <div class="info-row"><span class="info-label">지역</span><span class="info-value" id="ra-region">-</span></div>
       </div>
       <div class="form-group">
-        <label class="form-label">사업자등록번호 * (숫자만)</label>
-        <input class="form-input" type="text" id="ra-biz" placeholder="예: 1234567890" maxlength="10">
+        <label class="form-label">사업자등록번호 *</label>
+        <input class="form-input" type="text" id="ra-biz" placeholder="예: 123-45-67890" maxlength="12" oninput="formatBizNum(this)">
       </div>
       <div class="form-group">
         <label class="form-label">사업자등록증 이미지 *</label>
-        <input class="form-input" type="file" id="ra-biz-img" accept="image/*">
+        <input class="form-input" type="file" id="ra-biz-img" accept="image/*" onchange="showFileName(this, 'ra-file-name')">
+        <div class="file-feedback" id="ra-file-name"></div>
       </div>
       <button class="btn btn-primary" onclick="doReapply()">재신청하기</button>
       <button class="btn btn-ghost" data-page="mypage" style="margin-top:8px;">취소</button>
@@ -777,41 +806,103 @@ body {
   <!-- 회원가입 -->
   <div id="page-signup" class="page">
     <nav class="nav"><div class="nav-logo" data-page="landing">언더<span>커버</span></div></nav>
-    <div class="container" style="padding-top:32px;">
-      <h2 style="font-family:'Paperlogy', sans-serif;font-size:26px;font-weight:900;margin-bottom:6px;">회원가입</h2>
-      <p style="font-size:13px;color:var(--gray);margin-bottom:24px;">사업자등록증으로 점주 인증을 진행해요</p>
+    <div class="container" style="padding-top:24px;">
+      <h2 style="font-family:'Paperlogy', sans-serif;font-size:26px;font-weight:900;margin-bottom:4px;">회원가입</h2>
+      <p style="font-size:13px;color:var(--gray);margin-bottom:0;">사업자등록증으로 점주 인증을 진행해요</p>
+      <!-- 단계 표시 -->
+      <div class="signup-steps">
+        <div class="su-step active" data-step="1"><span>1</span><span class="su-label">기본 정보</span></div>
+        <div class="su-step-line"></div>
+        <div class="su-step" data-step="2"><span>2</span><span class="su-label">매장 정보</span></div>
+        <div class="su-step-line"></div>
+        <div class="su-step" data-step="3"><span>3</span><span class="su-label">인증 서류</span></div>
+      </div>
       <div id="signup-alert"></div>
-      <div class="form-row">
+
+      <!-- 1단계: 기본 정보 -->
+      <div id="su-step-1">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">이메일 *</label>
+            <input class="form-input" type="email" id="su-email" placeholder="이메일">
+          </div>
+          <div class="form-group">
+            <label class="form-label">닉네임 *</label>
+            <input class="form-input" type="text" id="su-nick" placeholder="활동 닉네임">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">비밀번호 *</label>
+            <input class="form-input" type="password" id="su-pw" placeholder="6자 이상">
+          </div>
+          <div class="form-group">
+            <label class="form-label">비밀번호 확인 *</label>
+            <input class="form-input" type="password" id="su-pw2" placeholder="비밀번호 재입력">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="gotoSignupStep(2)" style="margin-top:4px;">다음 →</button>
+      </div>
+
+      <!-- 2단계: 매장 정보 -->
+      <div id="su-step-2" class="hidden">
         <div class="form-group">
-          <label class="form-label">이메일 *</label>
-          <input class="form-input" type="email" id="su-email" placeholder="이메일">
+          <label class="form-label">사업자등록번호 *</label>
+          <input class="form-input" type="text" id="su-biz" placeholder="예: 123-45-67890" maxlength="12" oninput="formatBizNum(this)">
         </div>
         <div class="form-group">
-          <label class="form-label">닉네임 *</label>
-          <input class="form-input" type="text" id="su-nick" placeholder="활동 닉네임">
+          <label class="form-label">브랜드 선택 *</label>
+          <input type="hidden" id="su-brand" value="">
+          <div id="su-brand-selected" onclick="openBrandModal()" style="width:100%;background:var(--light);border:1px solid var(--border);border-radius:var(--r-sm);padding:11px 14px;font-size:14px;color:var(--gray);cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+            <span id="su-brand-label">브랜드를 선택해주세요</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">매장 지역 *</label>
+          <select class="form-select" id="su-region">
+            <option value="">지역을 선택해주세요</option>
+            <optgroup label="서울">
+              <option>서울 동부</option><option>서울 서부</option><option>서울 남부</option><option>서울 북부</option><option>서울 중부</option>
+            </optgroup>
+            <optgroup label="경기·인천">
+              <option>경기 북부</option><option>경기 남부</option><option>경기 동부</option><option>경기 서부</option><option>인천</option>
+            </optgroup>
+            <optgroup label="충청·대전·세종">
+              <option>충청 북부</option><option>충청 남부</option><option>대전·세종</option>
+            </optgroup>
+            <optgroup label="전라·광주">
+              <option>전라 북부</option><option>전라 남부</option><option>광주</option>
+            </optgroup>
+            <optgroup label="경상·부산·대구·울산">
+              <option>경상 북부</option><option>경상 남부</option><option>부산</option><option>대구</option><option>울산</option>
+            </optgroup>
+            <optgroup label="강원·제주">
+              <option>강원</option><option>제주</option>
+            </optgroup>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:4px;">
+          <button class="btn btn-ghost" onclick="gotoSignupStep(1)" style="flex:1;">← 이전</button>
+          <button class="btn btn-primary" onclick="gotoSignupStep(3)" style="flex:2;">다음 →</button>
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">비밀번호 *</label>
-          <input class="form-input" type="password" id="su-pw" placeholder="6자 이상">
+
+      <!-- 3단계: 인증 서류 -->
+      <div id="su-step-3" class="hidden">
+        <div class="alert alert-info" style="font-size:12px;line-height:1.6;margin-bottom:16px;">
+          📋 사업자등록증 사진을 업로드해주세요.<br>승인까지 보통 <b>24시간 이내</b>로 완료돼요.
         </div>
         <div class="form-group">
-          <label class="form-label">비밀번호 확인 *</label>
-          <input class="form-input" type="password" id="su-pw2" placeholder="비밀번호 재입력">
+          <label class="form-label">사업자등록증 업로드 *</label>
+          <input class="form-input" type="file" id="su-biz-img" accept="image/*" onchange="showFileName(this, 'su-file-name')">
+          <div class="file-feedback" id="su-file-name"></div>
+          <div class="form-note">JPG, PNG 파일만 가능해요</div>
         </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">사업자등록번호 * (숫자만)</label>
-        <input class="form-input" type="text" id="su-biz" placeholder="예: 1234567890" maxlength="10">
-      </div>
-      <div class="form-group">
-        <label class="form-label">브랜드 선택 *</label>
-        <input type="hidden" id="su-brand" value="">
-        <!-- 선택된 브랜드 표시 -->
-        <div id="su-brand-selected" onclick="openBrandModal()" style="width:100%;background:var(--light);border:1px solid var(--border);border-radius:var(--r-sm);padding:11px 14px;font-size:14px;color:var(--gray);cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
-          <span id="su-brand-label">브랜드를 선택해주세요</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        <p style="font-size:11px;color:var(--gray);text-align:center;margin-bottom:12px;line-height:1.6;">가입 시 <span style="text-decoration:underline;cursor:pointer;" data-page="privacy">개인정보처리방침</span> 및 <span style="text-decoration:underline;cursor:pointer;" data-page="terms">이용약관</span>에 동의하는 것으로 간주합니다.</p>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost" onclick="gotoSignupStep(2)" style="flex:1;">← 이전</button>
+          <button class="btn btn-primary" onclick="doSignup()" style="flex:2;">가입하기</button>
         </div>
       </div>
 
@@ -823,12 +914,10 @@ body {
               <span style="font-size:15px;font-weight:600;">브랜드 선택</span>
               <button onclick="closeBrandModal()" style="border:none;background:none;font-size:20px;cursor:pointer;color:var(--gray);">✕</button>
             </div>
-            <!-- 검색 -->
             <div style="position:relative;">
               <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
               <input id="brand-search" class="form-input" type="text" placeholder="브랜드 검색..." style="padding-left:36px;" oninput="filterBrands()">
             </div>
-            <!-- 카테고리 필터 -->
             <div id="brand-categories" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;">
               <button class="brand-cat-btn active" onclick="filterCategory('전체')" data-cat="전체">전체</button>
               <button class="brand-cat-btn" onclick="filterCategory('커피')" data-cat="커피">☕ 커피</button>
@@ -841,58 +930,10 @@ body {
               <button class="brand-cat-btn" onclick="filterCategory('기타')" data-cat="기타">기타</button>
             </div>
           </div>
-          <!-- 브랜드 리스트 -->
           <div id="brand-list-modal" style="overflow-y:auto;padding:8px 0;flex:1;"></div>
         </div>
       </div>
-      <div class="form-group">
-        <label class="form-label">매장 지역 *</label>
-        <select class="form-select" id="su-region">
-          <option value="">지역을 선택해주세요</option>
-          <optgroup label="서울">
-            <option>서울 동부</option>
-            <option>서울 서부</option>
-            <option>서울 남부</option>
-            <option>서울 북부</option>
-            <option>서울 중부</option>
-          </optgroup>
-          <optgroup label="경기·인천">
-            <option>경기 북부</option>
-            <option>경기 남부</option>
-            <option>경기 동부</option>
-            <option>경기 서부</option>
-            <option>인천</option>
-          </optgroup>
-          <optgroup label="충청·대전·세종">
-            <option>충청 북부</option>
-            <option>충청 남부</option>
-            <option>대전·세종</option>
-          </optgroup>
-          <optgroup label="전라·광주">
-            <option>전라 북부</option>
-            <option>전라 남부</option>
-            <option>광주</option>
-          </optgroup>
-          <optgroup label="경상·부산·대구·울산">
-            <option>경상 북부</option>
-            <option>경상 남부</option>
-            <option>부산</option>
-            <option>대구</option>
-            <option>울산</option>
-          </optgroup>
-          <optgroup label="강원·제주">
-            <option>강원</option>
-            <option>제주</option>
-          </optgroup>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">사업자등록증 업로드 *</label>
-        <input class="form-input" type="file" id="su-biz-img" accept="image/*">
-        <div class="form-note">JPG, PNG 파일만 가능해요</div>
-      </div>
-      <button class="btn btn-primary" onclick="doSignup()" style="margin-top:8px;">가입하기</button>
-      <p style="font-size:11px;color:var(--gray);text-align:center;margin-top:10px;line-height:1.6;">가입 시 <span style="text-decoration:underline;cursor:pointer;" data-page="privacy">개인정보처리방침</span> 및 <span style="text-decoration:underline;cursor:pointer;" data-page="terms">이용약관</span>에 동의하는 것으로 간주합니다.</p>
+
       <hr class="divider">
       <p style="text-align:center;font-size:13px;color:var(--gray);">이미 회원이신가요? <span style="color:var(--orange);cursor:pointer;font-weight:500;" data-page="login">로그인</span></p>
     </div>
@@ -946,6 +987,7 @@ body {
           <div class="empty-title">아직 기록된 매출이 없어요</div>
           <div class="empty-desc">이번 달 매출을 기록하면<br>브랜드 평균과 바로 비교해드려요.</div>
           <button class="btn btn-primary" data-page="store-data" style="width:auto;padding:12px 28px;">매출 기록하기 →</button>
+          <button class="btn btn-outline" data-page="community" style="width:auto;padding:10px 24px;margin-top:10px;font-size:13px;">커뮤니티 먼저 둘러보기</button>
         </div>
       </div>
     </div>
@@ -1108,12 +1150,18 @@ body {
       <button id="board-tab-incident" class="board-tab" onclick="switchBoard('incident')">사건사고</button>
       <button id="board-tab-brand" class="board-tab" onclick="switchBoard('brand')">언더커버</button>
     </div>
+    <!-- 게시글 작성 플로팅 버튼 -->
+    <button class="fab-write hidden" id="fab-write-btn" onclick="showWritePost()" title="글 쓰기">＋</button>
     <div class="container" style="padding-top:12px;">
       <div id="comm-board-desc" style="margin-bottom:12px;"></div>
       <!-- 플레어 필터 -->
       <div class="month-tabs" id="flair-filter" style="margin-bottom:12px;"></div>
-      <button class="btn btn-primary" onclick="showWritePost()" style="margin-bottom:12px;">+ 글 쓰기</button>
-      <div id="write-post-form" class="card hidden">
+      <!-- 검색 -->
+      <div class="comm-search-wrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="comm-search-input" id="comm-search" type="text" placeholder="게시글 검색..." oninput="searchPosts(this.value)">
+      </div>
+      <div id="write-post-form" class="card hidden" style="margin-bottom:12px;">
         <div id="write-post-notice" class="card-title">브랜드명으로 익명 작성돼요</div>
         <div class="form-group">
           <label class="form-label">머릿글</label>
@@ -1397,16 +1445,16 @@ body {
 <script src="js/config.js?v=2"></script>
 <script src="js/utils.js?v=2"></script>
 <script src="js/brands.js?v=2"></script>
-<script src="js/router.js?v=5"></script>
+<script src="js/router.js?v=6"></script>
 <script src="js/auth.js?v=5"></script>
-<script src="js/home.js?v=5"></script>
+<script src="js/home.js?v=6"></script>
 <script src="js/store-data.js?v=5"></script>
 <script src="js/mypage.js?v=5"></script>
 <script src="js/contact.js?v=5"></script>
-<script src="js/community.js?v=5"></script>
+<script src="js/community.js?v=6"></script>
 <script src="js/admin.js?v=5"></script>
 <script src="js/contact-thread.js?v=2"></script>
-<script src="js/app.js?v=2"></script>
+<script src="js/app.js?v=6"></script>
 <!-- 공통 탭바 -->
 <div id="global-tab-bar" class="tab-bar hidden"></div>
 

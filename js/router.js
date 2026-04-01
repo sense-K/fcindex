@@ -65,15 +65,19 @@ function showPage(name) {
   const pg = document.getElementById('page-' + name);
   if (pg) { pg.classList.add('active'); window.scrollTo(0, 0); }
   renderTabBar(name);
+  // FAB 버튼 표시/숨김
+  const fab = document.getElementById('fab-write-btn');
+  if (fab) fab.classList.toggle('hidden', name !== 'community');
   if (name === 'home') loadHome();
   if (name === 'mypage') loadMypage();
   if (name === 'store-data') loadStoreDataPage();
-  if (name === 'community') loadCommunity();
+  if (name === 'community') { const wf = document.getElementById('write-post-form'); if (wf) wf.classList.add('hidden'); loadCommunity(); }
   if (name === 'admin') loadAdmin();
   if (name === 'reapply') loadReapplyPage();
   if (name === 'contact') loadContact();
   if (name === 'contact-thread') loadContactThread();
   if (name === 'landing') renderLandingForUser();
+  if (name === 'signup') gotoSignupStep(1);
 }
 
 function showRestrictedPage(name) {
@@ -82,6 +86,7 @@ function showRestrictedPage(name) {
   const pg = document.getElementById('page-' + name);
   if (pg) { pg.classList.add('active'); window.scrollTo(0, 0); }
   renderTabBar(name);
+  document.getElementById('fab-write-btn')?.classList.add('hidden');
   const notice = `<div style="text-align:center;padding:80px 20px;">
     <div style="font-size:40px;margin-bottom:16px;">🔒</div>
     <div style="font-size:16px;font-weight:700;margin-bottom:8px;">${labels[name]}</div>
@@ -101,7 +106,7 @@ function renderLandingForUser() {
     actions.innerHTML = `<button class="btn btn-primary" data-page="${dest}" style="padding:14px;">앱으로 이동 →</button>`;
   } else {
     navRight.innerHTML = `<button class="nav-btn" data-page="login">로그인</button><button class="btn btn-primary btn-sm" data-page="signup">시작하기</button>`;
-    actions.innerHTML = `<button class="btn btn-primary" data-page="signup" style="padding:14px;">무료로 시작하기 →</button><button class="btn btn-outline" data-page="login" style="padding:14px;">로그인</button>`;
+    actions.innerHTML = `<button class="btn btn-primary" data-page="signup" style="padding:14px;">무료로 시작하기 →</button><p style="text-align:center;font-size:11px;color:var(--gray);margin:-4px 0 4px;">사업자등록증만 있으면 3분 안에 가입 완료 · 무료</p><button class="btn btn-outline" data-page="login" style="padding:14px;">로그인</button>`;
   }
 }
 

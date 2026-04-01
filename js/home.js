@@ -20,10 +20,9 @@ async function loadHome() {
   document.getElementById('home-data').classList.remove('hidden');
   document.getElementById('home-empty').classList.add('hidden');
 
-  const recent = data.slice(-6);
-  recent.forEach((d, i) => {
+  data.forEach((d, i) => {
     const tab = document.createElement('div');
-    tab.className = 'month-tab' + (i === recent.length - 1 ? ' active' : '');
+    tab.className = 'month-tab' + (i === data.length - 1 ? ' active' : '');
     tab.textContent = d.data_year + '년 ' + d.data_month + '월';
     tab.onclick = () => {
       document.querySelectorAll('.month-tab').forEach(t => t.classList.remove('active'));
@@ -32,8 +31,8 @@ async function loadHome() {
     };
     tabs.appendChild(tab);
   });
-  renderDashboard(recent[recent.length - 1]);
-  renderTrendChart(recent);
+  renderDashboard(data[data.length - 1]);
+  renderTrendChart(data.slice(-6));
 }
 
 function renderTrendChart(data) {
