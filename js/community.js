@@ -23,7 +23,10 @@ function getDisplayName(board) {
     return region ? `${nickname}_${region}` : nickname;
   }
   if (board === 'incident') {
-    return currentBrand?.category || '프랜차이즈';
+    const category = currentBrand?.category || '프랜차이즈';
+    const nick = currentProfile?.nickname || '';
+    const masked = nick ? nick[0] + '*'.repeat(5) : '*****';
+    return `${category}_${masked}`;
   }
   return brandName;
 }
