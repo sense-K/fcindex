@@ -114,8 +114,39 @@ async function loadAdmin() {
       </div>`;
   });
 
+  // 승인된 회원 목록
+  const approvedList = document.getElementById('admin-approved-list');
+  document.getElementById('admin-approved-count').textContent = `${approved.length}명`;
+  if (approved.length === 0) {
+    approvedList.innerHTML = '<div style="text-align:center;padding:24px;color:var(--gray);font-size:13px;">승인된 회원이 없어요</div>';
+  } else {
+    approvedList.innerHTML = '';
+    approved.forEach(p => {
+      const date = new Date(p.created_at).toLocaleDateString('ko-KR', { year: 'numeric', month: 'short', day: 'numeric' });
+      approvedList.innerHTML += `
+        <div class="admin-row" style="flex-wrap:wrap;gap:6px;">
+          <div class="admin-avatar" style="background:#059669;">${(p.nickname || '?')[0]}</div>
+          <div class="admin-info" style="flex:1;min-width:0;">
+            <div class="admin-name">${escapeHtml(p.nickname)} · ${p.brands?.name || '-'}</div>
+            <div class="admin-sub">${p.biz_number} · ${p.email}</div>
+            <div class="admin-sub">${date} 승인</div>
+            ${p.biz_image ? `<div style="margin-top:4px;"><a href="${p.biz_image}" target="_blank" style="font-size:11px;color:var(--blue);text-decoration:none;background:rgba(55,138,221,0.1);padding:3px 8px;border-radius:4px;">📎 사업자등록증 보기</a></div>` : '<div style="margin-top:2px;font-size:10px;color:var(--gray);">이미지 없음</div>'}
+          </div>
+          <button class="btn btn-sm" style="background:#FEF3C7;color:#D97706;border:none;flex-shrink:0;" onclick="revokeApproval('${p.id}', '${escapeHtml(p.nickname)}')">승인 취소</button>
+        </div>`;
+    });
+  }
+
   // 브랜드 관리
   await loadAdminBrands();
+}
+
+async function revokeApproval(userId, nickname) {
+  if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
+  if (!confirm(`'${nickname}' 회원의 승인을 취소하고 심사중으로 전환할까요?`)) return;
+  const { error } = await sb.from('profiles').update({ auth_status: 'pending' }).eq('id', userId);
+  if (error) return alert('처리 실패: ' + error.message);
+  await loadAdmin();
 }
 
 // ===== 관리자: 게시글 관리 =====
