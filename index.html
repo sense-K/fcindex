@@ -282,16 +282,18 @@ body {
 .admin-btns { display:flex; gap:6px; flex-shrink:0; }
 
 /* 커뮤니티 */
-.post-card { background:#fff; border:1px solid var(--border); border-radius:var(--r-md); padding:14px; margin-bottom:10px; cursor:pointer; transition:border-color 0.2s; }
+.post-card { background:#fff; border:1px solid var(--border); border-radius:var(--r-md); padding:10px 14px; margin-bottom:8px; cursor:pointer; transition:border-color 0.2s; }
 .post-card:hover { border-color:var(--orange); }
-.post-top { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
-.post-avatar { width:28px; height:28px; border-radius:50%; color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:500; flex-shrink:0; }
+.post-top { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+.post-avatar { width:24px; height:24px; border-radius:50%; color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; flex-shrink:0; }
 .post-user { font-size:12px; font-weight:500; color:var(--navy); }
 .post-brand { font-size:10px; color:var(--gray); }
-.post-title { font-size:14px; font-weight:500; margin-bottom:6px; }
+.post-title-row { display:flex; align-items:center; gap:8px; }
+.post-title { font-size:14px; font-weight:500; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.post-stats-inline { display:flex; gap:8px; flex-shrink:0; }
 .post-preview { font-size:12px; color:var(--gray); line-height:1.5; }
 .post-footer { display:flex; gap:12px; margin-top:8px; }
-.post-stat { font-size:11px; color:var(--gray); }
+.post-stat { font-size:11px; color:var(--gray); white-space:nowrap; }
 
 /* 순수익 박스 */
 .profit-box { background:var(--navy); border-radius:var(--r-lg); padding:16px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; }

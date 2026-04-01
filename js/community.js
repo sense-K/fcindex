@@ -95,9 +95,22 @@ function renderBoardTabs() {
     }
   };
   const d = descs[currentBoard];
+  const CATEGORY_COLORS = {
+    '커피': '#7C5C3E', '치킨': '#C0392B', '버거': '#D97706', '한식': '#16A34A',
+    '피자': '#E55039', '디저트': '#DB2777', '편의점': '#0891B2', '기타': '#6B7280'
+  };
+  let iconContent, iconBgColor;
+  if (currentBoard === 'brand' && currentBrand?.name) {
+    const cat = currentBrand.category || '기타';
+    iconBgColor = CATEGORY_COLORS[cat] || '#6B7280';
+    iconContent = `<span style="font-size:14px;font-weight:700;color:#fff;">${escapeHtml(currentBrand.name[0])}</span>`;
+  } else {
+    iconBgColor = d.iconBg;
+    iconContent = d.icon;
+  }
   document.getElementById('comm-board-desc').innerHTML = `
     <div style="background:${d.bg};border:1px solid ${d.border};border-radius:12px;padding:11px 14px;display:flex;align-items:flex-start;gap:10px;">
-      <div style="width:32px;height:32px;border-radius:8px;background:${d.iconBg};display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">${d.icon}</div>
+      <div style="width:32px;height:32px;border-radius:8px;background:${iconBgColor};display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">${iconContent}</div>
       <div>
         <div style="font-size:13px;font-weight:700;color:${d.color};margin-bottom:2px;">${d.title}</div>
         <div style="font-size:11px;color:${d.color};opacity:0.8;line-height:1.5;">${d.sub}</div>
@@ -194,10 +207,12 @@ async function loadCommunity(append = false) {
           <div class="post-brand">${hiddenBadge}${flairBadge}${date}</div>
         </div>
       </div>
-      <div class="post-title">${escapeHtml(p.title)}</div>
-      <div class="post-footer">
-        <span class="post-stat">💬 ${p.comment_count || 0}</span>
-        <span class="post-stat">👍 ${p.like_count || 0}</span>
+      <div class="post-title-row">
+        <div class="post-title">${escapeHtml(p.title)}</div>
+        <div class="post-stats-inline">
+          <span class="post-stat">💬${p.comment_count || 0}</span>
+          <span class="post-stat">👍${p.like_count || 0}</span>
+        </div>
       </div>`;
     div.onclick = () => showPostDetail(p, color);
     list.appendChild(div);
