@@ -170,6 +170,7 @@ async function doReapply() {
   const file = document.getElementById('ra-biz-img').files[0];
   if (!biz || !file) return showAlert('reapply-alert', '사업자등록번호와 이미지를 모두 입력해주세요.', 'error');
   if (biz.length !== 10 || !/^\d+$/.test(biz)) return showAlert('reapply-alert', '사업자등록번호는 숫자 10자리예요.', 'error');
+  if (!isValidBizNum(biz)) return showAlert('reapply-alert', '유효하지 않은 사업자등록번호예요. 다시 확인해주세요.', 'error');
 
   // 다른 계정의 사업자번호 중복 체크
   const { data: dupCheck } = await sb.from('profiles').select('id').eq('biz_number', biz).maybeSingle();

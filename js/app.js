@@ -24,6 +24,7 @@ function gotoSignupStep(n) {
       const region = document.getElementById('su-region').value;
       if (!biz || !brand || !region) return showAlert('signup-alert', '모든 항목을 입력해주세요.', 'error');
       if (biz.length !== 10 || !/^\d+$/.test(biz)) return showAlert('signup-alert', '사업자등록번호는 숫자 10자리예요.', 'error');
+      if (!isValidBizNum(biz)) return showAlert('signup-alert', '유효하지 않은 사업자등록번호예요. 다시 확인해주세요.', 'error');
     }
   }
   document.getElementById('signup-alert').innerHTML = '';
@@ -37,6 +38,17 @@ function gotoSignupStep(n) {
     el.classList.toggle('done', s < n);
   });
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== 사업자번호 체크섬 검증 (국세청 알고리즘) =====
+function isValidBizNum(biz) {
+  if (biz.length !== 10 || !/^\d+$/.test(biz)) return false;
+  const w = [1, 3, 7, 1, 3, 7, 1, 3, 5];
+  let sum = 0;
+  for (let i = 0; i < 9; i++) sum += parseInt(biz[i]) * w[i];
+  sum += Math.floor((parseInt(biz[8]) * 5) / 10);
+  const check = (10 - (sum % 10)) % 10;
+  return check === parseInt(biz[9]);
 }
 
 // ===== 사업자번호 자동 하이픈 =====
