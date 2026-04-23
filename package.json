@@ -1,0 +1,18 @@
+{
+  "name": "undercov-seo-builder",
+  "version": "1.0.0",
+  "description": "언더커버 브랜드 페이지 정적 생성 빌드 스크립트",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node build-seo.js",
+    "build:local": "node build-seo.js && echo '✓ Build completed'",
+    "clean": "rm -rf brands community sitemap.xml robots.txt"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}
