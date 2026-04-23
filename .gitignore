@@ -1,0 +1,20 @@
+# 환경변수 - 절대 커밋 금지 (service_role key 포함)
+.env
+.env.local
+.env.*.local
+
+# 빌드 결과물
+brands/
+community/
+sitemap.xml
+robots.txt
+
+# 로그
+*.log
+
+# Node.js
+node_modules/
+
+# 시스템
+.DS_Store
+Thumbs.db

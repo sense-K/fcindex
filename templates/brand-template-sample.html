@@ -1,0 +1,582 @@
+<!--
+  ⚠️ 참조용 샘플 파일
+  실제 빌드는 templates/brand-template.html 을 사용.
+  이 파일은 메가커피 예시로 렌더링된 완성본이며 build-seo.js 가 참조하지 않음.
+-->
+<!DOCTYPE html>
+<!--
+  언더커버 브랜드 페이지 템플릿 샘플 v2
+  ── 실제 렌더링 예시: 메가커피
+  ── {{이중괄호}} : build-seo.js가 브랜드별 데이터로 치환하는 영역
+  ── [분기 주석] : 인사이트 문구가 DB 수치 범위에 따라 달라지는 로직 설명
+-->
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- {{BRAND_NAME}} = 메가커피 -->
+<title>메가커피 가맹점 월매출·수익률·창업비용 정보 | 언더커버</title>
+<meta name="description" content="메가커피 가맹점 평균 순수익률 23%, 인건비 22%, 원자재 32%. 커피 업종 브랜드와 비교한 수익 구조 및 예비 창업자를 위한 FAQ.">
+<meta name="keywords" content="메가커피 창업, 메가커피 월매출, 메가커피 수익률, 메가커피 창업비용, 메가커피 가맹비, 메가커피 로열티, 메가커피 본사, 메가커피 후기, 메가커피 점주 후기, 메가커피 가맹점, 프랜차이즈 수익률 비교, 가맹점주 커뮤니티">
+<meta name="robots" content="index, follow">
+
+<meta property="og:title" content="메가커피 가맹점 수익률·창업비용 | 언더커버">
+<meta property="og:description" content="메가커피 가맹점 평균 수익률 23%. 업종 비교, 비용 구조, 창업 FAQ.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://undercov.kr/brands/메가커피">
+<meta property="og:image" content="https://undercov.kr/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="언더커버">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="메가커피 가맹점 수익률·창업비용 | 언더커버">
+<meta name="twitter:description" content="메가커피 가맹점 평균 수익률 23%. 업종 비교, 비용 구조, 창업 FAQ.">
+<meta name="twitter:image" content="https://undercov.kr/og-image.png">
+
+<link rel="canonical" href="https://undercov.kr/brands/메가커피">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<!-- FAQPage + BreadcrumbList JSON-LD -->
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "메가커피 창업비용은 얼마인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "창업비용은 점포 규모와 지역에 따라 달라집니다. 정확한 비용은 공정거래위원회 가맹사업거래 홈페이지(franchise.ftc.go.kr)의 정보공개서를 직접 확인하시기 바랍니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "메가커피 평균 월매출은 얼마인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "매장별 매출은 입지, 상권, 운영 방식에 따라 편차가 큽니다. 정보공개서의 지역별 평균 매출을 참고하시고, 가맹점주 커뮤니티 언더커버에서 현직 점주의 실제 운영 이야기를 확인할 수 있습니다(인증 필요)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "메가커피 로열티는 얼마인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "집계 데이터 기준 평균 매출의 약 3% 수준입니다. 정확한 조건은 공정거래위원회 정보공개서와 가맹 계약서를 통해 확인하세요."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "메가커피 본사 지원 정책은 어떤가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "공식 지원 정책은 본사 홈페이지를 참고하세요. 현직 점주의 실제 경험담은 가맹점주 전용 익명 커뮤니티 언더커버에서 확인할 수 있습니다(인증 필요)."
+        }
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "언더커버", "item": "https://undercov.kr" },
+      { "@type": "ListItem", "position": 2, "name": "프랜차이즈 브랜드", "item": "https://undercov.kr/brands" },
+      { "@type": "ListItem", "position": 3, "name": "메가커피", "item": "https://undercov.kr/brands/메가커피" }
+    ]
+  }
+]
+</script>
+
+<style>
+:root {
+  --navy:   #1C2B3A;
+  --orange: #E8790C;
+  --cream:  #F5F3EE;
+  --blue:   #378ADD;
+  --gray:   #6B7280;
+  --border: #E5E0D8;
+  --green:  #059669;
+  --red:    #DC2626;
+  --bg:     #ECEAE5;
+  --light:  #F3F4F6;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Malgun Gothic', '맑은 고딕', sans-serif;
+  background: var(--bg);
+  color: var(--navy);
+  line-height: 1.6;
+  font-size: 15px;
+}
+a { color: inherit; text-decoration: none; }
+.container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
+.section { padding: 28px 0; background: #fff; }
+.section + .section { border-top: 8px solid var(--bg); }
+.section-bg { background: var(--cream); }
+
+/* 헤더 */
+.site-header { background: var(--navy); padding: 14px 0; position: sticky; top: 0; z-index: 100; }
+.site-header .container { display: flex; justify-content: space-between; align-items: center; }
+.logo { color: #fff; font-weight: 800; font-size: 18px; letter-spacing: -0.5px; }
+.logo em { color: var(--orange); font-style: normal; }
+.btn-header { background: var(--orange); color: #fff; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; }
+
+/* 브레드크럼 */
+.breadcrumb { background: var(--cream); border-bottom: 1px solid var(--border); padding: 10px 0; }
+.breadcrumb .container { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--gray); }
+.breadcrumb a:hover { color: var(--navy); }
+
+/* 히어로 */
+.hero { background: var(--cream); border-bottom: 1px solid var(--border); padding: 32px 0 28px; }
+.category-badge { display: inline-block; background: var(--navy); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 14px; letter-spacing: 0.3px; }
+.hero h1 { font-size: 26px; font-weight: 900; line-height: 1.3; margin-bottom: 8px; letter-spacing: -0.5px; }
+.hero .sub { font-size: 13px; color: var(--gray); }
+
+/* 카드 */
+.card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-top: 16px; }
+.section-label { font-size: 17px; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.3px; }
+.section-desc { font-size: 12px; color: var(--gray); margin-bottom: 16px; }
+
+/* 수익률 히어로 */
+.profit-hero { background: var(--navy); border-radius: 16px; padding: 28px 24px; text-align: center; margin-top: 16px; }
+.profit-hero .ph-label { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 8px; }
+.profit-hero .ph-value { font-size: 72px; font-weight: 900; line-height: 1; color: var(--orange); letter-spacing: -2px; }
+.profit-hero .ph-unit { font-size: 28px; font-weight: 700; }
+.profit-hero .ph-compare { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 10px; }
+
+/* 비용 구조 바 */
+.cost-bars { display: flex; flex-direction: column; gap: 14px; }
+.cost-bar-head { display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin-bottom: 6px; }
+.cost-bar-head .cb-name { font-weight: 600; }
+.cb-pct.profit  { color: var(--green); font-weight: 700; }
+.cb-pct.cost    { color: var(--orange); font-weight: 700; }
+.cb-pct.neutral { color: var(--gray); }
+.cost-track { height: 9px; background: var(--light); border-radius: 5px; overflow: hidden; }
+.cost-fill { height: 100%; border-radius: 5px; }
+.cost-fill.orange { background: var(--orange); }
+.cost-fill.blue   { background: var(--blue); }
+.cost-fill.green  { background: var(--green); }
+.cost-fill.gray   { background: #9CA3AF; }
+
+/* 업종 비교 */
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.compare-card { background: var(--light); border-radius: 12px; padding: 16px 12px; text-align: center; }
+.cc-label { font-size: 11px; color: var(--gray); margin-bottom: 4px; }
+.cc-value { font-size: 28px; font-weight: 900; letter-spacing: -1px; }
+.cc-value.brand { color: var(--orange); }
+.cc-value.avg   { color: var(--navy); }
+.cc-sub  { font-size: 11px; color: var(--gray); margin-top: 2px; }
+.cc-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; margin-top: 6px; }
+.cc-badge.same { background: #E5E7EB; color: #6B7280; }
+.cc-badge.up   { background: #D1FAE5; color: var(--green); }
+.cc-badge.down { background: #FEE2E2; color: var(--red); }
+
+/* 인사이트 */
+.insight-list { display: flex; flex-direction: column; gap: 12px; }
+.insight-item { background: var(--light); border-radius: 12px; padding: 16px; display: flex; gap: 12px; align-items: flex-start; }
+.insight-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+.insight-body .ib-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.insight-body .ib-desc  { font-size: 12px; color: var(--gray); line-height: 1.6; }
+
+/* FAQ */
+.faq-list { border-top: 1px solid var(--border); }
+.faq-item { border-bottom: 1px solid var(--border); padding: 18px 0; }
+.faq-q { font-size: 14px; font-weight: 700; display: flex; gap: 10px; margin-bottom: 10px; }
+.faq-q::before { content: 'Q.'; color: var(--orange); font-weight: 900; flex-shrink: 0; }
+.faq-a { font-size: 13px; color: var(--gray); line-height: 1.7; padding-left: 24px; }
+.faq-a strong { color: var(--navy); }
+.faq-a a { color: var(--orange); font-weight: 600; }
+
+/* CTA */
+.cta-card { background: var(--navy); border-radius: 16px; padding: 28px 24px; text-align: center; margin-top: 16px; }
+.cta-tag { display: inline-block; font-size: 11px; font-weight: 600; background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.75); padding: 4px 12px; border-radius: 20px; margin-bottom: 14px; }
+.cta-title { color: #fff; font-size: 20px; font-weight: 800; line-height: 1.35; margin-bottom: 8px; }
+.cta-desc  { color: rgba(255,255,255,0.55); font-size: 13px; line-height: 1.6; margin-bottom: 20px; }
+.btn-cta { display: block; background: var(--orange); color: #fff; padding: 15px; border-radius: 10px; font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+.btn-cta-outline { display: block; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.75); padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 600; }
+
+/* 관련 브랜드 */
+.related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+.related-item { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 14px 10px; text-align: center; transition: border-color 0.2s; }
+.related-item:hover { border-color: var(--orange); }
+.ri-name  { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.ri-rate  { font-size: 20px; font-weight: 900; color: var(--orange); }
+.ri-label { font-size: 10px; color: var(--gray); margin-top: 2px; }
+
+/* 면책 · 푸터 */
+.disclaimer { padding: 24px 0; background: var(--cream); border-top: 1px solid var(--border); }
+.disclaimer p { font-size: 11px; color: var(--gray); line-height: 1.8; }
+.site-footer { background: var(--navy); padding: 28px 0; }
+.footer-inner { display: flex; flex-direction: column; gap: 10px; }
+.footer-top   { display: flex; justify-content: space-between; align-items: center; }
+.footer-logo  { color: #fff; font-weight: 800; font-size: 16px; }
+.footer-links { display: flex; gap: 16px; font-size: 12px; color: rgba(255,255,255,0.45); }
+.footer-links a:hover { color: rgba(255,255,255,0.75); }
+.footer-copy  { font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.6; }
+</style>
+</head>
+
+<body>
+
+<!-- ── 사이트 헤더 ── -->
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="logo">언더<em>커버</em></a>
+    <a href="/" class="btn-header">가입하기 →</a>
+  </div>
+</header>
+
+<!-- ── 브레드크럼 ── -->
+<nav class="breadcrumb" aria-label="현재 위치">
+  <div class="container">
+    <a href="/">언더커버</a>
+    <span aria-hidden="true">›</span>
+    <a href="/brands/">프랜차이즈 브랜드</a>
+    <span aria-hidden="true">›</span>
+    <!-- {{BRAND_NAME}} -->
+    <span aria-current="page">메가커피</span>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ── a. 히어로 ── -->
+  <div class="hero">
+    <div class="container">
+      <!--
+        {{CATEGORY_EMOJI}} {{CATEGORY}}
+        category 필드 값 그대로 사용. DB에 없는 임의 하위 분류 사용 금지.
+      -->
+      <div class="category-badge">☕ 커피</div>
+      <!-- {{BRAND_NAME}} -->
+      <h1>메가커피 가맹점<br>월매출·수익률·창업비용 정보</h1>
+      <p class="sub">가맹점주 집계 데이터 기반 수익 구조 분석</p>
+    </div>
+  </div>
+
+  <!-- ── b. 핵심 수치 섹션 ── -->
+  <section class="section">
+    <div class="container">
+      <div class="section-label">가맹점 평균 수익 구조</div>
+      <!-- {{BUILD_DATE}} -->
+      <div class="section-desc">언더커버 집계 데이터 기준 · 2025년</div>
+
+      <!-- 수익률 강조 (DB: avg_net_profit_rate = 23) -->
+      <div class="profit-hero">
+        <div class="ph-label">평균 순수익률</div>
+        <!-- {{NET_PROFIT}}% -->
+        <div class="ph-value">23<span class="ph-unit">%</span></div>
+        <!-- {{CATEGORY}} {{CAT_COUNT}}개 브랜드 평균 {{CAT_AVG_NET}}% -->
+        <div class="ph-compare">커피 업종 32개 브랜드 평균 23% · 동일 수준</div>
+      </div>
+
+      <!-- 비용 구조 바 (모든 수치 DB avg_*_rate 필드에서 직접 가져옴) -->
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;margin-bottom:18px;">매출 100원의 지출 구조</div>
+        <div class="cost-bars">
+          <!-- {{MATERIAL_RATE}} = 32 -->
+          <div>
+            <div class="cost-bar-head"><span class="cb-name">원자재·식재료비</span><span class="cb-pct cost">32%</span></div>
+            <div class="cost-track"><div class="cost-fill orange" style="width:32%"></div></div>
+          </div>
+          <!-- {{LABOR_RATE}} = 22 -->
+          <div>
+            <div class="cost-bar-head"><span class="cb-name">인건비</span><span class="cb-pct cost">22%</span></div>
+            <div class="cost-track"><div class="cost-fill blue" style="width:22%"></div></div>
+          </div>
+          <!-- {{RENT_RATE}} = 12 -->
+          <div>
+            <div class="cost-bar-head"><span class="cb-name">임대료</span><span class="cb-pct neutral">12%</span></div>
+            <div class="cost-track"><div class="cost-fill gray" style="width:12%"></div></div>
+          </div>
+          <!-- {{DELIVERY_RATE}} = 3 -->
+          <div>
+            <div class="cost-bar-head"><span class="cb-name">배달수수료</span><span class="cb-pct neutral">3%</span></div>
+            <div class="cost-track"><div class="cost-fill gray" style="width:3%"></div></div>
+          </div>
+          <!-- {{ROYALTY_RATE}} = 3 -->
+          <div>
+            <div class="cost-bar-head"><span class="cb-name">본사 로열티</span><span class="cb-pct neutral">3%</span></div>
+            <div class="cost-track"><div class="cost-fill gray" style="width:3%"></div></div>
+          </div>
+          <!-- {{UTILITY_RATE + OTHER_RATE}} = 3+2 = 5 -->
+          <div>
+            <div class="cost-bar-head"><span class="cb-name">공과금·기타</span><span class="cb-pct neutral">5%</span></div>
+            <div class="cost-track"><div class="cost-fill gray" style="width:5%"></div></div>
+          </div>
+          <!-- {{NET_PROFIT}} = 23 -->
+          <div>
+            <div class="cost-bar-head">
+              <span class="cb-name" style="color:var(--green);font-weight:800;">순수익</span>
+              <span class="cb-pct profit">23%</span>
+            </div>
+            <div class="cost-track"><div class="cost-fill green" style="width:23%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 업종 평균 비교 (DB 계산값만 사용, 특정 브랜드 수치 언급 금지) -->
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;margin-bottom:14px;">커피 업종 평균 비교</div>
+        <div class="compare-grid">
+          <!--
+            수익률 배지 분기:
+            brand - catAvg >= 3 → class="up", "업종 평균 대비 높은 편"
+            |diff| < 3          → class="same", "업종 평균 동일 수준"
+            brand - catAvg <= -3 → class="down", "업종 평균 대비 낮은 편"
+            [메가커피: 23-23=0 → same]
+          -->
+          <div class="compare-card">
+            <div class="cc-label">메가커피 수익률</div>
+            <div class="cc-value brand">23<small style="font-size:16px;font-weight:700;">%</small></div>
+            <div class="cc-badge same">업종 평균 동일 수준</div>
+          </div>
+          <div class="compare-card">
+            <div class="cc-label">커피 업종 평균</div>
+            <div class="cc-value avg">23<small style="font-size:16px;font-weight:700;">%</small></div>
+            <div class="cc-sub">32개 브랜드 기준</div>
+          </div>
+          <!--
+            로열티 배지 분기 (업종 평균과만 비교, 타 브랜드 언급 금지):
+            brand < catAvg → class="up", "업종 평균 대비 낮은 편"
+            brand = catAvg → class="same"
+            brand > catAvg → class="down", "업종 평균 대비 높은 편"
+            [메가커피: 3% vs 업종 평균 3.4% → up]
+          -->
+          <div class="compare-card">
+            <div class="cc-label">메가커피 로열티</div>
+            <div class="cc-value brand">3<small style="font-size:16px;font-weight:700;">%</small></div>
+            <div class="cc-badge up">업종 평균 대비 낮은 편</div>
+          </div>
+          <div class="compare-card">
+            <div class="cc-label">커피 업종 평균 로열티</div>
+            <div class="cc-value avg">3.4<small style="font-size:16px;font-weight:700;">%</small></div>
+            <div class="cc-sub">32개 브랜드 기준</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── c. 인사이트 섹션 ── -->
+  <section class="section section-bg">
+    <div class="container">
+      <div class="section-label">수익 구조 분석</div>
+      <div class="section-desc">DB 수치 기반 자동 생성 · 타 브랜드 비교 없음 · 절대 금액 없음</div>
+      <div class="insight-list">
+
+        <!--
+          [인사이트 1: 수익률 포지션 분기]
+          diff = brand.avg_net_profit_rate - catAvg.avg_net_profit_rate
+          diff >= 3  → "업종 평균보다 높은 편입니다. 수익률 {{NET_PROFIT}}%, 업종 평균 {{CAT_AVG_NET}}%."
+          |diff| < 3 → "업종 평균과 비슷한 수준입니다." (← 메가커피: 23-23=0)
+          diff <= -3 → "업종 평균보다 낮은 편입니다. 운영 방식 차이에 따라 결과가 다를 수 있습니다."
+        -->
+        <div class="insight-item">
+          <div class="insight-icon">📊</div>
+          <div class="insight-body">
+            <div class="ib-title">수익률이 업종 평균과 비슷한 수준입니다</div>
+            <div class="ib-desc">커피 업종 평균(23%)과 동일한 수익률 수준입니다. 수익률은 입지, 운영 인력, 배달 비중 등 운영 방식에 따라 달라질 수 있습니다.</div>
+          </div>
+        </div>
+
+        <!--
+          [인사이트 2: 인건비 분기]
+          avg_labor_rate > 25  → "인건비 비중이 업종 평균보다 높은 편입니다. 인력 관리가 수익에 큰 영향을 미칠 수 있습니다."
+          15 <= rate <= 25     → "인건비 비중이 일반적인 수준입니다." (← 메가커피: 22%)
+          rate < 15            → "인건비 비중이 비교적 낮은 편입니다."
+          절대 금액 계산 문구 사용 금지.
+        -->
+        <div class="insight-item">
+          <div class="insight-icon">👥</div>
+          <div class="insight-body">
+            <div class="ib-title">인건비 22% — 일반적인 수준</div>
+            <div class="ib-desc">인건비 비중이 일반적인 수준입니다. 운영 인원 구성과 근무 시간에 따라 실제 인건비 부담이 달라질 수 있습니다.</div>
+          </div>
+        </div>
+
+        <!--
+          [인사이트 3: 임대료 분기]
+          avg_rent_rate > 15 → "임대료 비중이 높은 편입니다. 입지 선택이 수익률에 큰 영향을 미칩니다."
+          8 <= rate <= 15    → "임대료 비중이 일반적 수준입니다." (← 메가커피: 12%)
+          rate < 8           → "임대료 비중이 비교적 낮은 편입니다."
+        -->
+        <div class="insight-item">
+          <div class="insight-icon">🏠</div>
+          <div class="insight-body">
+            <div class="ib-title">임대료 12% — 일반적인 수준</div>
+            <div class="ib-desc">임대료 비중이 일반적인 수준입니다. 상권과 입지에 따라 실제 임대료 부담이 크게 달라질 수 있어 계약 전 면밀한 검토가 필요합니다.</div>
+          </div>
+        </div>
+
+        <!--
+          [인사이트 4: 로열티 분기 — 업종 평균과만 비교, 타 브랜드 수치 언급 금지]
+          brand_royalty < catAvg_royalty → "업종 평균({catAvg}%) 대비 낮은 편입니다." (← 메가커피: 3% vs 3.4%)
+          brand_royalty = catAvg_royalty → "업종 평균과 비슷한 수준입니다."
+          brand_royalty > catAvg_royalty → "업종 평균({catAvg}%) 대비 높은 편입니다."
+        -->
+        <div class="insight-item">
+          <div class="insight-icon">💸</div>
+          <div class="insight-body">
+            <div class="ib-title">로열티 3% — 업종 평균(3.4%) 대비 낮은 편</div>
+            <div class="ib-desc">로열티 비중이 커피 업종 평균(3.4%) 대비 낮은 편입니다. 정확한 로열티 조건은 가맹 계약서와 공정거래위원회 정보공개서를 통해 직접 확인하세요.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── d. FAQ 섹션 ── -->
+  <!-- DB 수치 + 공정거래위원회 안내 중심. 절대 금액 및 타 브랜드 언급 금지. -->
+  <section class="section">
+    <div class="container">
+      <div class="section-label">자주 묻는 질문</div>
+      <div class="section-desc">예비 창업자 필수 확인 사항</div>
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <!-- {{BRAND_NAME}} 창업비용 — DB에 창업비용 데이터 없음 → FTC 안내 -->
+          <div class="faq-q">메가커피 창업비용은 얼마인가요?</div>
+          <div class="faq-a">
+            창업비용은 점포 규모와 지역에 따라 달라집니다. 정확한 비용은 <a href="https://franchise.ftc.go.kr" target="_blank" rel="noopener">공정거래위원회 가맹사업거래 홈페이지</a>의 정보공개서를 직접 확인하시기 바랍니다.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <!-- {{BRAND_NAME}} 월매출 — DB에 매출 데이터 없음 → FTC 안내 + 커뮤니티 유도 -->
+          <div class="faq-q">메가커피 평균 월매출은 얼마인가요?</div>
+          <div class="faq-a">
+            매장별 매출은 입지, 상권, 운영 방식에 따라 편차가 큽니다. 공정거래위원회 정보공개서의 지역별 평균 매출을 참고하시고, 현직 점주의 실제 운영 이야기는 <a href="/">언더커버 가맹점주 커뮤니티</a>에서 확인할 수 있습니다(인증 필요).
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <!-- {{BRAND_NAME}} 로열티 — DB avg_royalty_rate 값 직접 사용 -->
+          <div class="faq-q">메가커피 로열티는 얼마인가요?</div>
+          <div class="faq-a">
+            <!-- {{avg_royalty_rate}}% -->
+            집계 데이터 기준 평균 매출의 약 <strong>3%</strong> 수준입니다. 정확한 조건은 공정거래위원회 정보공개서와 가맹 계약서를 통해 반드시 확인하세요.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <!-- {{BRAND_NAME}} 본사 지원 — DB에 정성 데이터 없음 → 커뮤니티 유도 -->
+          <div class="faq-q">메가커피 본사 지원 정책은 어떤가요?</div>
+          <div class="faq-a">
+            공식 지원 정책은 본사 홈페이지를 참고하세요. 현직 점주의 실제 경험담은 <a href="/">언더커버 가맹점주 커뮤니티</a>에서 확인할 수 있습니다(인증 필요).
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── e. CTA 섹션 ── -->
+  <!-- "진짜 이야기", "현직 점주들의 솔직한 후기" 같은 과장 표현 사용 금지 -->
+  <section class="section section-bg">
+    <div class="container">
+      <div class="section-label">더 궁금하신가요?</div>
+      <div class="section-desc">가맹점주 전용 익명 커뮤니티</div>
+      <div class="cta-card">
+        <!-- 현직 점주 CTA -->
+        <div class="cta-tag">현직 메가커피 점주이신가요?</div>
+        <!-- {{BRAND_NAME}} -->
+        <div class="cta-title">같은 브랜드 점주끼리<br>이야기 나눠보세요</div>
+        <div class="cta-desc">수익, 운영, 배달앱 등 다양한 주제를<br>가맹점주 전용 익명 커뮤니티에서</div>
+        <a href="/" class="btn-cta">메가커피 점주 커뮤니티 입장하기 →</a>
+        <!-- 예비 창업자 CTA -->
+        <a href="/" class="btn-cta-outline">예비 창업자 — 가맹점주 커뮤니티 둘러보기</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── f. 관련 브랜드 섹션 ── -->
+  <!--
+    {{RELATED_BRANDS}}: 같은 category 브랜드 최대 6개, DB avg_net_profit_rate 값 직접 사용.
+    직영 전용 브랜드는 build-seo.js에서 seo_enabled=TRUE 필터로 자동 제외됨.
+    수치는 DB에서 직접 가져오므로 하드코딩 금지.
+  -->
+  <section class="section">
+    <div class="container">
+      <div class="section-label">다른 커피 브랜드 비교</div>
+      <div class="section-desc">같은 업종 브랜드 평균 수익률 (DB 기준)</div>
+      <div class="related-grid">
+        <!-- 아래 수치는 모두 DB brands.avg_net_profit_rate 실측값 -->
+        <a class="related-item" href="/brands/컴포즈커피">
+          <div class="ri-name">컴포즈커피</div>
+          <div class="ri-rate">23%</div><!-- DB: 23 ✅ -->
+          <div class="ri-label">평균 수익률</div>
+        </a>
+        <a class="related-item" href="/brands/빽다방">
+          <div class="ri-name">빽다방</div>
+          <div class="ri-rate">23%</div><!-- DB: 23 ✅ -->
+          <div class="ri-label">평균 수익률</div>
+        </a>
+        <a class="related-item" href="/brands/이디야커피">
+          <div class="ri-name">이디야커피</div>
+          <div class="ri-rate">24%</div><!-- DB: 24 ✅ -->
+          <div class="ri-label">평균 수익률</div>
+        </a>
+        <a class="related-item" href="/brands/투썸플레이스">
+          <div class="ri-name">투썸플레이스</div>
+          <div class="ri-rate">23%</div><!-- DB: 23 ✅ -->
+          <div class="ri-label">평균 수익률</div>
+        </a>
+        <a class="related-item" href="/brands/드롭탑">
+          <div class="ri-name">드롭탑</div>
+          <div class="ri-rate">24%</div><!-- DB: 24 ✅ -->
+          <div class="ri-label">평균 수익률</div>
+        </a>
+        <a class="related-item" href="/brands/달콤커피">
+          <div class="ri-name">달콤커피</div>
+          <div class="ri-rate">24%</div><!-- DB: 24 ✅ -->
+          <div class="ri-label">평균 수익률</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── g. 면책 조항 (강화) ── -->
+  <div class="disclaimer">
+    <div class="container">
+      <p>
+        본 페이지에 표시된 수익률, 비용 구조 등의 수치는 공정거래위원회 정보공개서 및 업계 집계 자료를 바탕으로 한 참고 데이터입니다.
+        실제 매장 수익은 입지, 운영 방식, 시장 상황 등 다양한 요인에 따라 상당한 편차가 있을 수 있으며,
+        본 정보는 창업 의사결정의 유일한 근거가 될 수 없습니다.
+        창업 전 반드시 <a href="https://franchise.ftc.go.kr" target="_blank" rel="noopener" style="color:var(--orange);">공정거래위원회 가맹사업거래 홈페이지(franchise.ftc.go.kr)</a>에서
+        공식 정보공개서를 열람하고, 본사와 직접 상담하시기 바랍니다.
+      </p>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── 사이트 푸터 ── -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <span class="footer-logo">언더커버</span>
+        <nav class="footer-links">
+          <a href="/#privacy">개인정보처리방침</a>
+          <a href="/#terms">이용약관</a>
+          <a href="/">앱 바로가기</a>
+        </nav>
+      </div>
+      <p class="footer-copy">
+        undercov.kr · 프랜차이즈 가맹점주 전용 익명 커뮤니티<br>
+        © 2025 언더커버. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
