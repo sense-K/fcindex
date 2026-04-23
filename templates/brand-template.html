@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>{{BRAND_NAME}} 가맹점 월매출·수익률·창업비용 정보 | 언더커버</title>
-<meta name="description" content="{{BRAND_NAME}} 가맹점 평균 순수익률 {{NET_PROFIT}}%, 인건비 {{LABOR_RATE}}%, 원자재 {{MATERIAL_RATE}}%. {{CATEGORY}} 업종 {{CAT_COUNT}}개 브랜드와 비교 분석. 예비 창업자와 현직 점주를 위한 수익 구조 데이터.">
-<meta name="keywords" content="{{BRAND_NAME}} 창업, {{BRAND_NAME}} 월매출, {{BRAND_NAME}} 수익률, {{BRAND_NAME}} 창업비용, {{BRAND_NAME}} 가맹비, {{BRAND_NAME}} 로열티, {{BRAND_NAME}} 본사, {{BRAND_NAME}} 후기, {{BRAND_NAME}} 점주 후기, {{BRAND_NAME}} 가맹점, {{CATEGORY}} 프랜차이즈 창업, 프랜차이즈 수익률 비교, 가맹점주 커뮤니티">
+<title>{{BRAND_NAME}} 프랜차이즈 점주 정보 (데이터 수집 중) | 언더커버</title>
+<meta name="description" content="{{BRAND_NAME}} 가맹점 점주 데이터를 수집 중입니다. 공개되면 알림을 받으려면 언더커버 점주 커뮤니티에 가입하세요. 정확한 가맹 조건은 공정거래위원회 정보공개서에서 확인 가능합니다.">
+<meta name="keywords" content="{{BRAND_NAME}}, {{BRAND_NAME}} 점주, {{BRAND_NAME}} 가맹, 프랜차이즈 정보, 공정거래위원회 정보공개서">
 <meta name="robots" content="index, follow">
 
-<meta property="og:title" content="{{BRAND_NAME}} 가맹점 수익률·창업비용 | 언더커버">
-<meta property="og:description" content="{{BRAND_NAME}} 가맹점 평균 수익률 {{NET_PROFIT}}%. {{CATEGORY}} 업종 비교, 비용 구조, 창업 FAQ.">
+<meta property="og:title" content="{{BRAND_NAME}} 점주 커뮤니티 | 언더커버">
+<meta property="og:description" content="{{BRAND_NAME}} 가맹점 점주 데이터 수집 중. 공정거래위원회 정보공개서 안내 및 점주 커뮤니티 가입 안내.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://undercov.kr/brands/{{BRAND_SLUG}}">
 <meta property="og:image" content="https://undercov.kr/og-image.png">
@@ -20,63 +20,23 @@
 <meta property="og:site_name" content="언더커버">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{BRAND_NAME}} 가맹점 수익률·창업비용 | 언더커버">
-<meta name="twitter:description" content="{{BRAND_NAME}} 가맹점 평균 수익률 {{NET_PROFIT}}%. {{CATEGORY}} 업종 비교, 비용 구조, 창업 FAQ.">
+<meta name="twitter:title" content="{{BRAND_NAME}} 점주 커뮤니티 | 언더커버">
+<meta name="twitter:description" content="{{BRAND_NAME}} 가맹점 점주 데이터 수집 중. 정확한 정보를 위해 준비하고 있습니다.">
 <meta name="twitter:image" content="https://undercov.kr/og-image.png">
 
 <link rel="canonical" href="https://undercov.kr/brands/{{BRAND_SLUG}}">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 
 <script type="application/ld+json">
-[
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "{{BRAND_NAME}} 창업비용은 얼마인가요?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "창업비용은 점포 규모와 지역에 따라 달라집니다. 정확한 비용은 공정거래위원회 가맹사업거래 홈페이지(franchise.ftc.go.kr)의 정보공개서를 직접 확인하시기 바랍니다."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "{{BRAND_NAME}} 평균 월매출은 얼마인가요?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "매장별 매출은 입지, 상권, 운영 방식에 따라 편차가 큽니다. 정보공개서의 지역별 평균 매출을 참고하시고, 가맹점주 커뮤니티 언더커버에서 현직 점주의 실제 운영 이야기를 확인할 수 있습니다(인증 필요)."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "{{BRAND_NAME}} 로열티는 얼마인가요?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "집계 데이터 기준 평균 매출의 약 {{ROYALTY_RATE}}% 수준입니다. 정확한 조건은 공정거래위원회 정보공개서와 가맹 계약서를 통해 확인하세요."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "{{BRAND_NAME}} 본사 지원 정책은 어떤가요?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "공식 지원 정책은 본사 홈페이지를 참고하세요. 현직 점주의 실제 경험담은 가맹점주 전용 익명 커뮤니티 언더커버에서 확인할 수 있습니다(인증 필요)."
-        }
-      }
-    ]
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "언더커버", "item": "https://undercov.kr" },
-      { "@type": "ListItem", "position": 2, "name": "프랜차이즈 브랜드", "item": "https://undercov.kr/brands" },
-      { "@type": "ListItem", "position": 3, "name": "{{BRAND_NAME}}", "item": "https://undercov.kr/brands/{{BRAND_SLUG}}" }
-    ]
-  }
-]
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "언더커버", "item": "https://undercov.kr" },
+    { "@type": "ListItem", "position": 2, "name": "프랜차이즈 브랜드", "item": "https://undercov.kr/brands" },
+    { "@type": "ListItem", "position": 3, "name": "{{BRAND_NAME}}", "item": "https://undercov.kr/brands/{{BRAND_SLUG}}" }
+  ]
+}
 </script>
 
 <style>
@@ -87,8 +47,6 @@
   --blue:   #378ADD;
   --gray:   #6B7280;
   --border: #E5E0D8;
-  --green:  #059669;
-  --red:    #DC2626;
   --bg:     #ECEAE5;
   --light:  #F3F4F6;
 }
@@ -103,114 +61,71 @@ body {
 }
 a { color: inherit; text-decoration: none; }
 .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
-.section { padding: 28px 0; background: #fff; }
+.section { padding: 24px 0; background: #fff; }
 .section + .section { border-top: 8px solid var(--bg); }
 .section-bg { background: var(--cream); }
 
-/* 헤더 */
+.notice-bar { background: #FEF3C7; border-bottom: 1px solid #FDE68A; padding: 10px 0; }
+.notice-bar .container { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #92400E; line-height: 1.5; }
+.notice-bar a { color: #92400E; font-weight: 700; text-decoration: underline; }
+
 .site-header { background: var(--navy); padding: 14px 0; position: sticky; top: 0; z-index: 100; }
 .site-header .container { display: flex; justify-content: space-between; align-items: center; }
 .logo { color: #fff; font-weight: 800; font-size: 18px; letter-spacing: -0.5px; }
 .logo em { color: var(--orange); font-style: normal; }
 .btn-header { background: var(--orange); color: #fff; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; }
 
-/* 브레드크럼 */
 .breadcrumb { background: var(--cream); border-bottom: 1px solid var(--border); padding: 10px 0; }
 .breadcrumb .container { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--gray); }
 .breadcrumb a:hover { color: var(--navy); }
 
-/* 히어로 */
 .hero { background: var(--cream); border-bottom: 1px solid var(--border); padding: 32px 0 28px; }
-.category-badge { display: inline-block; background: var(--navy); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 14px; letter-spacing: 0.3px; }
-.hero h1 { font-size: 26px; font-weight: 900; line-height: 1.3; margin-bottom: 8px; letter-spacing: -0.5px; }
-.hero .sub { font-size: 13px; color: var(--gray); }
+.category-badge { display: inline-block; background: var(--navy); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 14px; }
+.hero h1 { font-size: 26px; font-weight: 900; line-height: 1.3; margin-bottom: 10px; letter-spacing: -0.5px; }
+.hero .sub { font-size: 13px; color: var(--gray); margin-bottom: 14px; }
+.status-badge { display: inline-flex; align-items: center; gap: 6px; background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 20px; }
 
-/* 카드 */
-.card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-top: 16px; }
-.section-label { font-size: 17px; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.3px; }
+.card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 22px; margin-top: 16px; }
+.card-title { font-size: 16px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.3px; }
+.card-body { font-size: 13px; color: var(--gray); line-height: 1.7; margin-bottom: 16px; }
+.section-label { font-size: 17px; font-weight: 800; margin-bottom: 4px; }
 .section-desc { font-size: 12px; color: var(--gray); margin-bottom: 16px; }
 
-/* 수익률 히어로 */
-.profit-hero { background: var(--navy); border-radius: 16px; padding: 28px 24px; text-align: center; margin-top: 16px; }
-.profit-hero .ph-label { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 8px; }
-.profit-hero .ph-value { font-size: 72px; font-weight: 900; line-height: 1; color: var(--orange); letter-spacing: -2px; }
-.profit-hero .ph-unit { font-size: 28px; font-weight: 700; }
-.profit-hero .ph-compare { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 10px; }
+.btn-primary { display: block; background: var(--orange); color: #fff; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700; text-align: center; }
+.btn-primary:hover { opacity: 0.92; }
+.btn-outline { display: block; border: 1.5px solid var(--border); color: var(--navy); padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 600; text-align: center; }
+.btn-outline:hover { border-color: var(--navy); }
+.btn-external { display: block; border: 1.5px solid var(--blue); color: var(--blue); padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 600; text-align: center; }
 
-/* 비용 구조 바 */
-.cost-bars { display: flex; flex-direction: column; gap: 14px; }
-.cost-bar-head { display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin-bottom: 6px; }
-.cost-bar-head .cb-name { font-weight: 600; }
-.cb-pct.profit  { color: var(--green); font-weight: 700; }
-.cb-pct.cost    { color: var(--orange); font-weight: 700; }
-.cb-pct.neutral { color: var(--gray); }
-.cost-track { height: 9px; background: var(--light); border-radius: 5px; overflow: hidden; }
-.cost-fill { height: 100%; border-radius: 5px; }
-.cost-fill.orange { background: var(--orange); }
-.cost-fill.blue   { background: var(--blue); }
-.cost-fill.green  { background: var(--green); }
-.cost-fill.gray   { background: #9CA3AF; }
-
-/* 업종 비교 */
-.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
-.compare-card { background: var(--light); border-radius: 12px; padding: 16px 12px; text-align: center; }
-.cc-label { font-size: 11px; color: var(--gray); margin-bottom: 4px; }
-.cc-value { font-size: 28px; font-weight: 900; letter-spacing: -1px; }
-.cc-value.brand { color: var(--orange); }
-.cc-value.avg   { color: var(--navy); }
-.cc-sub  { font-size: 11px; color: var(--gray); margin-top: 2px; }
-.cc-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; margin-top: 6px; }
-.cc-badge.same { background: #E5E7EB; color: #6B7280; }
-.cc-badge.up   { background: #D1FAE5; color: var(--green); }
-.cc-badge.down { background: #FEE2E2; color: var(--red); }
-
-/* 인사이트 */
-.insight-list { display: flex; flex-direction: column; gap: 12px; }
-.insight-item { background: var(--light); border-radius: 12px; padding: 16px; display: flex; gap: 12px; align-items: flex-start; }
-.insight-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
-.insight-body .ib-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-.insight-body .ib-desc  { font-size: 12px; color: var(--gray); line-height: 1.6; }
-
-/* FAQ */
-.faq-list { border-top: 1px solid var(--border); }
-.faq-item { border-bottom: 1px solid var(--border); padding: 18px 0; }
-.faq-q { font-size: 14px; font-weight: 700; display: flex; gap: 10px; margin-bottom: 10px; }
-.faq-q::before { content: 'Q.'; color: var(--orange); font-weight: 900; flex-shrink: 0; }
-.faq-a { font-size: 13px; color: var(--gray); line-height: 1.7; padding-left: 24px; }
-.faq-a strong { color: var(--navy); }
-.faq-a a { color: var(--orange); font-weight: 600; }
-
-/* CTA */
-.cta-card { background: var(--navy); border-radius: 16px; padding: 28px 24px; text-align: center; margin-top: 16px; }
-.cta-tag { display: inline-block; font-size: 11px; font-weight: 600; background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.75); padding: 4px 12px; border-radius: 20px; margin-bottom: 14px; }
-.cta-title { color: #fff; font-size: 20px; font-weight: 800; line-height: 1.35; margin-bottom: 8px; }
-.cta-desc  { color: rgba(255,255,255,0.55); font-size: 13px; line-height: 1.6; margin-bottom: 20px; }
-.btn-cta { display: block; background: var(--orange); color: #fff; padding: 15px; border-radius: 10px; font-size: 15px; font-weight: 700; margin-bottom: 10px; }
-.btn-cta:hover { opacity: 0.92; }
-.btn-cta-outline { display: block; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.75); padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 600; }
-
-/* 관련 브랜드 */
 .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
 .related-item { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 14px 10px; text-align: center; transition: border-color 0.2s; }
 .related-item:hover { border-color: var(--orange); }
-.ri-name  { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
-.ri-rate  { font-size: 20px; font-weight: 900; color: var(--orange); }
-.ri-label { font-size: 10px; color: var(--gray); margin-top: 2px; }
+.ri-emoji  { font-size: 22px; margin-bottom: 6px; }
+.ri-name   { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.ri-status { display: inline-block; font-size: 10px; color: #1E40AF; background: #EFF6FF; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
 
-/* 면책·푸터 */
 .disclaimer { padding: 24px 0; background: var(--cream); border-top: 1px solid var(--border); }
 .disclaimer p { font-size: 11px; color: var(--gray); line-height: 1.8; }
+.disclaimer a { color: var(--orange); }
 .site-footer { background: var(--navy); padding: 28px 0; }
 .footer-inner { display: flex; flex-direction: column; gap: 10px; }
-.footer-top   { display: flex; justify-content: space-between; align-items: center; }
-.footer-logo  { color: #fff; font-weight: 800; font-size: 16px; }
+.footer-top { display: flex; justify-content: space-between; align-items: center; }
+.footer-logo { color: #fff; font-weight: 800; font-size: 16px; }
 .footer-links { display: flex; gap: 16px; font-size: 12px; color: rgba(255,255,255,0.45); }
 .footer-links a:hover { color: rgba(255,255,255,0.75); }
-.footer-copy  { font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.6; }
+.footer-copy { font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.6; }
 </style>
 </head>
 
 <body>
+
+<!-- 공지 바 -->
+<div class="notice-bar">
+  <div class="container">
+    <span>⚠️</span>
+    <span>본 페이지는 참고용이며, 가맹 조건은 <a href="https://franchise.ftc.go.kr" target="_blank" rel="noopener">공정거래위원회 가맹사업거래 정보공개서(franchise.ftc.go.kr)</a>에서 직접 확인하세요.</span>
+  </div>
+</div>
 
 <!-- 사이트 헤더 -->
 <header class="site-header">
@@ -233,187 +148,56 @@ a { color: inherit; text-decoration: none; }
 
 <main>
 
-  <!-- 히어로 섹션 -->
+  <!-- 히어로 -->
   <div class="hero">
     <div class="container">
       <div class="category-badge">{{CATEGORY_EMOJI}} {{CATEGORY}}</div>
-      <h1>{{BRAND_NAME}} 가맹점<br>월매출·수익률·창업비용 정보</h1>
-      <p class="sub">가맹점주 집계 데이터 기반 수익 구조 분석</p>
+      <h1>{{BRAND_NAME}} 점주 데이터</h1>
+      <p class="sub">정확한 데이터를 위해 수집 중이에요</p>
+      <div class="status-badge">🔜 데이터 수집 중</div>
     </div>
   </div>
 
-  <!-- 핵심 수치 섹션 -->
+  <!-- 안내 카드 3개 -->
   <section class="section">
     <div class="container">
-      <div class="section-label">가맹점 평균 수익 구조</div>
-      <div class="section-desc">언더커버 집계 데이터 기준 · {{BUILD_DATE}}</div>
 
-      <!-- 수익률 강조 카드 -->
-      <div class="profit-hero">
-        <div class="ph-label">평균 순수익률</div>
-        <div class="ph-value">{{NET_PROFIT}}<span class="ph-unit">%</span></div>
-        <div class="ph-compare">{{CATEGORY}} 업종 {{CAT_COUNT}}개 브랜드 평균 {{CAT_AVG_NET}}%</div>
-      </div>
-
-      <!-- 비용 구조 바 -->
       <div class="card">
-        <div style="font-size:13px;font-weight:700;margin-bottom:18px;">매출 100원의 지출 구조</div>
-        <div class="cost-bars">
-          <div>
-            <div class="cost-bar-head"><span class="cb-name">원자재·식재료비</span><span class="cb-pct cost">{{MATERIAL_RATE}}%</span></div>
-            <div class="cost-track"><div class="cost-fill orange" style="width:{{MATERIAL_RATE}}%"></div></div>
-          </div>
-          <div>
-            <div class="cost-bar-head"><span class="cb-name">인건비</span><span class="cb-pct cost">{{LABOR_RATE}}%</span></div>
-            <div class="cost-track"><div class="cost-fill blue" style="width:{{LABOR_RATE}}%"></div></div>
-          </div>
-          <div>
-            <div class="cost-bar-head"><span class="cb-name">임대료</span><span class="cb-pct neutral">{{RENT_RATE}}%</span></div>
-            <div class="cost-track"><div class="cost-fill gray" style="width:{{RENT_RATE}}%"></div></div>
-          </div>
-          <div>
-            <div class="cost-bar-head"><span class="cb-name">배달수수료</span><span class="cb-pct neutral">{{DELIVERY_RATE}}%</span></div>
-            <div class="cost-track"><div class="cost-fill gray" style="width:{{DELIVERY_RATE}}%"></div></div>
-          </div>
-          <div>
-            <div class="cost-bar-head"><span class="cb-name">본사 로열티</span><span class="cb-pct neutral">{{ROYALTY_RATE}}%</span></div>
-            <div class="cost-track"><div class="cost-fill gray" style="width:{{ROYALTY_RATE}}%"></div></div>
-          </div>
-          <div>
-            <div class="cost-bar-head"><span class="cb-name">공과금·기타</span><span class="cb-pct neutral">{{UTILITY_OTHER_RATE}}%</span></div>
-            <div class="cost-track"><div class="cost-fill gray" style="width:{{UTILITY_OTHER_RATE}}%"></div></div>
-          </div>
-          <div>
-            <div class="cost-bar-head">
-              <span class="cb-name" style="color:var(--green);font-weight:800;">순수익</span>
-              <span class="cb-pct profit">{{NET_PROFIT}}%</span>
-            </div>
-            <div class="cost-track"><div class="cost-fill green" style="width:{{NET_PROFIT}}%"></div></div>
-          </div>
+        <div class="card-title">📊 정확한 데이터를 위한 준비</div>
+        <div class="card-body">
+          언더커버는 공정거래위원회 정보공개서와 실제 점주 커뮤니티의 검증된 데이터를 기반으로
+          {{BRAND_NAME}} 가맹점의 수익 구조를 분석 중입니다.<br><br>
+          수집이 완료되면 평균 매출, 수익률, 비용 구조 등을 투명하게 공개할 예정입니다.
         </div>
+        <a href="/" class="btn-primary">공개되면 알림 받기 →</a>
       </div>
 
-      <!-- 업종 평균 비교 카드 -->
       <div class="card">
-        <div style="font-size:13px;font-weight:700;margin-bottom:14px;">{{CATEGORY}} 업종 평균 비교</div>
-        <div class="compare-grid">
-          <div class="compare-card">
-            <div class="cc-label">{{BRAND_NAME}} 수익률</div>
-            <div class="cc-value brand">{{NET_PROFIT}}<small style="font-size:16px;font-weight:700;">%</small></div>
-            <div class="cc-badge {{PROFIT_COMPARE_BADGE}}">{{PROFIT_COMPARE_TEXT}}</div>
-          </div>
-          <div class="compare-card">
-            <div class="cc-label">{{CATEGORY}} 업종 평균</div>
-            <div class="cc-value avg">{{CAT_AVG_NET}}<small style="font-size:16px;font-weight:700;">%</small></div>
-            <div class="cc-sub">{{CAT_COUNT}}개 브랜드 기준</div>
-          </div>
-          <div class="compare-card">
-            <div class="cc-label">{{BRAND_NAME}} 로열티</div>
-            <div class="cc-value brand">{{ROYALTY_RATE}}<small style="font-size:16px;font-weight:700;">%</small></div>
-            <div class="cc-badge {{ROYALTY_COMPARE_BADGE}}">{{ROYALTY_COMPARE_TEXT}}</div>
-          </div>
-          <div class="compare-card">
-            <div class="cc-label">{{CATEGORY}} 업종 평균 로열티</div>
-            <div class="cc-value avg">{{CAT_AVG_ROYALTY}}<small style="font-size:16px;font-weight:700;">%</small></div>
-            <div class="cc-sub">{{CAT_COUNT}}개 브랜드 기준</div>
-          </div>
+        <div class="card-title">💬 이미 {{BRAND_NAME}} 점주이신가요?</div>
+        <div class="card-body">
+          실제 {{BRAND_NAME}} 가맹점주들의 경험과 정보를 익명으로 공유하는
+          비공개 커뮤니티에 참여하실 수 있습니다. 사업자 인증 후 이용 가능합니다.
         </div>
+        <a href="/" class="btn-outline">점주 커뮤니티 가입하기</a>
       </div>
+
+      <div class="card">
+        <div class="card-title">🏛️ 지금 바로 확인하고 싶으시다면</div>
+        <div class="card-body">
+          공정거래위원회 가맹사업거래 정보공개서에서 {{BRAND_NAME}}의 가맹비,
+          로열티, 창업비용, 계약조건 등을 확인할 수 있습니다.
+        </div>
+        <a href="https://franchise.ftc.go.kr" target="_blank" rel="noopener" class="btn-external">공정거래위원회 가맹사업거래 →</a>
+      </div>
+
     </div>
   </section>
 
-  <!-- 인사이트 섹션 -->
+  <!-- 관련 브랜드 -->
   <section class="section section-bg">
     <div class="container">
-      <div class="section-label">수익 구조 분석</div>
-      <div class="section-desc">DB 수치 기반 자동 생성 · {{CATEGORY}} 업종 평균 비교</div>
-      <div class="insight-list">
-        <div class="insight-item">
-          <div class="insight-icon">📊</div>
-          <div class="insight-body">
-            <div class="ib-title">{{INSIGHT_1_TITLE}}</div>
-            <div class="ib-desc">{{INSIGHT_1_DESC}}</div>
-          </div>
-        </div>
-        <div class="insight-item">
-          <div class="insight-icon">👥</div>
-          <div class="insight-body">
-            <div class="ib-title">{{INSIGHT_2_TITLE}}</div>
-            <div class="ib-desc">{{INSIGHT_2_DESC}}</div>
-          </div>
-        </div>
-        <div class="insight-item">
-          <div class="insight-icon">🏠</div>
-          <div class="insight-body">
-            <div class="ib-title">{{INSIGHT_3_TITLE}}</div>
-            <div class="ib-desc">{{INSIGHT_3_DESC}}</div>
-          </div>
-        </div>
-        <div class="insight-item">
-          <div class="insight-icon">💸</div>
-          <div class="insight-body">
-            <div class="ib-title">{{INSIGHT_4_TITLE}}</div>
-            <div class="ib-desc">{{INSIGHT_4_DESC}}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ 섹션 -->
-  <section class="section">
-    <div class="container">
-      <div class="section-label">자주 묻는 질문</div>
-      <div class="section-desc">예비 창업자 필수 확인 사항</div>
-      <div class="faq-list">
-        <div class="faq-item">
-          <div class="faq-q">{{BRAND_NAME}} 창업비용은 얼마인가요?</div>
-          <div class="faq-a">
-            창업비용은 점포 규모와 지역에 따라 달라집니다. 정확한 비용은 <a href="https://franchise.ftc.go.kr" target="_blank" rel="noopener">공정거래위원회 가맹사업거래 홈페이지</a>의 정보공개서를 직접 확인하시기 바랍니다.
-          </div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">{{BRAND_NAME}} 평균 월매출은 얼마인가요?</div>
-          <div class="faq-a">
-            매장별 매출은 입지, 상권, 운영 방식에 따라 편차가 큽니다. 공정거래위원회 정보공개서의 지역별 평균 매출을 참고하시고, 현직 점주의 실제 운영 이야기는 <a href="/">언더커버 가맹점주 커뮤니티</a>에서 확인할 수 있습니다(인증 필요).
-          </div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">{{BRAND_NAME}} 로열티는 얼마인가요?</div>
-          <div class="faq-a">
-            집계 데이터 기준 평균 매출의 약 <strong>{{ROYALTY_RATE}}%</strong> 수준입니다. 정확한 조건은 공정거래위원회 정보공개서와 가맹 계약서를 통해 반드시 확인하세요.
-          </div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">{{BRAND_NAME}} 본사 지원 정책은 어떤가요?</div>
-          <div class="faq-a">
-            공식 지원 정책은 본사 홈페이지를 참고하세요. 현직 점주의 실제 경험담은 <a href="/">언더커버 가맹점주 커뮤니티</a>에서 확인할 수 있습니다(인증 필요).
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA 섹션 -->
-  <section class="section section-bg">
-    <div class="container">
-      <div class="section-label">더 궁금하신가요?</div>
-      <div class="section-desc">가맹점주 전용 익명 커뮤니티</div>
-      <div class="cta-card">
-        <div class="cta-tag">현직 {{BRAND_NAME}} 점주이신가요?</div>
-        <div class="cta-title">같은 브랜드 점주끼리<br>이야기 나눠보세요</div>
-        <div class="cta-desc">수익, 운영, 배달앱 등 다양한 주제를<br>가맹점주 전용 익명 커뮤니티에서</div>
-        <a href="/" class="btn-cta">{{BRAND_NAME}} 점주 커뮤니티 입장하기 →</a>
-        <a href="/" class="btn-cta-outline">예비 창업자 — 가맹점주 커뮤니티 둘러보기</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 관련 브랜드 섹션 -->
-  <section class="section">
-    <div class="container">
-      <div class="section-label">다른 {{CATEGORY}} 브랜드 비교</div>
-      <div class="section-desc">같은 업종 브랜드 평균 수익률 (DB 기준)</div>
+      <div class="section-label">다른 {{CATEGORY}} 브랜드</div>
+      <div class="section-desc">같은 업종의 다른 브랜드 페이지</div>
       <div class="related-grid">
         {{RELATED_BRANDS}}
       </div>
@@ -424,11 +208,11 @@ a { color: inherit; text-decoration: none; }
   <div class="disclaimer">
     <div class="container">
       <p>
-        본 페이지에 표시된 수익률, 비용 구조 등의 수치는 공정거래위원회 정보공개서 및 업계 집계 자료를 바탕으로 한 참고 데이터입니다.
-        실제 매장 수익은 입지, 운영 방식, 시장 상황 등 다양한 요인에 따라 상당한 편차가 있을 수 있으며,
-        본 정보는 창업 의사결정의 유일한 근거가 될 수 없습니다.
-        창업 전 반드시 <a href="https://franchise.ftc.go.kr" target="_blank" rel="noopener" style="color:var(--orange);">공정거래위원회 가맹사업거래 홈페이지(franchise.ftc.go.kr)</a>에서
-        공식 정보공개서를 열람하고, 본사와 직접 상담하시기 바랍니다.
+        본 페이지는 {{BRAND_NAME}} 관련 참고 페이지입니다.
+        실제 가맹 조건 및 수익 구조는 매장별·계약별로 크게 다르며,
+        정확한 정보는 <a href="https://franchise.ftc.go.kr" target="_blank" rel="noopener">공정거래위원회 가맹사업거래 홈페이지(franchise.ftc.go.kr)</a> 및
+        본사 상담을 통해 확인하시기 바랍니다.
+        마지막 업데이트: {{BUILD_DATE}}
       </p>
     </div>
   </div>
@@ -449,7 +233,7 @@ a { color: inherit; text-decoration: none; }
       </div>
       <p class="footer-copy">
         undercov.kr · 프랜차이즈 가맹점주 전용 익명 커뮤니티<br>
-        © 2025 언더커버. All rights reserved. · {{BUILD_DATE}}
+        © 2025 언더커버. All rights reserved.
       </p>
     </div>
   </div>
