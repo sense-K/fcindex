@@ -1,6 +1,8 @@
 'use strict';
 
 // ── 환경변수 로드 ─────────────────────────────────────────────
+// 로컬: .env 파일에서 로드. Cloudflare Pages: 대시보드 환경변수에서 자동 주입.
+// .env 파일이 없어도 에러 없이 넘어감 (override:false 가 기본값).
 require('dotenv').config();
 
 const { createClient } = require('@supabase/supabase-js');
@@ -200,8 +202,9 @@ async function main() {
   // 1. 환경변수 검증
   const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-    console.error('❌ .env 파일에 SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY 가 필요합니다.');
-    console.error('   cp .env.example .env 후 값을 채워주세요.');
+    console.error('❌ 환경변수에 SUPABASE_URL 과 SUPABASE_SERVICE_ROLE_KEY 가 필요합니다.');
+    console.error('   로컬: 프로젝트 루트 .env 파일에 입력 (cp .env.example .env)');
+    console.error('   Cloudflare Pages: 대시보드 Settings > Variables and Secrets 에 등록');
     process.exit(1);
   }
 
