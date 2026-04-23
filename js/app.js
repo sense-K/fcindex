@@ -10,13 +10,16 @@ function gotoSignupStep(n) {
   // 앞으로 이동 시 현재 단계 검증
   if (n > current) {
     if (current === 1) {
-      const email = document.getElementById('su-email').value.trim();
       const nick = document.getElementById('su-nick').value.trim();
-      const pw = document.getElementById('su-pw').value;
-      const pw2 = document.getElementById('su-pw2').value;
-      if (!email || !nick || !pw || !pw2) return showAlert('signup-alert', '모든 항목을 입력해주세요.', 'error');
-      if (pw !== pw2) return showAlert('signup-alert', '비밀번호가 일치하지 않아요.', 'error');
-      if (pw.length < 6) return showAlert('signup-alert', '비밀번호는 6자 이상이어야 해요.', 'error');
+      if (!nick) return showAlert('signup-alert', '닉네임을 입력해주세요.', 'error');
+      if (!_googleSignupMode) {
+        const email = document.getElementById('su-email').value.trim();
+        const pw  = document.getElementById('su-pw').value;
+        const pw2 = document.getElementById('su-pw2').value;
+        if (!email || !pw || !pw2) return showAlert('signup-alert', '모든 항목을 입력해주세요.', 'error');
+        if (pw !== pw2) return showAlert('signup-alert', '비밀번호가 일치하지 않아요.', 'error');
+        if (pw.length < 6) return showAlert('signup-alert', '비밀번호는 6자 이상이어야 해요.', 'error');
+      }
     }
     if (current === 2) {
       const biz = document.getElementById('su-biz').value.trim().replace(/-/g, '');

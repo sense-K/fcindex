@@ -1,3 +1,6 @@
+// Google OAuth 모드 플래그 (Google 로그인 후 사업자 인증 플로우용)
+let _googleSignupMode = false;
+
 // ===== 프로필 로드 =====
 async function loadProfile() {
   const { data } = await sb.from('profiles')
@@ -52,7 +55,16 @@ async function init() {
     if (currentUser.email === ADMIN_EMAIL) {
       const target = [...adminPages, ...approvedPages].includes(savedPage) ? savedPage : 'admin';
       showPage(target);
-    } else if (currentProfile?.auth_status === 'approved') {
+    } else if (!currentProfile) {
+      // 프로필 없음 = Google OAuth 신규 유저 (이메일 가입은 doSignup에서 바로 생성)
+      if (currentUser.app_metadata?.provider === 'google') {
+        _googleSignupMode = true;
+        showPage('signup');
+        gotoGoogleSignup();
+      } else {
+        showPage('mypage');
+      }
+    } else if (currentProfile.auth_status === 'approved') {
       const target = approvedPages.includes(savedPage) ? savedPage : 'home';
       showPage(target);
     } else {
@@ -64,6 +76,39 @@ async function init() {
   await loadBrands();
   document.getElementById('loading').classList.add('hidden');
   document.getElementById('app').classList.remove('hidden');
+}
+
+// ===== Google OAuth 로그인/가입 =====
+async function signInWithGoogle() {
+  const { error } = await sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.origin }
+  });
+  if (error) {
+    showAlert('login-alert', 'Google 로그인에 실패했습니다. 다시 시도해주세요.', 'error');
+  }
+}
+
+// Google OAuth 완료 후 회원가입 페이지를 Google 모드로 세팅
+function gotoGoogleSignup() {
+  // 이메일 자동 입력 + 읽기 전용 (Google 실명 등 user_metadata는 사용하지 않음)
+  const emailEl = document.getElementById('su-email');
+  if (emailEl) {
+    emailEl.value = currentUser.email;
+    emailEl.setAttribute('readonly', '');
+    emailEl.style.color = 'var(--gray)';
+  }
+  // 비밀번호 행 숨기기
+  const pwRow = document.getElementById('su-pw-row');
+  if (pwRow) pwRow.classList.add('hidden');
+  // Google 가입 버튼 영역 숨기기 (이미 구글 로그인 상태이므로 불필요)
+  const googleBtn = document.getElementById('su-google-btn-wrapper');
+  if (googleBtn) googleBtn.classList.add('hidden');
+  // Google 모드 안내 표시
+  const notice = document.getElementById('su-google-notice');
+  if (notice) notice.classList.remove('hidden');
+  // 1단계부터 시작
+  gotoSignupStep(1);
 }
 
 // ===== 로그인 =====
@@ -148,9 +193,13 @@ async function doSignup() {
   const region = document.getElementById('su-region').value;
   const file = document.getElementById('su-biz-img').files[0];
 
-  if (!email || !nick || !pw || !biz || !brandId || !region || !file) return showAlert('signup-alert', '모든 항목을 입력해주세요.', 'error');
-  if (pw !== pw2) return showAlert('signup-alert', '비밀번호가 일치하지 않아요.', 'error');
-  if (pw.length < 6) return showAlert('signup-alert', '비밀번호는 6자 이상이어야 해요.', 'error');
+  if (_googleSignupMode) {
+    if (!nick || !biz || !brandId || !region || !file) return showAlert('signup-alert', '모든 항목을 입력해주세요.', 'error');
+  } else {
+    if (!email || !nick || !pw || !biz || !brandId || !region || !file) return showAlert('signup-alert', '모든 항목을 입력해주세요.', 'error');
+    if (pw !== pw2) return showAlert('signup-alert', '비밀번호가 일치하지 않아요.', 'error');
+    if (pw.length < 6) return showAlert('signup-alert', '비밀번호는 6자 이상이어야 해요.', 'error');
+  }
   if (biz.length !== 10 || !/^\d+$/.test(biz)) return showAlert('signup-alert', '사업자등록번호는 숫자 10자리예요.', 'error');
 
   // 이메일 중복 체크
@@ -196,13 +245,23 @@ async function doSignup() {
   const { data: urlData } = sb.storage.from('biz-images').getPublicUrl(filePath);
   const bizImageUrl = urlData.publicUrl;
 
-  const { data: authData, error: authErr } = await sb.auth.signUp({ email, password: pw });
-  if (authErr) return showAlert('signup-alert', authErr.message, 'error');
-  if (!authData?.user) return showAlert('signup-alert', '이미 가입된 이메일이에요.', 'error');
-  if (authData.user.identities?.length === 0) return showAlert('signup-alert', '이미 가입된 이메일이에요.', 'error');
+  let userId, finalEmail;
+  if (_googleSignupMode) {
+    // Google 로그인 상태: auth 계정 이미 존재, profiles만 생성
+    userId = currentUser.id;
+    finalEmail = currentUser.email;
+  } else {
+    // 이메일 가입: Supabase Auth 계정 신규 생성
+    const { data: authData, error: authErr } = await sb.auth.signUp({ email, password: pw });
+    if (authErr) return showAlert('signup-alert', authErr.message, 'error');
+    if (!authData?.user) return showAlert('signup-alert', '이미 가입된 이메일이에요.', 'error');
+    if (authData.user.identities?.length === 0) return showAlert('signup-alert', '이미 가입된 이메일이에요.', 'error');
+    userId = authData.user.id;
+    finalEmail = email;
+  }
 
   const { error: profileErr } = await sb.from('profiles').insert({
-    id: authData.user.id, email, nickname: nick,
+    id: userId, email: finalEmail, nickname: nick,
     biz_number: biz, biz_image: bizImageUrl,
     brand_id: brandId, auth_status: 'pending', region
   });
@@ -213,11 +272,18 @@ async function doSignup() {
   fetch('https://vogyfomyhrvqswivqhdv.supabase.co/functions/v1/smooth-api', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
-    body: JSON.stringify({ type: 'signup', nickname: nick, brand: brandName, biz_number: biz, email })
-  }).catch(() => {}); // 알림 실패해도 가입은 정상 처리
+    body: JSON.stringify({ type: 'signup', nickname: nick, brand: brandName, biz_number: biz, email: finalEmail })
+  }).catch(() => {});
 
-  currentUser = authData.user;
-  await loadProfile();
+  if (_googleSignupMode) {
+    // Google 모드: currentUser는 이미 설정됨, 프로필만 다시 로드
+    _googleSignupMode = false;
+    await loadProfile();
+  } else {
+    const { data: { user } } = await sb.auth.getUser();
+    currentUser = user;
+    await loadProfile();
+  }
   showPage('mypage');
 }
 
