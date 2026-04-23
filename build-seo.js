@@ -191,7 +191,7 @@ function writeSitemap(brands, buildDate) {
 // ── robots.txt 생성 ───────────────────────────────────────────
 function writeRobots() {
   const siteUrl = process.env.SITE_URL || 'https://undercov.kr';
-  const content = `User-agent: *\nDisallow: /community/\nDisallow: /admin/\n\nSitemap: ${siteUrl}/sitemap.xml\n`;
+  const content = `User-agent: *\nDisallow: /community\nDisallow: /community/\nDisallow: /admin\nDisallow: /admin/\n\nSitemap: ${siteUrl}/sitemap.xml\n`;
   fs.writeFileSync('robots.txt', content, 'utf-8');
 }
 
